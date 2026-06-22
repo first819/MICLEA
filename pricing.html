@@ -8,7 +8,6 @@
 <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
 <link rel="stylesheet" href="tokens.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   a{text-decoration:none;color:inherit}
@@ -276,11 +275,11 @@
     transition:background var(--duration-fast) var(--ease-standard),color var(--duration-fast) var(--ease-standard)}
   .foot-social a:hover{background:var(--brand-default);color:#fff}
   .foot-social svg{width:17px;height:17px}
-  .foot-bottom{background:#fff;min-height:128px;display:flex;align-items:center}
-  .foot-bottom .wrap-wide{display:flex;justify-content:space-between;align-items:center;color:#1a1a1a;width:100%}
-  .foot-bottom .legal{display:flex;gap:26px;font-size:14px}
-  .foot-bottom .legal a:hover{opacity:.7}
-  .foot-bottom .made{font-size:14px;color:#000}
+  .foot-bottom{border-top:1px solid #e5e7eb;padding:32px 24px;text-align:center}
+  .foot-legal{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:14px}
+  .foot-legal a{color:#6b7280}
+  .foot-legal a:hover{color:#111}
+  .foot-made{margin-top:12px;font-size:13px;color:#9ca3af}
 
   /* ── Responsive ── */
   @media (max-width:1023px){
@@ -730,18 +729,12 @@
   </div>
 
   <div class="foot-bottom">
-    <div class="wrap-wide">
-      <div style="display:flex;align-items:center;gap:14px">
-        <span class="foot-wordmark">Miclea</span>
-        <span class="foot-made">&#169; 2026 Miclea AI, Inc. All rights reserved.</span>
-      </div>
-      <nav class="foot-legal" aria-label="Legal">
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="security.html">Security</a>
-        <a href="#">Cookies</a>
-      </nav>
-    </div>
+    <nav class="foot-legal" aria-label="Legal">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="security.html">Security</a>
+    </nav>
+    <p class="foot-made">&#169; 2026 Miclea AI, Inc. All rights reserved.</p>
   </div>
 </footer>
 
