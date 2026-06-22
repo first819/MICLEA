@@ -301,15 +301,15 @@
   .sec-card h4{font-size:19px;font-weight:500;margin:0 0 12px;color:#fff}
   .sec-card p{font-size:14.5px;line-height:1.6;color:#b7b7b1;margin:0}
 
-  /* Final CTA — high-contrast */
-  .final{position:relative;overflow:hidden;text-align:center;padding:128px 0 120px;
-    background:#e8f4fd}
-  .final .wrap{position:relative;z-index:2}
-  .final .final-eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 auto 22px;
-    font-family:var(--font-family-sans);font-weight:500;font-size:13px;letter-spacing:1.3px;text-transform:uppercase;
-    color:#1e40af}
-  .final .final-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#3b82f6;
-    box-shadow:0 0 0 4px rgba(59,130,246,.22)}
+  /* Final CTA — light skyline */
+  .final{position:relative;overflow:hidden;text-align:center;padding:0;
+    background:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+  .final .wrap{position:absolute;z-index:2;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;padding:0 24px}
+  .final-skyline{position:absolute;z-index:1;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:1400px;
+    height:100%;object-fit:cover;pointer-events:none}
+  .final .final-eyebrow{display:none}
+  .final .final-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#a78bfa;
+    box-shadow:0 0 0 4px rgba(167,139,250,.22)}
   .final h2{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(40px,5.4vw,64px);line-height:1.02;
     letter-spacing:-2.56px;margin:0 0 20px;color:#0d1b3e}
   .final p{font-size:18.4px;line-height:25.76px;color:#3b5280;margin:0 auto 34px;max-width:480px}
@@ -594,7 +594,7 @@
       <a href="#">About</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href="#">Sign in</a>
+      <a class="btn btn-ghost" href="#">Log in</a>
       <a class="btn btn-navy" href="#">Get Started &#8594;</a>
     </div>
     <button class="hamburger" aria-label="Open menu">
@@ -1197,6 +1197,7 @@
     </div>
     <p class="final-micro">No credit card · Free plan · 2 minutes to your first score</p>
   </div>
+  <img class="final-skyline" src="images/cta-skyline.png" alt="" aria-hidden="true">
 </section>
 
 <footer>
