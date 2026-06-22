@@ -8,9 +8,9 @@ const DASHBOARD_URL = '/dashboard'                         // TODO: replace when
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON)
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const { data, error } = await supabase.auth.getSession()
-  if (error) { console.error('auth check failed', error); return; }
-  if (data?.session) {
+  const { data, error } = await supabase.auth.getUser()
+  if (error) { return; }
+  if (data?.user) {
     window.location.replace(DASHBOARD_URL)
   }
 })
