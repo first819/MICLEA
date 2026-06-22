@@ -1,0 +1,153 @@
+/* ============================================================
+   Exa (https://exa.ai/) — design tokens
+   Extracted 2026-06-16 (hybrid). Values are verbatim from source
+   CSS / rendered measurements. Do not invent new values.
+   Font src URLs are absolute (exa.ai) so this sheet resolves
+   when opened from file:// or any origin.
+   ============================================================ */
+
+/* ---------- Fonts (self-hosted woff2 on exa.ai) ---------- */
+/* ABC Diatype — sans / body / UI */
+@font-face{font-family:ABCDiatype;font-weight:300;src:url(https://exa.ai/fonts/ABCDiatype-Light.woff2) format("woff2");font-display:swap}
+@font-face{font-family:ABCDiatype;font-weight:400;src:url(https://exa.ai/fonts/ABCDiatype-Regular.woff2) format("woff2");font-display:swap}
+@font-face{font-family:ABCDiatype;font-weight:500;src:url(https://exa.ai/fonts/ABCDiatype-Medium.woff2) format("woff2");font-display:swap}
+@font-face{font-family:ABCDiatype;font-weight:700;src:url(https://exa.ai/fonts/ABCDiatype-Bold.woff2) format("woff2");font-display:swap}
+
+/* ABC Arizona Flare — serif display (family name "Arizona") */
+@font-face{font-family:Arizona;font-weight:300;font-style:normal;src:url(https://exa.ai/fonts/ABCArizonaFlare-Light.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Arizona;font-weight:400;font-style:normal;src:url(https://exa.ai/fonts/ABCArizonaFlare-Regular.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Arizona;font-weight:500;font-style:normal;src:url(https://exa.ai/fonts/ABCArizonaFlare-Medium.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Arizona;font-weight:700;font-style:normal;src:url(https://exa.ai/fonts/ABCArizonaFlare-Bold.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Arizona;font-weight:400;font-style:italic;src:url(https://exa.ai/fonts/ABCArizonaFlare-RegularItalic.woff2) format("woff2");font-display:swap}
+
+/* Suisse Intl Mono — mono labels / code */
+@font-face{font-family:SuisseIntlMono;font-weight:400;src:url(https://exa.ai/fonts/SuisseIntlMono-Regular-WebTrial.woff2) format("woff2");font-display:swap}
+@font-face{font-family:SuisseIntlMono;font-weight:700;src:url(https://exa.ai/fonts/SuisseIntlMono-Bold-WebTrial.woff2) format("woff2");font-display:swap}
+
+/* Iowan (Bitstream Iowan Old Style) — example-card titles */
+@font-face{font-family:Iowan;font-weight:400;font-style:normal;src:url(https://exa.ai/fonts/bitstream-iowan-old-style-bt.ttf) format("truetype");font-display:swap}
+@font-face{font-family:Iowan;font-weight:700;font-style:normal;src:url(https://exa.ai/fonts/bitstream-iowan-old-style-bold-bt.ttf) format("truetype");font-display:swap}
+
+/* ---------- Tokens (verbatim from /_next/static/css/526eb32230f31761.css :root) ---------- */
+:root {
+  /* Brand */
+  --brand-default: #1f40ed;        --brand-default-rgb: 31,64,237;
+  --brand-fainter: #e7ebfd;        --brand-faint: #c6cfff;
+  --brand-subtle: #a1aff7;         --brand-muted: #4d87e7;
+  --brand-dark: #0d2189;           --brand-darker: #000a40;
+  --light-shojin-blue: #2043f9;    --orchid: #788ff6;
+
+  /* Neutrals — warm "cream/greige" set */
+  --cream: #faf9f7;                --cream-darker: #f0ece8;
+  --greige-lightest: #c2bfbb;      --greige-light: #787572;
+  --greige: #58544e;               --winter-park: #96948d;
+  --charcoal: #111111;             --carbon: #333;
+  --thamar-black: #191919;         --raven: #0c0c09;
+  --pearl-necklace: #fbf7ec;       --paper-white: #f0f0f4;
+
+  /* Gray ramp (Tailwind neutral) */
+  --gray-50:#fafafa; --gray-100:#f5f5f5; --gray-200:#e5e5e5; --gray-300:#d4d4d4;
+  --gray-400:#a3a3a3; --gray-500:#737373; --gray-600:#525252; --gray-700:#404040;
+  --gray-800:#262626; --gray-900:#171717; --gray-950:#0a0a0a;
+  --black:#000000; --white:#ffffff; --white-rgb:255,255,255; --dark-gray-rgb:64,64,64;
+
+  /* Secondary surfaces */
+  --secondary-default: white;      --secondary-faint: #fafafa;   --secondary-fainter: #fcfcfc;
+  --secondary-dark: #f5f5f5;       --secondary-darker: #efefef;  --secondary-darkest: #e5e5e5;
+  --secondary-accent: #d4d4d4;     --secondary-accent2x: #a3a3a3;
+
+  /* Text roles */
+  --text-light-default: #111827;   --text-light-muted: #787572;  --text-light-subtle: #9ca3af;
+  --text-light-faint: #e5e7eb;     --text-light-link: #1f40ed;
+  --text-dark-default: #e5e7eb;    --text-dark-muted: #d1d5db;   --text-dark-subtle: #9ca3af;
+  --text-dark-faint: #6b7280;      --text-dark-link: #a1aff7;
+
+  /* Accent pairs (badges/chips) — light & dark variants */
+  --accent-yellow-light:#fef3c7; --accent-yellow-dark:#92400e;
+  --accent-skyblue-light:#dbeafe; --accent-skyblue-dark:#1e40af;
+  --accent-green:#50b40a; --accent-red:#d32f2f;
+  --accent-darkgreen-dark:#065f46; --accent-darkgreen-light:#d1fae5;
+  --accent-purple-dark:#5b21b6; --accent-purple-light:#ede9fe;
+  --accent-pink-dark:#9d174d; --accent-pink-light:#fce7f3;
+  --accent-maroon-dark:#991b1b; --accent-maroon-light:#fee2e2;
+  --dark-accent-skyblue-dark:#243876; --dark-accent-skyblue-light:#a5cafd;
+  --dark-accent-maroon-dark:#771d1d; --dark-accent-maroon-light:#f8b4b3;
+  --dark-accent-green-dark:#014737; --dark-accent-green-light:#77d1ae;
+  --dark-accent-yellow-dark:#623112; --dark-accent-yellow-light:#faca16;
+  --dark-accent-purple-dark:#4a1d96; --dark-accent-purple-light:#bfb1f4;
+  --dark-accent-pink-dark:#751a3d; --dark-accent-pink-light:#f8b4d9;
+  --gold:#89661a; --blood-burst:#ff4b4b; --pouty-purple:#e9d9f8;
+  --pauper:#343447; --virtual-violet:#675181; --burnished-metal:#c9c9c8;
+  --lucky-grey:#777777; --cerebral-grey:#cccccc; --blog-cards-hover:#f2f0e9;
+
+  /* Semantic aliases */
+  --background: var(--secondary-default);
+  --accent: var(--brand-default);
+  --accent-background: var(--brand-default);
+
+  /* Typography */
+  --font-family-sans: "ABCDiatype","Trebuchet MS",sans-serif;
+  --font-family-serif: "Arizona",Georgia,serif;
+  --font-family-monospace: "SuisseIntlMono",monospace;
+
+  /* Layout containers */
+  --home-page-container: 1040px;     --features-section-container: 1040px;
+  --about-page-container: 1000px;    --careers-page-container: 1100px;
+  --pricing-page-container: 1100px;  --websets-container: 1400px;
+  --faq-page-container: 80ch;        --waitlist-form-container: 800px;
+  --blog-container: 1364px;          --blog-max-width: 740px;  --blog-container-gap: 32px;
+  --nav-height: 55px;                /* source also declares 60px; rendered = 55px */
+  --announcement-banner-height: 48px;
+  --total-header-height: var(--nav-height);
+  --privacy-page-padding: 5rem;      --api-page-padding: 50px;
+
+  /* Radii */
+  --radius: 8px;
+  --border-radius-default: 2px; --border-radius-4: 4px; --border-radius-8: 8px;
+  --border-radius-10: 10px; --border-radius-20: 20px; --border-radius-1000: 1000px;
+
+  /* Motion (observed defaults) */
+  --duration-fast: .15s;
+  --ease-standard: cubic-bezier(.4,0,.2,1);
+
+  /* Rendered-only values (not named tokens in source) */
+  --dark-section-bg: #181815;
+  --text-paragraph-muted: #6b7280;
+  --eyebrow-color: #8c8880;
+}
+
+/* ---------- Base layer (measured values only) ---------- */
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  color: var(--text-light-default);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Resources nav dropdown (shared across all pages) ---------- */
+.nav-dd{position:relative;display:inline-flex}
+.nav-dd__trigger{font-family:var(--font-family-sans);font-weight:500;font-size:16px;color:var(--text-light-default);
+  display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;cursor:pointer;
+  transition:background .15s,color .15s}
+.nav-dd__trigger .caret{font-size:9px;color:#9ca3af;margin-left:1px;transition:transform .18s var(--ease-standard)}
+.nav-dd:hover .nav-dd__trigger,.nav-dd:focus-within .nav-dd__trigger{background:rgba(0,0,0,.06)}
+.nav-dd:hover .nav-dd__trigger .caret,.nav-dd:focus-within .nav-dd__trigger .caret{transform:rotate(180deg)}
+.nav-dd__menu{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(4px);
+  min-width:308px;background:#fff;border:1px solid #ececec;border-radius:14px;
+  box-shadow:0 18px 50px rgba(17,24,39,.14);padding:8px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .16s var(--ease-standard),transform .16s var(--ease-standard),visibility .16s;z-index:80}
+.nav-dd:hover .nav-dd__menu,.nav-dd:focus-within .nav-dd__menu{opacity:1;visibility:visible;pointer-events:auto;
+  transform:translateX(-50%) translateY(9px)}
+/* invisible bridge so the cursor can travel from trigger to menu */
+.nav-dd__menu::before{content:"";position:absolute;left:0;right:0;top:-11px;height:11px}
+.nav-dd .nav-dd__menu a{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;
+  padding:10px 12px;border-radius:9px;color:var(--text-light-default);
+  transition:background .14s var(--ease-standard)}
+.nav-dd .nav-dd__menu a:hover{background:#f4f4f5}
+.nav-dd__t{font-size:15px;font-weight:600;color:var(--text-light-default);line-height:1.25}
+.nav-dd__d{font-size:12.5px;color:var(--text-paragraph-muted);line-height:1.3}
+.nav-dd .nav-dd__menu a.nav-dd__all{flex-direction:row;align-items:center;gap:6px;
+  margin-top:6px;padding-top:13px;border-top:1px solid #f0f0f0;border-radius:0 0 9px 9px;
+  color:var(--brand-default);font-weight:600;font-size:14px}

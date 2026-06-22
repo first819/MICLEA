@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing — Miclea AI</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  a{text-decoration:none;color:inherit}
+  body{overflow-x:hidden}
+  .wrap{max-width:var(--home-page-container);margin:0 auto;padding:0 24px}
+  .wrap-wide{max-width:1280px;margin:0 auto;padding:0 24px}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;
+    border-radius:var(--border-radius-4);font-family:var(--font-family-sans);
+    transition:background var(--duration-fast) var(--ease-standard),color var(--duration-fast) var(--ease-standard)}
+  .btn-dash{background:#000;color:#fff;padding:9px 16px;font-size:15px;font-weight:500;border-radius:4px}
+  .btn-dash:hover{background:#1a1a1a}
+
+  /* Nav */
+  header.nav{position:sticky;top:0;z-index:60;height:var(--nav-height);background:#fff;display:flex;
+    align-items:center;border-bottom:1px solid #f0f0f0}
+  .nav .wrap-wide{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;width:100%}
+  .nav .wrap-wide .nav-logo{justify-self:start;display:flex;align-items:center}
+  .nav .wrap-wide .nav-logo img{height:34px;width:auto;display:block}
+  .nav .wrap-wide nav.center{justify-self:center}
+  .nav .wrap-wide .nav-cta{justify-self:end}
+  nav.center{display:flex;gap:30px;align-items:center}
+  nav.center a{font-family:var(--font-family-sans);font-weight:500;font-size:16px;
+    color:var(--text-light-default);display:inline-flex;align-items:center;gap:5px;
+    padding:5px 10px;border-radius:6px;transition:background .15s,color .15s}
+  nav.center a:hover{background:rgba(0,0,0,.06)}
+  nav.center a.active{color:var(--brand-default)}
+  nav.center a .caret{font-size:9px;color:#9ca3af;margin-left:1px}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .hamburger{display:none;width:32px;height:32px;border:0;background:none;cursor:pointer;
+    align-items:center;justify-content:center}
+  .hamburger svg{width:22px;height:22px}
+
+  /* ── Pricing hero ── */
+  .pricing-hero{padding:80px 0 0;text-align:center;background:#fff}
+  .ph-eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;
+    font-family:var(--font-family-monospace);font-size:12px;letter-spacing:1.4px;
+    text-transform:uppercase;color:var(--brand-default)}
+  .ph-eyebrow span{display:block;width:14px;height:2px;background:var(--brand-default);border-radius:2px}
+  .ph-title{font-family:var(--font-family-serif);font-weight:400;
+    font-size:clamp(36px,5vw,64px);line-height:1.04;letter-spacing:-2px;
+    color:var(--text-light-default);margin:0 0 18px}
+  .ph-sub{font-size:18px;line-height:1.55;color:var(--text-paragraph-muted);
+    margin:0 auto 38px;max-width:480px}
+
+  /* Billing toggle */
+  .billing-toggle{display:inline-flex;align-items:center;background:#f5f5f5;
+    border-radius:999px;padding:4px;margin-bottom:64px}
+  .bt-opt{font-size:14px;font-weight:500;padding:8px 20px;border-radius:999px;cursor:pointer;
+    color:#6b7280;transition:background .15s,color .15s,box-shadow .15s;
+    user-select:none;display:flex;align-items:center;gap:8px}
+  .bt-opt.active{background:#fff;color:var(--text-light-default);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .bt-badge{background:#d1fae5;color:#065f46;font-size:11px;font-weight:700;
+    padding:2px 8px;border-radius:999px;letter-spacing:.3px}
+
+  /* ── Tier cards ── */
+  .pricing-cards{max-width:1280px;margin:0 auto;padding:0 24px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:center}
+
+  .pc{border-radius:20px;padding:36px;display:flex;flex-direction:column;
+    transition:transform .2s var(--ease-standard),box-shadow .2s var(--ease-standard)}
+
+  /* Outline cards (Free, Ultra) */
+  .pc-outline{background:#fff;border:1.5px solid #e9e9e6}
+  .pc-outline:hover{box-shadow:0 16px 44px rgba(17,24,39,.08);transform:translateY(-3px)}
+
+  /* Hero (Pro) card — white card with an animated glowing border */
+  /* @property enables smooth conic-gradient angle animation */
+  @property --pc-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+
+  .pro-wrap{position:relative;border-radius:20px;transform:translateY(-20px);
+    display:flex;transition:transform .2s var(--ease-standard)}
+
+  /* soft outer halo glow (traveling light) */
+  .pro-wrap::before{content:"";position:absolute;inset:-3px;border-radius:inherit;
+    background:conic-gradient(from var(--pc-angle),
+      transparent 0deg, #2043f9 40deg, #6f8bff 85deg, #aebfff 115deg,
+      transparent 160deg, transparent 360deg);
+    filter:blur(11px);opacity:.85;z-index:0;
+    animation:pc-glow-spin 4s linear infinite}
+
+  /* crisp animated gradient border ring */
+  .pro-wrap::after{content:"";position:absolute;inset:0;border-radius:inherit;
+    padding:2px;
+    background:conic-gradient(from var(--pc-angle),
+      var(--brand-faint) 0deg, #2043f9 40deg, #8aa0ff 85deg, #ffffff 115deg,
+      var(--brand-faint) 160deg, var(--brand-faint) 360deg);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    z-index:2;pointer-events:none;
+    animation:pc-glow-spin 4s linear infinite}
+
+  .pc-hero{position:relative;z-index:1;width:100%;
+    background:#fff;color:var(--text-light-default);border:none;
+    box-shadow:0 24px 64px rgba(31,64,237,.18)}
+
+  .pro-wrap:hover{transform:translateY(-24px)}
+  .pro-wrap:hover::before{opacity:1;filter:blur(14px)}
+
+  @keyframes pc-glow-spin{to{--pc-angle:360deg}}
+
+  /* Badge */
+  .pc-badge{display:inline-flex;align-items:center;gap:6px;
+    font-family:"Inter",sans-serif;font-size:12px;letter-spacing:.8px;
+    text-transform:uppercase;font-weight:700;padding:6px 12px;border-radius:999px;
+    margin-bottom:20px;width:fit-content}
+  .badge-free{background:#f5f5f5;color:#6b7280}
+  .badge-pro{background:var(--brand-fainter);color:var(--brand-default);border:1px solid var(--brand-faint)}
+  .badge-ultra{background:var(--brand-fainter);color:var(--brand-default)}
+
+  /* Tier name */
+  .pc-name{font-family:"Inter",sans-serif;font-weight:700;font-size:40px;
+    letter-spacing:-.5px;margin:0 0 6px}
+  .pc-outline .pc-name{color:var(--text-light-default)}
+  .pc-hero .pc-name{color:var(--text-light-default)}
+
+  .pc-tagline{font-size:14px;line-height:1.5;margin:0 0 28px}
+  .pc-outline .pc-tagline{color:var(--text-paragraph-muted)}
+  .pc-hero .pc-tagline{color:var(--text-paragraph-muted)}
+
+  /* Price block */
+  .pc-price{margin-bottom:28px}
+  .pc-amount{display:flex;align-items:baseline;gap:3px}
+  .pc-dollar{font-size:22px;font-weight:600;line-height:1;padding-bottom:4px}
+  .pc-num{font-size:52px;font-weight:700;line-height:1;letter-spacing:-2.5px}
+  .pc-period{font-size:14px;font-weight:400;margin-left:2px;padding-bottom:4px}
+  .pc-outline .pc-dollar,.pc-outline .pc-num{color:var(--text-light-default)}
+  .pc-outline .pc-period{color:#9ca3af}
+  .pc-hero .pc-dollar,.pc-hero .pc-num{color:var(--brand-default)}
+  .pc-hero .pc-period{color:#9ca3af}
+  .pc-billing-note{font-size:13px;margin-top:6px}
+  .pc-outline .pc-billing-note{color:#9ca3af}
+  .pc-hero .pc-billing-note{color:#9ca3af}
+
+  /* CTA button */
+  .pc-cta{display:flex;align-items:center;justify-content:center;width:100%;
+    padding:13px 24px;border-radius:10px;font-family:var(--font-family-sans);font-size:15px;
+    font-weight:600;cursor:pointer;border:0;margin-bottom:28px;
+    transition:background .15s,transform .1s,box-shadow .15s;text-align:center}
+  .pc-cta:active{transform:scale(.98)}
+  .cta-free{background:transparent;color:var(--text-light-default);
+    border:1.5px solid #e0e0e0}
+  .cta-free:hover{background:#f9f9f9}
+  .cta-pro{background:var(--brand-default);color:#fff}
+  .cta-pro:hover{background:var(--light-shojin-blue);box-shadow:0 4px 14px rgba(31,64,237,.35)}
+  .cta-ultra{background:var(--brand-default);color:#fff}
+  .cta-ultra:hover{background:var(--light-shojin-blue)}
+
+  /* Divider */
+  .pc-divider{height:1px;margin-bottom:24px}
+  .pc-outline .pc-divider{background:#f0f0f0}
+  .pc-hero .pc-divider{background:#e9e9e6}
+
+  /* Feature list */
+  .pc-features{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;flex:1}
+  .pc-features li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.4}
+  .pc-outline .pc-features li{color:var(--text-light-default)}
+  .pc-hero .pc-features li{color:var(--text-light-default)}
+
+  .fi{flex:0 0 18px;height:18px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .fi svg{display:block}
+
+  .fi-check svg{width:15px;height:15px}
+  .pc-outline .fi-check svg{color:var(--brand-default)}
+  .pc-hero .fi-check svg{color:var(--brand-default)}
+
+  .fi-lock{opacity:.38}
+  .fi-lock svg{width:13px;height:13px}
+  .pc-outline .fi-lock svg{color:#9ca3af}
+  .locked-text{opacity:.42}
+
+  /* ROI note (Ultra only) */
+  .pc-roi{margin-top:18px;font-size:12.5px;line-height:1.55;padding:13px 15px;border-radius:10px;
+    background:var(--brand-fainter);color:var(--brand-dark);border:1px solid var(--brand-faint)}
+  .pc-roi strong{color:var(--brand-dark)}
+
+  /* ── Feature comparison table ── */
+  .compare-section{max-width:var(--pricing-page-container);margin:96px auto 0;padding:0 24px}
+  .compare-heading{font-family:var(--font-family-serif);font-weight:400;
+    font-size:clamp(28px,3.5vw,42px);letter-spacing:-1px;text-align:center;margin-bottom:56px}
+  .compare-table{width:100%;border-collapse:collapse}
+  .compare-table th,.compare-table td{padding:14px 16px;text-align:left;font-size:14px}
+  .compare-table thead th{font-size:12px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.6px;color:#9ca3af;border-bottom:2px solid #f0f0f0;padding-bottom:14px}
+  .compare-table thead th:first-child{width:44%;color:var(--text-light-default);
+    font-size:14px;text-transform:none;letter-spacing:0}
+  .compare-table thead th:not(:first-child){text-align:center}
+  .compare-table thead th.col-pro{color:var(--brand-default)}
+  .compare-table tbody tr{border-bottom:1px solid #f7f7f7}
+  .compare-table tbody tr:hover{background:#fafafa}
+  .compare-table tbody td{color:var(--text-light-default)}
+  .compare-table tbody td:not(:first-child){text-align:center}
+  .cat-row td{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;
+    color:#9ca3af;padding-top:30px;padding-bottom:8px;border-bottom:0 !important;background:none !important}
+  .ct-check{display:inline-flex;align-items:center;justify-content:center}
+  .ct-check svg{width:16px;height:16px;color:var(--brand-default)}
+  .ct-dash{color:#d4d4d4;font-size:18px;line-height:1;display:inline-block}
+  .ct-text{font-size:13px;color:#6b7280}
+  .ct-text.strong{color:var(--text-light-default);font-weight:500}
+
+  /* ── FAQ ── */
+  .faq-section{max-width:var(--faq-page-container);margin:96px auto 0;padding:0 24px}
+  .faq-heading{font-family:var(--font-family-serif);font-weight:400;
+    font-size:clamp(28px,3.5vw,42px);letter-spacing:-1px;text-align:center;margin-bottom:48px}
+  .faq-item{border-top:1px solid #f0f0f0}
+  .faq-item:last-child{border-bottom:1px solid #f0f0f0}
+  .faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    width:100%;padding:20px 0;cursor:pointer;font-size:16px;font-weight:500;
+    color:var(--text-light-default);background:none;border:0;text-align:left;
+    font-family:var(--font-family-sans);user-select:none;
+    transition:color .15s}
+  .faq-q:hover{color:var(--brand-default)}
+  .faq-icon{flex:0 0 22px;width:22px;height:22px;position:relative}
+  .faq-icon::before,.faq-icon::after{content:"";position:absolute;background:var(--brand-default);border-radius:2px;
+    transition:transform var(--duration-fast) var(--ease-standard),opacity var(--duration-fast) var(--ease-standard)}
+  .faq-icon::before{top:10px;left:3px;width:16px;height:2px}
+  .faq-icon::after{top:3px;left:10px;width:2px;height:16px}
+  .faq-item.open .faq-icon::after{transform:rotate(90deg);opacity:0}
+  .faq-a-wrap{overflow:hidden;max-height:0;
+    transition:max-height .3s cubic-bezier(.4,0,.2,1)}
+  .faq-a{font-size:15px;line-height:1.65;color:var(--text-paragraph-muted);
+    padding-bottom:22px;max-width:64ch;margin:0}
+  .faq-a a{color:var(--brand-default);font-weight:500}
+
+  /* ── Bottom CTA ── */
+  .cta-section{margin:96px auto;max-width:var(--pricing-page-container);padding:0 24px}
+  .cta-box{background:linear-gradient(168deg,#0d2189 0%,#1f40ed 58%,#2043f9 100%);
+    border-radius:24px;padding:80px 64px;text-align:center;position:relative;overflow:hidden}
+  .cta-box::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse at 70% -20%,rgba(255,255,255,.08),transparent 60%);
+    pointer-events:none}
+  .cta-box h2{font-family:var(--font-family-serif);font-weight:400;
+    font-size:clamp(32px,4vw,52px);letter-spacing:-1.5px;color:#fff;
+    margin:0 0 16px;line-height:1.06}
+  .cta-box p{font-size:17px;color:#c6cfff;margin:0 auto 36px;
+    max-width:440px;line-height:1.55}
+  .cta-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+  .cta-white{background:#fff;color:var(--brand-dark);padding:13px 28px;border-radius:10px;
+    font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;
+    transition:background .15s,box-shadow .15s}
+  .cta-white:hover{background:#f0f4ff;box-shadow:0 0 0 4px rgba(255,255,255,.18)}
+  .cta-ghost{background:rgba(255,255,255,.1);color:#fff;padding:13px 28px;border-radius:10px;
+    font-size:15px;font-weight:500;border:1.5px solid rgba(255,255,255,.25);
+    display:inline-flex;align-items:center;gap:8px;transition:background .15s}
+  .cta-ghost:hover{background:rgba(255,255,255,.16)}
+
+  /* ── Footer ── */
+  footer{background:#0c0c09;color:#fff;margin-top:96px}
+  .foot-top{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:32px;
+    max-width:1280px;margin:0 auto;padding:80px 24px 72px}
+  .foot-brand .name{font-weight:600;letter-spacing:1.2px;font-size:12px;
+    color:#8c8880;text-transform:uppercase}
+  .foot-brand .desc{font-size:14px;line-height:1.55;color:#9ca3af;margin:14px 0 22px;max-width:300px}
+  .foot-col h5{font-size:12px;color:#8c8880;text-transform:uppercase;letter-spacing:.6px;
+    margin:0 0 10px;font-weight:500}
+  .foot-col a{display:block;font-weight:500;font-size:15px;color:#d1d5db;padding:7px 0}
+  .foot-col a:hover{color:#fff}
+  .foot-news{max-width:300px}
+  .foot-news label{display:block;font-size:12px;color:#8c8880;text-transform:uppercase;
+    letter-spacing:.6px;margin-bottom:9px;font-weight:500}
+  .foot-news form{display:flex;gap:8px}
+  .foot-news input{flex:1;min-width:0;background:#1a1a16;border:1px solid #2a2a25;
+    border-radius:var(--border-radius-8);padding:10px 12px;font-family:var(--font-family-sans);
+    font-size:14px;color:#f0f0f4;outline:none;
+    transition:border-color var(--duration-fast) var(--ease-standard)}
+  .foot-news input::placeholder{color:#6b6b64}
+  .foot-news input:focus{border-color:var(--brand-muted)}
+  .foot-news button{flex:0 0 auto;background:var(--brand-default);color:#fff;border:0;
+    border-radius:var(--border-radius-8);padding:0 16px;font-family:var(--font-family-sans);
+    font-size:14px;font-weight:500;cursor:pointer;
+    transition:background var(--duration-fast) var(--ease-standard)}
+  .foot-news button:hover{background:var(--light-shojin-blue)}
+  .foot-social{display:flex;gap:12px;margin-top:24px}
+  .foot-social a{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;background:#1a1a16;color:#9ca3af;
+    transition:background var(--duration-fast) var(--ease-standard),color var(--duration-fast) var(--ease-standard)}
+  .foot-social a:hover{background:var(--brand-default);color:#fff}
+  .foot-social svg{width:17px;height:17px}
+  .foot-bottom{background:var(--brand-default);min-height:60px;display:flex;align-items:center;padding:16px 0}
+  .foot-bottom .wrap-wide{display:flex;justify-content:space-between;align-items:center;color:#fff;width:100%}
+  .foot-wordmark{font-family:var(--font-family-serif);font-size:22px;color:#fff;letter-spacing:.5px}
+  .foot-made{font-size:14px;color:rgba(255,255,255,.85)}
+  .foot-legal{display:flex;gap:26px;font-size:14px}
+  .foot-legal a{color:rgba(255,255,255,.85)}
+  .foot-legal a:hover{opacity:.8}
+
+  /* ── Responsive ── */
+  @media (max-width:1023px){
+    nav.center,.nav-cta{display:none}
+    .hamburger{display:flex}
+    .pricing-cards{grid-template-columns:1fr;max-width:500px;margin:0 auto}
+    .compare-section{overflow-x:auto}
+    .foot-top{grid-template-columns:1fr 1fr;gap:28px}
+    .foot-brand{grid-column:1/-1}
+  }
+  @media (max-width:680px){
+    .cta-box{padding:52px 28px}
+    .faq-section,.cta-section{margin-top:64px}
+    .foot-bottom .wrap-wide{flex-direction:column;gap:16px;text-align:center;padding:24px}
+    .foot-legal{flex-wrap:wrap;justify-content:center;gap:14px 20px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<header class="nav">
+  <div class="wrap-wide">
+    <a class="nav-logo" href="index.html" aria-label="Miclea home">
+      <img src="images/logo.png" alt="Miclea">
+    </a>
+    <nav class="center">
+      <a href="#">Products <span class="caret">&#9662;</span></a>
+      <div class="nav-dd">
+        <a class="nav-dd__trigger" href="case-studies.html">Resources <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Resources">
+          <a href="job-seekers.html" role="menuitem"><span class="nav-dd__t">Job seekers</span><span class="nav-dd__d">Land more callbacks and offers, faster</span></a>
+          <a href="bootcamps.html" role="menuitem"><span class="nav-dd__t">Bootcamps</span><span class="nav-dd__d">Lift cohort placement rates</span></a>
+          <a href="career-centers.html" role="menuitem"><span class="nav-dd__t">Career centers</span><span class="nav-dd__d">Coach more students with less staff</span></a>
+          <a href="universities.html" role="menuitem"><span class="nav-dd__t">Universities</span><span class="nav-dd__d">Raise graduate employment outcomes</span></a>
+          <a href="teams.html" role="menuitem"><span class="nav-dd__t">Teams</span><span class="nav-dd__d">Prep employees for internal moves</span></a>
+          <a class="nav-dd__all" href="case-studies.html" role="menuitem">All case studies &rarr;</a>
+        </div>
+      </div>
+      <a href="pricing.html" class="active">Pricing</a>
+      <a href="#">Blog</a>
+      <a href="#">About</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-dash" href="#">Sign in</a>
+    </div>
+    <button class="hamburger" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Pricing hero -->
+<section class="pricing-hero">
+  <h1 class="ph-title">Practice free.<br>Get hired faster.</h1>
+  <p class="ph-sub">Start for free — no credit card needed. Upgrade when you're ready to go unlimited.</p>
+
+  <!-- Billing toggle -->
+  <div class="billing-toggle" role="group" aria-label="Billing period">
+    <div class="bt-opt" id="btn-monthly" onclick="setBilling('monthly')">Monthly</div>
+    <div class="bt-opt active" id="btn-annual" onclick="setBilling('annual')">Annual <span class="bt-badge">Save 20%</span></div>
+  </div>
+</section>
+
+<!-- Tier cards -->
+<div class="pricing-cards">
+
+  <!-- Free -->
+  <div class="pc pc-outline">
+    <div class="pc-badge badge-free">Free</div>
+    <div class="pc-name">Free</div>
+    <p class="pc-tagline">Try it once. Feel the difference.</p>
+    <div class="pc-price">
+      <div class="pc-amount">
+        <span class="pc-dollar">$</span>
+        <span class="pc-num">0</span>
+        <span class="pc-period">/ month</span>
+      </div>
+      <div class="pc-billing-note">Always free</div>
+    </div>
+    <a href="#" class="pc-cta cta-free">Start free — no card needed</a>
+    <div class="pc-divider"></div>
+    <ul class="pc-features">
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>1 Speed Round session</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>1 Gauntlet Round session</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Live transcript + instant scoring</span>
+      </li>
+      <li>
+        <div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div>
+        <span class="locked-text">Progress dashboard</span>
+      </li>
+      <li>
+        <div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div>
+        <span class="locked-text">Question Bank</span>
+      </li>
+      <li>
+        <div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div>
+        <span class="locked-text">Resume &amp; Cover Letter Editor</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Pro — star of the show -->
+  <div class="pro-wrap">
+  <div class="pc pc-hero">
+    <div class="pc-badge badge-pro">&#9733; Most Popular</div>
+    <div class="pc-name">Pro</div>
+    <p class="pc-tagline">Practice without limits. Interview with confidence.</p>
+    <div class="pc-price">
+      <div class="pc-amount">
+        <span class="pc-dollar">$</span>
+        <span class="pc-num" id="pro-price">19</span>
+        <span class="pc-period">/ month</span>
+      </div>
+      <div class="pc-billing-note" id="pro-note">$230 billed annually</div>
+    </div>
+    <a href="#" class="pc-cta cta-pro">Start 7-day free trial</a>
+    <div class="pc-divider"></div>
+    <ul class="pc-features">
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Unlimited Speed &amp; Gauntlet Rounds</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Full progress dashboard &amp; history</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Question Bank — all roles &amp; difficulty levels</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Resume Editor + AI rewrites</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Cover Letter Editor + AI generation</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Week-over-week improvement tips</span>
+      </li>
+    </ul>
+  </div>
+  </div>
+
+  <!-- Ultra -->
+  <div class="pc pc-outline">
+    <div class="pc-badge badge-ultra">Best ROI</div>
+    <div class="pc-name">Ultra</div>
+    <p class="pc-tagline">Get the job. Negotiate the offer. Keep the edge.</p>
+    <div class="pc-price">
+      <div class="pc-amount">
+        <span class="pc-dollar">$</span>
+        <span class="pc-num" id="ultra-price">39</span>
+        <span class="pc-period">/ month</span>
+      </div>
+      <div class="pc-billing-note" id="ultra-note">$470 billed annually</div>
+    </div>
+    <a href="#" class="pc-cta cta-ultra">Start 7-day free trial</a>
+    <div class="pc-divider"></div>
+    <ul class="pc-features">
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Everything in Pro</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span><strong>Salary Negotiation Mode</strong> — AI plays the hiring manager</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span><strong>Company Packs</strong> — Amazon, Google, Goldman, Meta &amp; more</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Advanced analytics &amp; session replay</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Priority AI — faster responses at peak hours</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Early access to new features</span>
+      </li>
+    </ul>
+    <div class="pc-roi">
+      The average negotiated offer adds <strong>$5,000–$20,000</strong> in base salary. Ultra pays for itself in the first conversation.
+    </div>
+  </div>
+
+</div><!-- /pricing-cards -->
+
+<!-- Feature comparison table -->
+<section class="compare-section">
+  <h2 class="compare-heading">Everything, compared</h2>
+  <table class="compare-table" aria-label="Feature comparison across tiers">
+    <thead>
+      <tr>
+        <th scope="col">Feature</th>
+        <th scope="col">Free</th>
+        <th scope="col" class="col-pro">Pro</th>
+        <th scope="col">Ultra</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="cat-row"><td colspan="4">Practice Modes</td></tr>
+      <tr>
+        <td>Speed Round</td>
+        <td><span class="ct-text">1 session</span></td>
+        <td><span class="ct-text strong">Unlimited</span></td>
+        <td><span class="ct-text strong">Unlimited</span></td>
+      </tr>
+      <tr>
+        <td>Gauntlet Round</td>
+        <td><span class="ct-text">1 session</span></td>
+        <td><span class="ct-text strong">Unlimited</span></td>
+        <td><span class="ct-text strong">Unlimited</span></td>
+      </tr>
+      <tr>
+        <td>Salary Negotiation Mode</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+      <tr>
+        <td>Company-Specific Packs (Amazon, Google, Goldman &amp; more)</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+
+      <tr class="cat-row"><td colspan="4">Feedback &amp; Scoring</td></tr>
+      <tr>
+        <td>Live transcript</td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+      <tr>
+        <td>Per-answer scoring — Clarity, Structure, Confidence, Relevance</td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+      <tr>
+        <td>Progress dashboard &amp; history</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+      <tr>
+        <td>Week-over-week improvement tips</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+      <tr>
+        <td>Advanced analytics &amp; session replay</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+
+      <tr class="cat-row"><td colspan="4">Content &amp; Resources</td></tr>
+      <tr>
+        <td>Question Bank</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><span class="ct-text strong">Full access</span></td>
+        <td><span class="ct-text strong">Full access</span></td>
+      </tr>
+      <tr>
+        <td>Resume Editor + AI</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+      <tr>
+        <td>Cover Letter Editor + AI</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+
+      <tr class="cat-row"><td colspan="4">Platform</td></tr>
+      <tr>
+        <td>Priority AI (faster responses)</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+      <tr>
+        <td>Early access to new features</td>
+        <td><span class="ct-dash">—</span></td>
+        <td><span class="ct-dash">—</span></td>
+        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+      </tr>
+
+    </tbody>
+  </table>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <h2 class="faq-heading">Common questions</h2>
+
+  <div class="faq-item">
+    <button class="faq-q" aria-expanded="false">
+      Can I cancel anytime?
+      <div class="faq-icon"></div>
+    </button>
+    <div class="faq-a-wrap"><p class="faq-a">Yes — cancel any time from your account settings. You keep full access through the end of your current billing period, then you're downgraded to Free with no charge.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" aria-expanded="false">
+      What happens after my 7-day free trial?
+      <div class="faq-icon"></div>
+    </button>
+    <div class="faq-a-wrap"><p class="faq-a">After the trial ends you're charged the rate for your chosen plan. We'll send a reminder email 24 hours before it starts. Cancel before then and you won't be charged at all.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" aria-expanded="false">
+      Is the Free plan really free forever?
+      <div class="faq-icon"></div>
+    </button>
+    <div class="faq-a-wrap"><p class="faq-a">Yes. The Free plan gives you one Speed Round and one Gauntlet session — no credit card, no time limit, no catch. When you want to practice more, upgrading takes about 30 seconds.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" aria-expanded="false">
+      What's in a Company Pack?
+      <div class="faq-icon"></div>
+    </button>
+    <div class="faq-a-wrap"><p class="faq-a">Each Company Pack is a curated set of real questions specific to that company's interview process — Amazon's Leadership Principles, Google behavioral rounds, Goldman Sachs finance cases, and more. Packs are updated regularly as hiring patterns shift.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" aria-expanded="false">
+      Do you offer student or team pricing?
+      <div class="faq-icon"></div>
+    </button>
+    <div class="faq-a-wrap"><p class="faq-a">Yes — we offer discounted plans for students and volume pricing for career centers, bootcamps, and recruiting teams. <a href="#">Get in touch</a> and we'll set you up.</p></div>
+  </div>
+
+</section>
+
+<script>
+  (function(){
+    var items = document.querySelectorAll('.faq-section .faq-item');
+    items.forEach(function(item){
+      var btn = item.querySelector('.faq-q');
+      var panel = item.querySelector('.faq-a-wrap');
+      btn.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        items.forEach(function(other){
+          other.classList.remove('open');
+          other.querySelector('.faq-q').setAttribute('aria-expanded','false');
+          other.querySelector('.faq-a-wrap').style.maxHeight = null;
+        });
+        if(!isOpen){
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded','true');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        }
+      });
+    });
+  })();
+</script>
+
+<!-- Bottom CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <h2>Still on the fence?<br>Start free — no card needed.</h2>
+    <p>Two minutes from now you could have your first score. Try it, then decide.</p>
+    <div class="cta-btns">
+      <a href="#" class="cta-white">Start free trial</a>
+      <a href="index.html" class="cta-ghost">See how it works</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <div class="name">Miclea AI</div>
+      <p class="desc">Your AI interview coach. Practice real questions out loud, get scored instantly, and walk in already warmed up.</p>
+      <div class="foot-news">
+        <label for="foot-email">Get interview tips</label>
+        <form onsubmit="return false">
+          <input id="foot-email" type="email" placeholder="you@email.com" aria-label="Email address">
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+      <div class="foot-social">
+        <a href="#" aria-label="Miclea on X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="#" aria-label="Miclea on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+        </a>
+        <a href="#" aria-label="Miclea on YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.08 0 12 0 12s0 3.92.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.8zM9.6 15.57V8.43L15.82 12z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="foot-col">
+      <h5>Product</h5>
+      <a href="#">How it works</a>
+      <a href="#">Practice modes</a>
+      <a href="#">Question Bank</a>
+      <a href="#">Resume Editor</a>
+      <a href="pricing.html" style="color:#fff">Pricing</a>
+    </div>
+
+    <div class="foot-col">
+      <h5>Use cases</h5>
+      <a href="job-seekers.html">Job seekers</a>
+      <a href="bootcamps.html">Bootcamps</a>
+      <a href="career-centers.html">Career centers</a>
+      <a href="universities.html">Universities</a>
+      <a href="teams.html">Teams</a>
+    </div>
+
+    <div class="foot-col">
+      <h5>Company</h5>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Careers</a>
+      <a href="#">Contact</a>
+    </div>
+
+    <div class="foot-col">
+      <h5>Support</h5>
+      <a href="#">FAQ</a>
+      <a href="#">Help center</a>
+      <a href="#">Talk to an expert</a>
+      <a href="#">Status</a>
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    <div class="wrap-wide">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span class="foot-wordmark">Miclea</span>
+        <span class="foot-made">&#169; 2026 Miclea AI, Inc. All rights reserved.</span>
+      </div>
+      <nav class="foot-legal" aria-label="Legal">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+        <a href="#">Cookies</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const prices = {
+    monthly: { pro: 24, ultra: 49, proNote: 'billed monthly', ultraNote: 'billed monthly' },
+    annual:  { pro: 19, ultra: 39, proNote: '$230 billed annually', ultraNote: '$470 billed annually' }
+  };
+
+  function setBilling(mode) {
+    const p = prices[mode];
+    document.getElementById('pro-price').textContent = p.pro;
+    document.getElementById('ultra-price').textContent = p.ultra;
+    document.getElementById('pro-note').textContent = p.proNote;
+    document.getElementById('ultra-note').textContent = p.ultraNote;
+    document.getElementById('btn-monthly').classList.toggle('active', mode === 'monthly');
+    document.getElementById('btn-annual').classList.toggle('active', mode === 'annual');
+    const url = new URL(location.href);
+    url.searchParams.set('billing', mode);
+    history.replaceState(null, '', url);
+  }
+
+  // Init from URL param (annual is default)
+  const urlBilling = new URLSearchParams(location.search).get('billing');
+  if (urlBilling === 'monthly') setBilling('monthly');
+</script>
+</body>
+</html>
