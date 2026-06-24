@@ -19,6 +19,12 @@
   var body = document.body;
   var frame = document.getElementById("featureFrame");
   var loading = document.getElementById("featureLoading");
+  var loadTimer = null;
+
+  function stopLoading() {
+    clearTimeout(loadTimer);
+    loading.classList.remove("on");
+  }
 
   function slugFromHref(href) {
     if (!href) return "";
@@ -38,7 +44,7 @@
 
   function showHome() {
     body.classList.remove("feature-active");
-    loading.classList.remove("on");
+    stopLoading();
     frame.removeAttribute("src");
     document.title = "Dashboard — Miclea";
     setActiveNav("dashboard");
@@ -47,6 +53,9 @@
   function showFeature(slug) {
     if (slugFromHref(frame.getAttribute("src") || "") !== slug) {
       loading.classList.add("on");
+      // Safety net: never spin forever if the frame fails to fire load.
+      clearTimeout(loadTimer);
+      loadTimer = setTimeout(stopLoading, 8000);
       frame.setAttribute("src", slug + "?embed=1");
     }
     body.classList.add("feature-active");
@@ -61,8 +70,9 @@
   }
 
   frame.addEventListener("load", function () {
-    if (frame.getAttribute("src")) loading.classList.remove("on");
+    if (frame.getAttribute("src")) stopLoading();
   });
+  frame.addEventListener("error", stopLoading);
 
   // Intercept core-feature + Dashboard links anywhere in the dashboard document.
   document.addEventListener("click", function (e) {
