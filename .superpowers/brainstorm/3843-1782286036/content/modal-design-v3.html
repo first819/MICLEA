@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pricing Modal v3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; background: #f0f0f0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+
+  .pm-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+  .pm-dialog { background: #fff; border-radius: 20px; width: 100%; max-width: 1040px; max-height: 92vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,.22); padding: 36px 36px 40px; }
+
+  /* Header */
+  .pm-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+  .pm-title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #111; }
+  .pm-sub { font-size: 14px; color: #6b7280; margin-top: 4px; }
+  .pm-close { width: 34px; height: 34px; border-radius: 8px; border: 1.5px solid #e5e7eb; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #6b7280; flex-shrink: 0; }
+  .pm-close svg { width: 15px; height: 15px; }
+
+  /* Billing toggle */
+  .pm-toggle-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+  .billing-toggle { display: inline-flex; align-items: center; background: #f5f5f5; border-radius: 999px; padding: 4px; }
+  .bt-opt { font-size: 13px; font-weight: 500; padding: 7px 18px; border-radius: 999px; cursor: pointer; color: #6b7280; user-select: none; display: flex; align-items: center; gap: 7px; transition: all .15s; }
+  .bt-opt.active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .bt-badge { background: #d1fae5; color: #065f46; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; }
+
+  /* Cards grid */
+  .pm-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+
+  /* Base card */
+  .pm-card {
+    border-radius: 16px; padding: 28px 24px 24px; display: flex; flex-direction: column;
+    border: 1.5px solid #e5e7eb; background: #fff; cursor: pointer;
+    position: relative; transition: border-color .2s, box-shadow .2s;
+    user-select: none;
+  }
+  .pm-card:hover { border-color: #93a4fb; }
+  .pm-card.selected { border: 2px solid #2043f9; box-shadow: 0 0 0 4px rgba(32,67,249,.08); }
+  .pm-card.current { cursor: default; opacity: .7; }
+  .pm-card.current:hover { border-color: #e5e7eb; }
+
+  /* Selection indicator */
+  .pm-sel-dot {
+    position: absolute; top: 20px; right: 20px;
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid #d1d5db; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+  .pm-card.selected .pm-sel-dot { background: #2043f9; border-color: #2043f9; }
+  .pm-sel-dot svg { width: 12px; height: 12px; color: #fff; display: none; }
+  .pm-card.selected .pm-sel-dot svg { display: block; }
+
+  /* Card content */
+  .pm-plan-name { font-size: 22px; font-weight: 700; color: #111; margin-bottom: 6px; padding-right: 28px; }
+  .pm-price { font-size: 28px; font-weight: 700; color: #111; margin-bottom: 2px; display: flex; align-items: baseline; gap: 2px; }
+  .pm-price .dollar { font-size: 18px; padding-bottom: 2px; }
+  .pm-price .period { font-size: 13px; font-weight: 400; color: #9ca3af; margin-left: 2px; }
+  .pm-card.selected .pm-price { color: #2043f9; }
+  .pm-card.selected .pm-price .dollar { color: #2043f9; }
+  .pm-billing-note { font-size: 12px; color: #9ca3af; margin-bottom: 18px; }
+  .pm-current-label { font-size: 12px; color: #9ca3af; margin-bottom: 18px; font-style: italic; }
+  .pm-divider { height: 1px; background: #f0f0f0; margin-bottom: 18px; }
+  .pm-features { list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .pm-features li { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; color: #374151; line-height: 1.4; }
+  .fi { flex: 0 0 17px; height: 17px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .fi svg { width: 14px; height: 14px; color: #2043f9; }
+  .fi-lock { opacity: .35; }
+  .fi-lock svg { width: 12px; height: 12px; color: #9ca3af; }
+  .locked-text { opacity: .42; }
+
+  /* Bottom CTA */
+  .pm-footer { display: flex; justify-content: center; }
+  .pm-cta-btn {
+    background: #2043f9; color: #fff; border: 0; border-radius: 12px;
+    padding: 15px 48px; font-size: 16px; font-weight: 600; cursor: pointer;
+    font-family: inherit; transition: background .15s, box-shadow .15s;
+    min-width: 280px; text-align: center;
+  }
+  .pm-cta-btn:hover { background: #1a35d4; box-shadow: 0 4px 16px rgba(32,67,249,.3); }
+</style>
+</head>
+<body>
+
+<div class="pm-backdrop">
+  <div class="pm-dialog">
+
+    <div class="pm-header">
+      <div>
+        <div class="pm-title">Unlock your full potential</div>
+        <div class="pm-sub">Pick the plan that matches your ambition. Cancel anytime.</div>
+      </div>
+      <button class="pm-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="pm-toggle-wrap">
+      <div class="billing-toggle">
+        <div class="bt-opt" onclick="setBilling('monthly',this)">Monthly</div>
+        <div class="bt-opt active" onclick="setBilling('annual',this)">Annual <span class="bt-badge">Save 20%</span></div>
+      </div>
+    </div>
+
+    <div class="pm-cards">
+
+      <!-- Free (current, not selectable) -->
+      <div class="pm-card current" id="card-free">
+        <div class="pm-sel-dot">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+        </div>
+        <div class="pm-plan-name">Free</div>
+        <div class="pm-price"><span class="dollar">$</span>0<span class="period">/ month</span></div>
+        <div class="pm-current-label">Your current plan</div>
+        <div class="pm-divider"></div>
+        <ul class="pm-features">
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>1 Speed Round session</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>1 Gauntlet Round session</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Live transcript + instant scoring</span></li>
+          <li><div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="locked-text">Progress dashboard</span></li>
+          <li><div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="locked-text">Question Bank</span></li>
+          <li><div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="locked-text">Resume &amp; Cover Letter Editor</span></li>
+        </ul>
+      </div>
+
+      <!-- Ultra (pre-selected) -->
+      <div class="pm-card selected" id="card-ultra" onclick="selectPlan('ultra','Get Ultra')">
+        <div class="pm-sel-dot">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+        </div>
+        <div class="pm-plan-name">Ultra</div>
+        <div class="pm-price"><span class="dollar">$</span><span id="ultra-price">23</span><span class="period">/ month</span></div>
+        <div class="pm-billing-note" id="ultra-note">$278 billed annually</div>
+        <div class="pm-divider"></div>
+        <ul class="pm-features">
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>Unlimited</strong> Speed &amp; Gauntlet Rounds</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Full Question Bank — all roles &amp; senior</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>Company Packs</strong> — Amazon, Google, Goldman, Meta</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Unlimited Resume &amp; Cover Letter AI rewrites</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Advanced analytics &amp; session replay</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Priority AI — faster responses at peak hours</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Early access to new features</span></li>
+        </ul>
+      </div>
+
+      <!-- Pro -->
+      <div class="pm-card" id="card-pro" onclick="selectPlan('pro','Choose Pro')">
+        <div class="pm-sel-dot">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+        </div>
+        <div class="pm-plan-name">Pro</div>
+        <div class="pm-price"><span class="dollar">$</span><span id="pro-price">15</span><span class="period">/ month</span></div>
+        <div class="pm-billing-note" id="pro-note">$182 billed annually</div>
+        <div class="pm-divider"></div>
+        <ul class="pm-features">
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>50</strong> Speed &amp; Gauntlet Rounds / month</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Full progress dashboard &amp; history</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Question Bank — core roles &amp; standard difficulty</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Resume Editor — 10 AI rewrites / month</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Cover Letter Editor — 10 AI generations / month</span></li>
+          <li><div class="fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Week-over-week improvement tips</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Single bottom CTA -->
+    <div class="pm-footer">
+      <button class="pm-cta-btn" id="pm-cta">Get Ultra</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function selectPlan(plan, label) {
+    document.querySelectorAll('.pm-card:not(.current)').forEach(c => c.classList.remove('selected'));
+    document.getElementById('card-' + plan).classList.add('selected');
+    document.getElementById('pm-cta').textContent = label;
+  }
+
+  function setBilling(mode, el) {
+    document.querySelectorAll('.bt-opt').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    const annual = mode === 'annual';
+    document.getElementById('ultra-price').textContent = annual ? '23' : '29';
+    document.getElementById('ultra-note').textContent = annual ? '$278 billed annually' : 'Billed monthly';
+    document.getElementById('pro-price').textContent = annual ? '15' : '19';
+    document.getElementById('pro-note').textContent = annual ? '$182 billed annually' : 'Billed monthly';
+  }
+</script>
+</body>
+</html>

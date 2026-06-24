@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pricing Modal Design v2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; background: #f0f0f0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+
+  .pm-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px); display: flex; align-items: center;
+    justify-content: center; padding: 20px; z-index: 1000;
+  }
+  .pm-dialog {
+    background: #fff; border-radius: 20px; width: 100%; max-width: 1060px;
+    max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,.22);
+    padding: 40px 36px 48px;
+  }
+  .pm-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .pm-title { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: #111; }
+  .pm-sub { font-size: 15px; color: #6b7280; margin-top: 4px; margin-bottom: 28px; }
+  .pm-close {
+    width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid #e5e7eb;
+    background: #fff; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; margin-top: -4px; color: #6b7280;
+  }
+  .pm-close svg { width: 16px; height: 16px; }
+
+  .pm-toggle-wrap { display: flex; justify-content: center; margin-bottom: 36px; }
+  .billing-toggle { display: inline-flex; align-items: center; background: #f5f5f5; border-radius: 999px; padding: 4px; }
+  .bt-opt { font-size: 14px; font-weight: 500; padding: 7px 18px; border-radius: 999px; cursor: pointer; color: #6b7280; user-select: none; display: flex; align-items: center; gap: 8px; }
+  .bt-opt.active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .bt-badge { background: #d1fae5; color: #065f46; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px; }
+
+  .pm-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: center; }
+
+  .pc { border-radius: 18px; padding: 32px; display: flex; flex-direction: column; }
+  .pc-outline { background: #fff; border: 1.5px solid #e9e9e6; }
+
+  @property --pc-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+  .pro-wrap { position: relative; border-radius: 18px; transform: translateY(-16px); }
+  .pro-wrap::before {
+    content: ""; position: absolute; inset: -3px; border-radius: inherit;
+    background: conic-gradient(from var(--pc-angle), transparent 0deg, #2043f9 40deg, #6f8bff 85deg, #aebfff 115deg, transparent 160deg, transparent 360deg);
+    filter: blur(10px); opacity: .85; z-index: 0; animation: pc-glow-spin 4s linear infinite;
+  }
+  .pro-wrap::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 2px;
+    background: conic-gradient(from var(--pc-angle), #e8eeff 0deg, #2043f9 40deg, #8aa0ff 85deg, #ffffff 115deg, #e8eeff 160deg, #e8eeff 360deg);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    z-index: 2; pointer-events: none; animation: pc-glow-spin 4s linear infinite;
+  }
+  @keyframes pc-glow-spin { to { --pc-angle: 360deg; } }
+  .pc-hero { position: relative; z-index: 1; width: 100%; background: #fff; border: none; box-shadow: 0 20px 56px rgba(31,64,237,.15); }
+
+  .pc-badge { display: inline-flex; align-items: center; font-size: 11px; letter-spacing: .8px; text-transform: uppercase; font-weight: 700; padding: 5px 11px; border-radius: 999px; margin-bottom: 16px; width: fit-content; }
+  .badge-free { background: #f5f5f5; color: #6b7280; }
+  .badge-popular { background: #fee2e2; color: #dc2626; }
+
+  .pc-name { font-size: 42px; font-weight: 700; letter-spacing: -.5px; margin-bottom: 4px; color: #111; }
+  .pc-tagline { font-size: 13px; color: #6b7280; margin-bottom: 22px; line-height: 1.5; }
+
+  .pc-amount { display: flex; align-items: baseline; gap: 2px; }
+  .pc-dollar { font-size: 20px; font-weight: 600; padding-bottom: 3px; color: #111; }
+  .pc-num { font-size: 44px; font-weight: 700; letter-spacing: -2px; color: #111; }
+  .pc-hero .pc-dollar, .pc-hero .pc-num { color: #2043f9; }
+  .pc-period { font-size: 13px; color: #9ca3af; margin-left: 2px; padding-bottom: 3px; }
+  .pc-billing-note { font-size: 12px; color: #9ca3af; margin-top: 5px; margin-bottom: 22px; }
+
+  .pc-cta { display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px 20px; border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; border: 0; margin-bottom: 22px; }
+  .cta-current { background: #f5f5f5; color: #9ca3af; cursor: default; }
+  .cta-paid { background: #2043f9; color: #fff; }
+
+  .pc-divider { height: 1px; background: #f0f0f0; margin-bottom: 20px; }
+  .pc-features { list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .pc-features li { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.4; color: #374151; }
+  .fi { flex: 0 0 17px; height: 17px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .fi-check svg { width: 14px; height: 14px; color: #2043f9; }
+  .fi-lock { opacity: .35; }
+  .fi-lock svg { width: 12px; height: 12px; color: #9ca3af; }
+  .locked-text { opacity: .42; }
+</style>
+</head>
+<body>
+
+<div class="pm-backdrop">
+  <div class="pm-dialog">
+
+    <div class="pm-header">
+      <div>
+        <div class="pm-title">Unlock your full potential</div>
+        <div class="pm-sub">Pick the plan that matches your ambition. Cancel anytime.</div>
+      </div>
+      <button class="pm-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="pm-toggle-wrap">
+      <div class="billing-toggle">
+        <div class="bt-opt" id="btn-monthly">Monthly</div>
+        <div class="bt-opt active" id="btn-annual">Annual <span class="bt-badge">Save 20%</span></div>
+      </div>
+    </div>
+
+    <div class="pm-cards">
+
+      <!-- Free -->
+      <div class="pc pc-outline">
+        <div class="pc-badge badge-free">Free</div>
+        <div class="pc-name">Free</div>
+        <p class="pc-tagline">You're here. A taste of what's possible — but the ceiling comes fast.</p>
+        <div class="pc-amount">
+          <span class="pc-dollar">$</span>
+          <span class="pc-num">0</span>
+          <span class="pc-period">/ month</span>
+        </div>
+        <div class="pc-billing-note">Always free</div>
+        <button class="pc-cta cta-current">Your current plan</button>
+        <div class="pc-divider"></div>
+        <ul class="pc-features">
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>1 Speed Round session</span></li>
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>1 Gauntlet Round session</span></li>
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Live transcript + instant scoring</span></li>
+          <li><div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="locked-text">Progress dashboard</span></li>
+          <li><div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="locked-text">Question Bank</span></li>
+          <li><div class="fi fi-lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="locked-text">Resume &amp; Cover Letter Editor</span></li>
+        </ul>
+      </div>
+
+      <!-- Ultra -->
+      <div class="pro-wrap">
+        <div class="pc pc-hero">
+          <div class="pc-badge badge-popular">Most Popular</div>
+          <div class="pc-name">Ultra</div>
+          <p class="pc-tagline">No limits, no excuses. The serious choice for serious candidates.</p>
+          <div class="pc-amount">
+            <span class="pc-dollar">$</span>
+            <span class="pc-num">23</span>
+            <span class="pc-period">/ month</span>
+          </div>
+          <div class="pc-billing-note">$278 billed annually</div>
+          <button class="pc-cta cta-paid">Get Ultra — start today</button>
+          <div class="pc-divider"></div>
+          <ul class="pc-features">
+            <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>Unlimited</strong> Speed &amp; Gauntlet Rounds</span></li>
+            <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Full Question Bank — all roles &amp; senior</span></li>
+            <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>Company Packs</strong> — Amazon, Google, Goldman, Meta</span></li>
+            <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Unlimited Resume &amp; Cover Letter AI rewrites</span></li>
+            <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Advanced analytics &amp; session replay</span></li>
+            <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Priority AI — faster responses at peak hours</span></li>
+            <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Early access to new features</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pro -->
+      <div class="pc pc-outline">
+        <div class="pc-name">Pro</div>
+        <p class="pc-tagline">More reps, more feedback, more signal. A real step up from free.</p>
+        <div class="pc-amount">
+          <span class="pc-dollar">$</span>
+          <span class="pc-num">15</span>
+          <span class="pc-period">/ month</span>
+        </div>
+        <div class="pc-billing-note">$182 billed annually</div>
+        <button class="pc-cta cta-paid">Choose Pro</button>
+        <div class="pc-divider"></div>
+        <ul class="pc-features">
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>50</strong> Speed &amp; Gauntlet Rounds / month</span></li>
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Full progress dashboard &amp; history</span></li>
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Question Bank — core roles &amp; standard difficulty</span></li>
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Resume Editor — 10 AI rewrites / month</span></li>
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Cover Letter Editor — 10 AI generations / month</span></li>
+          <li><div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Week-over-week improvement tips</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
