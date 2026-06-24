@@ -680,7 +680,7 @@
 <!-- ── Pricing Modal ── -->
 <div id="pricing-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
   <div class="pm-backdrop"></div>
-  <div class="pm-dialog">
+  <div class="pm-dialog" tabindex="-1">
     <div class="pm-topbar">
       <img class="pm-logo" src="images/logo.png" alt="Miclea">
       <button class="pm-close-btn" id="pm-close-btn" aria-label="Close pricing modal">
@@ -693,8 +693,8 @@
     </div>
     <div class="pm-toggle-wrap">
       <div class="pm-billing-toggle">
-        <div class="pm-bt-opt" id="pm-btn-monthly" onclick="pmSetBilling('monthly')">Monthly</div>
-        <div class="pm-bt-opt active" id="pm-btn-annual" onclick="pmSetBilling('annual')">Annual <span class="pm-bt-badge">Save 20%</span></div>
+        <div class="pm-bt-opt" id="pm-btn-monthly" role="button" tabindex="0" onclick="pmSetBilling('monthly')">Monthly</div>
+        <div class="pm-bt-opt active" id="pm-btn-annual" role="button" tabindex="0" onclick="pmSetBilling('annual')">Annual <span class="pm-bt-badge">Save 20%</span></div>
       </div>
     </div>
     <div class="pm-cards">
@@ -721,7 +721,7 @@
       </div>
 
       <!-- Ultra — pre-selected -->
-      <div class="pm-card pm-card--selected" id="pm-card-ultra" onclick="pmSelectPlan('ultra','Get Ultra')">
+      <div class="pm-card pm-card--selected" id="pm-card-ultra" role="button" tabindex="0" onclick="pmSelectPlan('ultra','Get Ultra')">
         <div class="pm-sel-dot">
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
         </div>
@@ -743,7 +743,7 @@
       </div>
 
       <!-- Pro -->
-      <div class="pm-card" id="pm-card-pro" onclick="pmSelectPlan('pro','Choose Pro')">
+      <div class="pm-card" id="pm-card-pro" role="button" tabindex="0" onclick="pmSelectPlan('pro','Choose Pro')">
         <div class="pm-sel-dot">
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
         </div>
@@ -766,7 +766,7 @@
     </div><!-- /pm-cards -->
 
     <div class="pm-footer">
-      <button class="pm-cta-btn" id="pm-cta-btn">Get Ultra</button>
+      <button class="pm-cta-btn" id="pm-cta-btn" type="button">Get Ultra</button>
     </div>
   </div><!-- /pm-dialog -->
 </div><!-- /pricing-modal -->
