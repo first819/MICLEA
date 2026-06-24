@@ -215,8 +215,38 @@
       '</header>';
   }
 
+  /* In embed mode, keep navigation to other core features inside the embed:
+     tell the parent dashboard to update its hash (which reloads this iframe). */
+  function wireEmbedLinks() {
+    var CORE = { "speed-round":1,"gauntlet":1,"progress":1,"resume":1,"cover-letter":1,"question-bank":1,"company-packs":1 };
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || a.target === "_blank") return;
+      var slug = a.getAttribute("href").split("?")[0].split("#")[0]
+        .replace(/^.*?\/\/[^/]+/, "").replace(/^\//, "").replace(/\/$/, "").replace(/\.html$/, "");
+      if (!CORE[slug]) return;
+      e.preventDefault();
+      if (window.parent !== window) window.parent.postMessage({ type: "miclea:navigate", slug: slug }, "*");
+      else location.href = slug + "?embed=1";
+    });
+  }
+
+  function isEmbed() {
+    try { return new URLSearchParams(location.search).has("embed"); }
+    catch (e) { return /[?&]embed(=|&|$)/.test(location.search); }
+  }
+
   function mount() {
     var page = document.body.getAttribute("data-page") || "";
+    if (isEmbed()) {
+      document.body.classList.add("embed");
+      seedSessions();
+      applyTheme();
+      applyLocks();
+      paintTierUI();
+      wireEmbedLinks();
+      return;
+    }
     document.body.insertAdjacentHTML("afterbegin", buildRail(page) + buildSidebar(page, document.body.getAttribute("data-search")));
     var main = document.querySelector(".main");
     if (main) main.insertAdjacentHTML("afterbegin", buildTopbar());
