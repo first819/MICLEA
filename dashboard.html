@@ -676,5 +676,99 @@
     })});
   })();
 </script>
+
+<!-- ── Pricing Modal ── -->
+<div id="pricing-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+  <div class="pm-backdrop"></div>
+  <div class="pm-dialog">
+    <div class="pm-topbar">
+      <img class="pm-logo" src="images/logo.png" alt="Miclea">
+      <button class="pm-close-btn" id="pm-close-btn" aria-label="Close pricing modal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="pm-title-block">
+      <div class="pm-modal-title" id="pm-title">Unlock your full potential</div>
+      <div class="pm-modal-sub">Pick the plan that matches your ambition. Cancel anytime.</div>
+    </div>
+    <div class="pm-toggle-wrap">
+      <div class="pm-billing-toggle">
+        <div class="pm-bt-opt" id="pm-btn-monthly" onclick="pmSetBilling('monthly')">Monthly</div>
+        <div class="pm-bt-opt active" id="pm-btn-annual" onclick="pmSetBilling('annual')">Annual <span class="pm-bt-badge">Save 20%</span></div>
+      </div>
+    </div>
+    <div class="pm-cards">
+
+      <!-- Free — current plan, not selectable -->
+      <div class="pm-card pm-card--current" id="pm-card-free">
+        <div class="pm-sel-dot">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+        </div>
+        <div class="pm-plan-name">Free</div>
+        <div class="pm-price">
+          <span class="pm-price-dollar">$</span><span class="pm-price-num">0</span><span class="pm-price-period">/ month</span>
+        </div>
+        <div class="pm-current-label">Your current plan</div>
+        <div class="pm-card-divider"></div>
+        <ul class="pm-features">
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>1 Speed Round session</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>1 Gauntlet Round session</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Live transcript + instant scoring</span></li>
+          <li><div class="pm-fi pm-fi--lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="pm-locked-text">Progress dashboard</span></li>
+          <li><div class="pm-fi pm-fi--lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="pm-locked-text">Question Bank</span></li>
+          <li><div class="pm-fi pm-fi--lock"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></div><span class="pm-locked-text">Resume &amp; Cover Letter Editor</span></li>
+        </ul>
+      </div>
+
+      <!-- Ultra — pre-selected -->
+      <div class="pm-card pm-card--selected" id="pm-card-ultra" onclick="pmSelectPlan('ultra','Get Ultra')">
+        <div class="pm-sel-dot">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+        </div>
+        <div class="pm-plan-name">Ultra</div>
+        <div class="pm-price">
+          <span class="pm-price-dollar">$</span><span class="pm-price-num" id="pm-ultra-price">23</span><span class="pm-price-period">/ month</span>
+        </div>
+        <div class="pm-billing-note" id="pm-ultra-note">$278 billed annually</div>
+        <div class="pm-card-divider"></div>
+        <ul class="pm-features">
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>Unlimited</strong> Speed &amp; Gauntlet Rounds</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Full Question Bank — all roles &amp; senior</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>Company Packs</strong> — Amazon, Google, Goldman, Meta</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Unlimited Resume &amp; Cover Letter AI rewrites</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Advanced analytics &amp; session replay</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Priority AI — faster responses at peak hours</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Early access to new features</span></li>
+        </ul>
+      </div>
+
+      <!-- Pro -->
+      <div class="pm-card" id="pm-card-pro" onclick="pmSelectPlan('pro','Choose Pro')">
+        <div class="pm-sel-dot">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+        </div>
+        <div class="pm-plan-name">Pro</div>
+        <div class="pm-price">
+          <span class="pm-price-dollar">$</span><span class="pm-price-num" id="pm-pro-price">15</span><span class="pm-price-period">/ month</span>
+        </div>
+        <div class="pm-billing-note" id="pm-pro-note">$182 billed annually</div>
+        <div class="pm-card-divider"></div>
+        <ul class="pm-features">
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span><strong>50</strong> Speed &amp; Gauntlet Rounds / month</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Full progress dashboard &amp; history</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Question Bank — core roles &amp; standard difficulty</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Resume Editor — 10 AI rewrites / month</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Cover Letter Editor — 10 AI generations / month</span></li>
+          <li><div class="pm-fi"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div><span>Week-over-week improvement tips</span></li>
+        </ul>
+      </div>
+
+    </div><!-- /pm-cards -->
+
+    <div class="pm-footer">
+      <button class="pm-cta-btn" id="pm-cta-btn">Get Ultra</button>
+    </div>
+  </div><!-- /pm-dialog -->
+</div><!-- /pricing-modal -->
 </body>
 </html>
