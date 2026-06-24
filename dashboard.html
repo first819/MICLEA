@@ -322,9 +322,11 @@
   /* ===================== Inline feature host ===================== */
   #featureFrame{display:none;width:100%;border:0;background:var(--app-bg)}
   #featureLoading{display:none}
-  body.feature-active .content{padding:0;max-width:none;position:relative}
+  body.feature-active .main{display:flex;flex-direction:column;min-height:100vh}
+  body.feature-active .main > :not(.topbar):not(.content){display:none}
+  body.feature-active .content{flex:1 1 auto;min-height:0;padding:0;max-width:none;position:relative;display:flex;flex-direction:column}
   body.feature-active .content > :not(#featureFrame):not(#featureLoading){display:none}
-  body.feature-active #featureFrame{display:block;width:100%;height:calc(100vh - 70px)}
+  body.feature-active #featureFrame{display:block;flex:1 1 auto;width:100%}
   #featureLoading.on{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;background:var(--app-bg);z-index:2}
   .fl-spinner{width:34px;height:34px;border-radius:50%;border:3px solid var(--brand-faint);border-top-color:var(--brand);animation:fl-spin .8s linear infinite}
   @keyframes fl-spin{to{transform:rotate(360deg)}}
