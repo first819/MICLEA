@@ -1,0 +1,77 @@
+<h2>Which modal layout should appear when "Upgrade plan" is clicked?</h2>
+<p class="subtitle">The dashboard sidebar currently shows the user on the "Pro" tier. Pick what tiers to show in the popup.</p>
+
+<div class="cards">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:20px;background:#f9f9f9;border-radius:8px;min-height:180px;display:flex;gap:10px;align-items:stretch">
+      <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:10px;padding:14px;background:#fff;display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px">Free</div>
+        <div style="font-size:22px;font-weight:700;color:#111">$0</div>
+        <div style="font-size:11px;color:#9ca3af;flex:1">Basic sessions</div>
+        <div style="background:#f3f4f6;border-radius:6px;padding:6px 10px;text-align:center;font-size:11px;color:#374151;font-weight:600">Current plan</div>
+      </div>
+      <div style="flex:1;border:2px solid #2043f9;border-radius:10px;padding:14px;background:#fff;display:flex;flex-direction:column;gap:6px;position:relative">
+        <div style="font-size:10px;font-weight:700;color:#2043f9;text-transform:uppercase;letter-spacing:.5px">Pro</div>
+        <div style="font-size:22px;font-weight:700;color:#111">$15<span style="font-size:12px;font-weight:400;color:#9ca3af">/mo</span></div>
+        <div style="font-size:11px;color:#9ca3af;flex:1">50 rounds, full dashboard</div>
+        <div style="background:#2043f9;border-radius:6px;padding:6px 10px;text-align:center;font-size:11px;color:#fff;font-weight:600">Upgrade</div>
+      </div>
+      <div style="flex:1;border:2px solid #2043f9;border-radius:10px;padding:14px;background:#fff;display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:10px;font-weight:700;color:#2043f9;text-transform:uppercase;letter-spacing:.5px">Ultra ⭐</div>
+        <div style="font-size:22px;font-weight:700;color:#111">$23<span style="font-size:12px;font-weight:400;color:#9ca3af">/mo</span></div>
+        <div style="font-size:11px;color:#9ca3af;flex:1">Unlimited everything</div>
+        <div style="background:#2043f9;border-radius:6px;padding:6px 10px;text-align:center;font-size:11px;color:#fff;font-weight:600">Upgrade</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — All 3 tiers</h3>
+      <p>Shows Free (current), Pro, and Ultra side-by-side — mirrors the full pricing page. Great for comparing all options at a glance.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:20px;background:#f9f9f9;border-radius:8px;min-height:180px;display:flex;gap:14px;align-items:stretch">
+      <div style="flex:1;border:1.5px solid #e0e0e0;border-radius:10px;padding:16px;background:#fff;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px">Pro</div>
+        <div style="font-size:26px;font-weight:700;color:#111">$15<span style="font-size:13px;font-weight:400;color:#9ca3af">/mo</span></div>
+        <div style="font-size:11px;color:#6b7280;flex:1">50 sessions · Full dashboard · Resume & Cover Letter</div>
+        <div style="background:#2043f9;border-radius:6px;padding:8px 10px;text-align:center;font-size:12px;color:#fff;font-weight:600">Upgrade to Pro</div>
+      </div>
+      <div style="flex:1;border:2px solid #2043f9;border-radius:10px;padding:16px;background:#fff;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 32px rgba(32,67,249,.15)">
+        <div style="font-size:10px;font-weight:700;color:#2043f9;text-transform:uppercase;letter-spacing:.5px">Ultra ⭐ Most Popular</div>
+        <div style="font-size:26px;font-weight:700;color:#2043f9">$23<span style="font-size:13px;font-weight:400;color:#9ca3af">/mo</span></div>
+        <div style="font-size:11px;color:#6b7280;flex:1">Unlimited · Company Packs · Analytics · Priority AI</div>
+        <div style="background:#2043f9;border-radius:6px;padding:8px 10px;text-align:center;font-size:12px;color:#fff;font-weight:600">Upgrade to Ultra</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Pro & Ultra only</h3>
+      <p>Skip Free (they're already using the app). Show only the two paid tiers, giving each more breathing room. Focused upgrade decision.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:20px;background:#f9f9f9;border-radius:8px;min-height:180px;display:flex;align-items:center;justify-content:center">
+      <div style="max-width:280px;border:2px solid #2043f9;border-radius:14px;padding:22px;background:#fff;box-shadow:0 8px 32px rgba(32,67,249,.15);display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;font-weight:700;color:#2043f9;text-transform:uppercase;letter-spacing:.5px">Ultra — Most Popular</div>
+        <div style="font-size:30px;font-weight:700;color:#2043f9">$23<span style="font-size:14px;font-weight:400;color:#9ca3af">/mo</span></div>
+        <div style="font-size:11px;color:#6b7280">✓ Unlimited rounds&nbsp;&nbsp;✓ Company Packs<br>✓ Resume AI&nbsp;&nbsp;✓ Priority AI&nbsp;&nbsp;✓ Analytics</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;background:#2043f9;border-radius:6px;padding:8px;text-align:center;font-size:12px;color:#fff;font-weight:600">Upgrade to Ultra</div>
+          <div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;text-align:center;font-size:12px;color:#6b7280;font-weight:500">See all plans</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Single Ultra spotlight</h3>
+      <p>Just one card pushing the top tier, with a "See all plans" link that navigates to the full pricing page. Maximum conversion focus.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">Click a card to select it, then tell me your choice in the terminal.</p>
