@@ -1,0 +1,73 @@
+<h2>Testimonials section — pick a layout direction</h2>
+<p class="subtitle">All three include faces, numbers, and case-study snippets — they differ in how they're arranged. Click the one you like (or mix-and-match in the terminal).</p>
+
+<style>
+  .tm-demo{font-family:"ABCDiatype","Trebuchet MS",sans-serif;color:#111827}
+  .tm-demo .serif{font-family:"Arizona",Georgia,serif}
+  .tm-blue{color:#1f40ed}
+  .tm-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px;text-align:left}
+  .tm-quote{font-size:12px;line-height:1.45;color:#1f2937;margin:0 0 10px}
+  .tm-person{display:flex;align-items:center;gap:8px}
+  .tm-ava{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1f40ed,#0d2189);flex:0 0 auto}
+  .tm-ava.p2{background:linear-gradient(135deg,#4d87e7,#1f40ed)}
+  .tm-ava.p3{background:linear-gradient(135deg,#0d2189,#000a40)}
+  .tm-name{font-size:11px;font-weight:600;line-height:1.2}
+  .tm-role{font-size:10px;color:#6b7280;line-height:1.2}
+  .tm-logo{margin-left:auto;font-size:9px;font-weight:700;color:#9ca3af;letter-spacing:.5px}
+  .tm-stat{font-family:"Arizona",Georgia,serif;font-size:26px;line-height:1;color:#1f40ed}
+  .tm-statlbl{font-size:9px;color:#6b7280;margin-top:3px}
+</style>
+
+<div class="cards tm-demo">
+
+  <div class="card" data-choice="grid" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f7f7f5;padding:16px">
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="flex:1;text-align:center"><div class="tm-stat">3.2×</div><div class="tm-statlbl">more callbacks</div></div>
+        <div style="flex:1;text-align:center"><div class="tm-stat">12k+</div><div class="tm-statlbl">hired</div></div>
+        <div style="flex:1;text-align:center"><div class="tm-stat">87%</div><div class="tm-statlbl">offer rate</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="tm-card"><p class="tm-quote">"Micl caught my rambling. Two weeks later I had the offer."</p><div class="tm-person"><div class="tm-ava"></div><div><div class="tm-name">Sarah K.</div><div class="tm-role">PM</div></div><span class="tm-logo">STRIPE</span></div></div>
+        <div class="tm-card"><p class="tm-quote">"The curveball round is exactly what got me at Google."</p><div class="tm-person"><div class="tm-ava p2"></div><div><div class="tm-name">David L.</div><div class="tm-role">SWE</div></div><span class="tm-logo">GOOGLE</span></div></div>
+        <div class="tm-card"><p class="tm-quote">"Went from freezing up to genuinely confident."</p><div class="tm-person"><div class="tm-ava p3"></div><div><div class="tm-name">Maya R.</div><div class="tm-role">Analyst</div></div><span class="tm-logo">GS</span></div></div>
+        <div class="tm-card"><p class="tm-quote">"Did 40 reps before my real one. Felt like #41."</p><div class="tm-person"><div class="tm-ava"></div><div><div class="tm-name">Tom W.</div><div class="tm-role">Data Sci</div></div><span class="tm-logo">NVIDIA</span></div></div>
+      </div>
+    </div>
+    <div class="card-body"><h3>A — Stat bar + card grid</h3><p>A row of big headline numbers, then a tidy 2-col grid of quote cards. Balanced, scannable.</p></div>
+  </div>
+
+  <div class="card" data-choice="feature" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f7f7f5;padding:16px">
+      <div style="display:flex;gap:10px">
+        <div style="flex:1.3;background:#0d2189;border-radius:12px;padding:14px;color:#fff;text-align:left">
+          <p style="font-family:'Arizona',serif;font-size:14px;line-height:1.35;margin:0 0 12px">"I'd bombed four final rounds. After two weeks on Miclea I landed a senior role — <span style="color:#a1aff7">and negotiated +18%.</span>"</p>
+          <div style="display:flex;align-items:center;gap:8px"><div class="tm-ava" style="background:#a1aff7"></div><div><div class="tm-name" style="color:#fff">Jordan M.</div><div class="tm-role" style="color:#a1aff7">Eng Manager · OpenAI</div></div></div>
+          <div style="display:flex;gap:14px;margin-top:14px;border-top:1px solid rgba(255,255,255,.15);padding-top:10px">
+            <div><div style="font-family:'Arizona',serif;font-size:18px">5</div><div style="font-size:8px;color:#a1aff7">rounds failed before</div></div>
+            <div><div style="font-family:'Arizona',serif;font-size:18px">+18%</div><div style="font-size:8px;color:#a1aff7">comp increase</div></div>
+          </div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+          <div class="tm-card"><p class="tm-quote">"The curveball round got me ready for Google."</p><div class="tm-person"><div class="tm-ava p2"></div><div><div class="tm-name">David L.</div></div><span class="tm-logo">GOOGLE</span></div></div>
+          <div class="tm-card"><p class="tm-quote">"From freezing up to confident in days."</p><div class="tm-person"><div class="tm-ava p3"></div><div><div class="tm-name">Maya R.</div></div><span class="tm-logo">GS</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><h3>B — Featured case study + supporting</h3><p>One big hero testimonial (a mini case study with numbers) flanked by smaller quotes. Most persuasive.</p></div>
+  </div>
+
+  <div class="card" data-choice="marquee" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f7f7f5;padding:16px">
+      <div style="text-align:center;margin-bottom:12px"><div class="tm-stat" style="font-size:30px">12,000+ hired</div><div class="tm-statlbl">across 600+ companies</div></div>
+      <div style="display:flex;gap:8px;overflow:hidden">
+        <div class="tm-card" style="flex:0 0 46%"><p class="tm-quote">"Micl caught my rambling. Offer in two weeks."</p><div class="tm-person"><div class="tm-ava"></div><div><div class="tm-name">Sarah K.</div><div class="tm-role">PM · Stripe</div></div></div></div>
+        <div class="tm-card" style="flex:0 0 46%"><p class="tm-quote">"The curveball round is exactly what got me there."</p><div class="tm-person"><div class="tm-ava p2"></div><div><div class="tm-name">David L.</div><div class="tm-role">SWE · Google</div></div></div></div>
+        <div class="tm-card" style="flex:0 0 20%;opacity:.4"></div>
+      </div>
+      <div style="text-align:center;font-size:9px;color:#9ca3af;margin-top:8px">‹ ‹ auto-scrolling row of quotes › ›</div>
+    </div>
+    <div class="card-body"><h3>C — Headline stat + scrolling wall</h3><p>One giant proof number up top, then an auto-scrolling marquee of many short quotes. Highest "volume of proof" feel.</p></div>
+  </div>
+
+</div>

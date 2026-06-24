@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "miclea-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/tmp/miclea-preview/server.py"],
+      "autoPort": true
+    }
+  ]
+}

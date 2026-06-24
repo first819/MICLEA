@@ -327,7 +327,7 @@
 
   /* Footer */
   footer{background:#fff;color:#1a1a1a}
-  .foot-top{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:32px;max-width:1280px;margin:0 auto;padding:80px 24px 72px}
+  .foot-top{display:grid;grid-template-columns:1.8fr repeat(3,1fr);gap:48px;max-width:1280px;margin:0 auto;padding:80px 24px 72px}
   .foot-brand .name{font-weight:600;letter-spacing:1.2px;font-size:12px;color:#6b7280;text-transform:uppercase}
   .foot-brand .tag{font-family:var(--font-family-serif);font-size:29px;margin-top:14px;max-width:300px;line-height:1.18;color:#0d1b3e}
   .foot-col h5{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;font-weight:500;padding:0 0 0 0}
@@ -588,24 +588,31 @@
       <img src="images/logo.png" alt="Miclea">
     </a>
     <nav class="center">
-      <a href="#">Products <span class="caret">&#9662;</span></a>
       <div class="nav-dd">
-        <a class="nav-dd__trigger" href="case-studies.html">Resources <span class="caret">&#9662;</span></a>
-        <div class="nav-dd__menu" role="menu" aria-label="Resources">
-          <a href="job-seekers.html" role="menuitem"><span class="nav-dd__t">Job seekers</span><span class="nav-dd__d">Land more callbacks and offers, faster</span></a>
-          <a href="bootcamps.html" role="menuitem"><span class="nav-dd__t">Bootcamps</span><span class="nav-dd__d">Lift cohort placement rates</span></a>
-          <a href="career-centers.html" role="menuitem"><span class="nav-dd__t">Career centers</span><span class="nav-dd__d">Coach more students with less staff</span></a>
-          <a href="universities.html" role="menuitem"><span class="nav-dd__t">Universities</span><span class="nav-dd__d">Raise graduate employment outcomes</span></a>
-          <a href="teams.html" role="menuitem"><span class="nav-dd__t">Teams</span><span class="nav-dd__d">Prep employees for internal moves</span></a>
-          <a class="nav-dd__all" href="case-studies.html" role="menuitem">All case studies &rarr;</a>
+        <a class="nav-dd__trigger" href="#how-section">Products <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Products">
+          <a href="feature-voice-coaching" role="menuitem"><span class="nav-dd__t">Voice coaching</span><span class="nav-dd__d">Realistic mock interviews, out loud</span></a>
+          <a href="feature-instant-scoring" role="menuitem"><span class="nav-dd__t">Instant scoring</span><span class="nav-dd__d">Know exactly how you came across</span></a>
+          <a href="feature-practice-questions" role="menuitem"><span class="nav-dd__t">Practice questions</span><span class="nav-dd__d">Real questions from real interviews</span></a>
         </div>
       </div>
-      <a href="pricing.html">Pricing</a>
-      <a href="#">About</a>
+      <div class="nav-dd">
+        <a class="nav-dd__trigger" href="case-studies">Resources <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Resources">
+          <a href="job-seekers" role="menuitem"><span class="nav-dd__t">Job seekers</span><span class="nav-dd__d">Land more callbacks and offers, faster</span></a>
+          <a href="bootcamps" role="menuitem"><span class="nav-dd__t">Bootcamps</span><span class="nav-dd__d">Lift cohort placement rates</span></a>
+          <a href="career-centers" role="menuitem"><span class="nav-dd__t">Career centers</span><span class="nav-dd__d">Coach more students with less staff</span></a>
+          <a href="universities" role="menuitem"><span class="nav-dd__t">Universities</span><span class="nav-dd__d">Raise graduate employment outcomes</span></a>
+          <a href="teams" role="menuitem"><span class="nav-dd__t">Teams</span><span class="nav-dd__d">Prep employees for internal moves</span></a>
+          <a class="nav-dd__all" href="case-studies" role="menuitem">All case studies &rarr;</a>
+        </div>
+      </div>
+      <a href="pricing">Pricing</a>
+      <a href="about">About</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href="#">Log in</a>
-      <a class="btn btn-navy" href="#">Get Started &#8594;</a>
+      <a class="btn btn-ghost" href="login">Log in</a>
+      <a class="btn btn-navy" href="signup">Get Started &#8594;</a>
     </div>
     <button class="hamburger" aria-label="Open menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -619,7 +626,7 @@
   <div class="hero-inner">
     <h1 class="hero-title">Practice with an AI interviewer</h1>
     <p class="hero-sub">Get interview-ready. Get hired.</p>
-    <a class="btn btn-cta" href="#">Try free practice</a>
+    <a class="btn btn-cta" href="signup">Try free practice</a>
 
   </div>
 </section>
@@ -852,7 +859,7 @@
     <!-- Bottom CTA -->
     <div class="how-cta">
       <p class="how-cta-text">Ready to hear how you actually sound in an interview?</p>
-      <a href="#" class="how-cta-btn">Try your first practice free →</a>
+      <a href="signup" class="how-cta-btn">Try your first practice free →</a>
       <p class="how-cta-micro">No credit card · Free plan · 2 minutes to your first score</p>
     </div>
   </div>
@@ -1070,7 +1077,7 @@
   </div>
 
   <div class="tm-foot">
-    <a class="link-arrow" href="case-studies.html">Read full case studies <span class="arr">&rarr;</span></a>
+    <a class="link-arrow" href="case-studies">Read full case studies <span class="arr">&rarr;</span></a>
   </div>
 </section>
 
@@ -1156,11 +1163,11 @@
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">Can teams or universities use Miclea AI?<span class="faq-icon" aria-hidden="true"></span></button>
-        <div class="faq-a"><div class="faq-a-inner">Yes. Miclea AI supports teams with single sign-on, centralized access controls, and enterprise-grade security — a good fit for bootcamps, career centers, and companies coaching candidates at scale. <a href="#">Talk to an expert</a> to set it up.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. Miclea AI supports teams with single sign-on, centralized access controls, and enterprise-grade security — a good fit for bootcamps, career centers, and companies coaching candidates at scale. <a href="contact">Talk to an expert</a> to set it up.</div></div>
       </div>
     </div>
 
-    <p class="faq-foot">Still have a question? <a href="#">Get in touch</a> — we're happy to help.</p>
+    <p class="faq-foot">Still have a question? <a href="contact">Get in touch</a> — we're happy to help.</p>
   </div>
 </section>
 
@@ -1195,8 +1202,8 @@
     <h2 class="serif">Walk in already warmed up.</h2>
     <p>Run your first rep with Miclea in two minutes and hear exactly how you sound — before it counts.</p>
     <div class="final-actions">
-      <a class="btn-final" href="#">Try your first practice free</a>
-      <a class="btn-final-ghost" href="#">Talk to our team <span class="arr">&rarr;</span></a>
+      <a class="btn-final" href="signup">Try your first practice free</a>
+      <a class="btn-final-ghost" href="contact">Talk to our team <span class="arr">&rarr;</span></a>
     </div>
     <p class="final-micro">No credit card · Free plan · 2 minutes to your first score</p>
   </div>
@@ -1227,37 +1234,28 @@
 
     <div class="foot-col">
       <h5>Product</h5>
-      <a href="#how-section">How it works</a>
-      <a href="#">Practice questions</a>
-      <a href="#">Instant scoring</a>
-      <a href="#">Voice coaching</a>
-      <a href="pricing.html">Pricing</a>
+      <a href="feature-practice-questions">Practice questions</a>
+      <a href="feature-instant-scoring">Instant scoring</a>
+      <a href="feature-voice-coaching">Voice coaching</a>
+      <a href="pricing">Pricing</a>
     </div>
 
     <div class="foot-col">
       <h5>Use cases</h5>
-      <a href="job-seekers.html">Job seekers</a>
-      <a href="bootcamps.html">Bootcamps</a>
-      <a href="career-centers.html">Career centers</a>
-      <a href="universities.html">Universities</a>
-      <a href="teams.html">Teams</a>
+      <a href="job-seekers">Job seekers</a>
+      <a href="bootcamps">Bootcamps</a>
+      <a href="career-centers">Career centers</a>
+      <a href="universities">Universities</a>
+      <a href="teams">Teams</a>
     </div>
 
     <div class="foot-col">
       <h5>Company</h5>
-      <a href="#">About</a>
-      <a href="#">Blog</a>
-      <a href="#">Careers</a>
-      <a href="#">Contact</a>
+      <a href="about">About</a>
+      <a href="contact">Contact</a>
     </div>
 
-    <div class="foot-col">
-      <h5>Support</h5>
-      <a href="#faq-section">FAQ</a>
-      <a href="#">Help center</a>
-      <a href="#">Talk to an expert</a>
-      <a href="#">Status</a>
-    </div>
+    
   </div>
 
   <div class="foot-bottom">
@@ -1266,9 +1264,9 @@
         <span class="made">© 2026 Miclea AI, Inc. All rights reserved.</span>
       </div>
       <nav class="legal" aria-label="Legal">
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="security.html">Security</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
+        <a href="security">Security</a>
       </nav>
     </div>
   </div>

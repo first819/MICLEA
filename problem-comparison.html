@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miclea — The Problem (Miclea vs. the old way)</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-family-sans);color:var(--text-light-default);background:#fff;-webkit-font-smoothing:antialiased}
+
+  .cmp{padding:104px 0;background:#fff}
+  .cmp-wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+
+  /* Section head */
+  .cmp-head{max-width:680px;margin:0 0 56px}
+  .cmp-kicker{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .cmp-kicker__dash{display:block;width:14px;height:3px;background:var(--brand-default);border-radius:2px}
+  .cmp-kicker__label{font-family:var(--font-family-monospace);font-size:12.5px;font-weight:400;letter-spacing:1.4px;
+    text-transform:uppercase;color:var(--brand-default)}
+  .cmp-head h2{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(32px,4.4vw,52px);line-height:1.06;
+    letter-spacing:-1.6px;color:var(--text-light-default)}
+  .cmp-head h2 em{font-style:italic;color:var(--brand-default)}
+  .cmp-head p{font-size:18.4px;line-height:1.5;letter-spacing:-.3px;color:var(--text-paragraph-muted);margin-top:20px;max-width:560px}
+
+  /* Comparison shell */
+  .cmp-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+
+  /* Panels */
+  .cmp-col{border-radius:16px;padding:30px 30px 14px;display:flex;flex-direction:column}
+  .cmp-col--old{background:var(--cream,#faf9f7);border:1px solid #e9e9e6}
+  .cmp-col--new{background:var(--brand-fainter,#eef2ff);border:1px solid var(--brand-faint,#c6cfff);
+    box-shadow:0 18px 50px rgba(31,64,237,.14)}
+
+  /* Panel head */
+  .cmp-col__tag{font-family:var(--font-family-monospace);font-size:11px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px}
+  .cmp-col--old .cmp-col__tag{color:var(--text-light-subtle,#9ca3af)}
+  .cmp-col--new .cmp-col__tag{color:var(--brand-default,#1f40ed)}
+  .cmp-col__title{font-family:var(--font-family-serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:-.7px;margin-bottom:22px}
+  .cmp-col--old .cmp-col__title{color:var(--greige,#58544e)}
+  .cmp-col--new .cmp-col__title{color:#111111}
+
+  /* Rows */
+  .cmp-row{display:flex;align-items:flex-start;gap:13px;padding:16px 0;flex:1}
+  .cmp-row + .cmp-row{border-top:1px solid}
+  .cmp-col--old .cmp-row + .cmp-row{border-color:#e6e2dc}
+  .cmp-col--new .cmp-row + .cmp-row{border-color:rgba(31,64,237,.14)}
+
+  .cmp-ic{flex:0 0 auto;width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .cmp-ic svg{width:12px;height:12px;display:block}
+  .cmp-col--old .cmp-ic{background:#e7e3dd;color:var(--greige-light,#787572)}
+  .cmp-col--new .cmp-ic{background:var(--brand-default,#1f40ed);color:#fff}
+
+  .cmp-row__text{font-size:15px;line-height:1.5;letter-spacing:-.2px}
+  .cmp-col--old .cmp-row__text{color:var(--greige-light,#787572)}
+  .cmp-col--new .cmp-row__text{color:#111111}
+  .cmp-row__text strong{font-weight:600}
+  .cmp-col--new .cmp-row__text strong{color:var(--brand-dark,#0d2189)}
+
+  /* Center "vs" chip */
+  .cmp-vs{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+    width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid #e9e9e6;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-family-monospace);font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-light-subtle);
+    box-shadow:0 6px 18px rgba(17,24,39,.10)}
+
+  @media(max-width:760px){
+    .cmp{padding:72px 0}
+    .cmp-grid{grid-template-columns:1fr;gap:16px}
+    .cmp-vs{position:static;transform:none;margin:2px auto;box-shadow:none}
+    .cmp-col{padding:26px 24px 10px}
+  }
+</style>
+</head>
+<body>
+
+<section class="cmp" aria-label="The problem Miclea solves: Miclea versus traditional interview prep">
+  <div class="cmp-wrap">
+
+    <div class="cmp-head">
+      <div class="cmp-kicker">
+        <span class="cmp-kicker__dash"></span>
+        <span class="cmp-kicker__label">The Problem</span>
+      </div>
+      <h2>Preparing the old way leaves you <em>guessing.</em></h2>
+      <p>Reading questions silently and hoping for the best isn't practice. Miclea turns
+         prep into real reps with feedback — so you walk in knowing, not guessing.</p>
+    </div>
+
+    <div class="cmp-grid">
+
+      <!-- OLD WAY -->
+      <div class="cmp-col cmp-col--old">
+        <div class="cmp-col__tag">The old way</div>
+        <h3 class="cmp-col__title">Prep that just hopes for the best</h3>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </span>
+          <span class="cmp-row__text">Rehearse answers silently in your head — and freeze when you say them out loud.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </span>
+          <span class="cmp-row__text">Beg a friend for an awkward mock interview that's hard to schedule.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </span>
+          <span class="cmp-row__text">Cram from generic question lists off Google with no idea what you'll face.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </span>
+          <span class="cmp-row__text">Get a vague "you did fine" — and never learn what to actually fix.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </span>
+          <span class="cmp-row__text">Walk in cold — your first real answer is your first answer of the day.</span>
+        </div>
+      </div>
+
+      <!-- WITH MICLEA -->
+      <div class="cmp-col cmp-col--new">
+        <div class="cmp-col__tag">With Miclea</div>
+        <h3 class="cmp-col__title">Reps, pressure, and real feedback</h3>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          </span>
+          <span class="cmp-row__text">Say every answer <strong>out loud to Micl</strong>, on demand, any time of day.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          </span>
+          <span class="cmp-row__text">A <strong>3-round Gauntlet</strong> that escalates and throws a real curveball.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          </span>
+          <span class="cmp-row__text">A <strong>question bank</strong> tailored to your role — plus every question you've faced.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          </span>
+          <span class="cmp-row__text"><strong>Honest scoring</strong> on clarity, confidence, and structure — with what to fix next.</span>
+        </div>
+
+        <div class="cmp-row">
+          <span class="cmp-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          </span>
+          <span class="cmp-row__text">Walk in <strong>warm</strong> — you've already done this interview before.</span>
+        </div>
+      </div>
+
+      <span class="cmp-vs" aria-hidden="true">vs</span>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

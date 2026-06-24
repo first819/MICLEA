@@ -1,0 +1,8 @@
+{"type":"server-started","port":63401,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:63401","screen_dir":"/Users/first/Downloads/MICLEA/.superpowers/brainstorm/40094-1782090789/content","state_dir":"/Users/first/Downloads/MICLEA/.superpowers/brainstorm/40094-1782090789/state"}
+{"type":"screen-added","file":"/Users/first/Downloads/MICLEA/.superpowers/brainstorm/40094-1782090789/content/nav-button-contrast.html"}
+{"source":"user-event","type":"click","text":"A\n      \n        Ghost \"Sign in\" + Solid Black \"Get Started\"\n        \n          Miclea\n          \n            ProductsPricingBlog\n          \n          \n            Sign in\n            Get Started\n          \n        \n        Low-key sign-in, black CTA — same family, clear hierarchy.","choice":"a","id":null,"timestamp":1782090890601}
+{"source":"user-event","type":"click","text":"A\n      \n        Ghost \"Sign in\" + Solid Black \"Get Started\"\n        \n          Miclea\n          \n            ProductsPricingBlog\n          \n          \n            Sign in\n            Get Started\n          \n        \n        Low-key sign-in, black CTA — same family, clear hierarchy.","choice":"a","id":null,"timestamp":1782090900915}
+{"type":"screen-added","file":"/Users/first/Downloads/MICLEA/.superpowers/brainstorm/40094-1782090789/content/waiting-1.html"}
+{"type":"screen-added","file":"/Users/first/Downloads/MICLEA/.superpowers/brainstorm/40094-1782090789/content/nav-getstarted-blue.html"}
+{"type":"screen-added","file":"/Users/first/Downloads/MICLEA/.superpowers/brainstorm/40094-1782090789/content/waiting-2.html"}
+{"type":"server-stopped","reason":"idle timeout"}

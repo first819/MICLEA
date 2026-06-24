@@ -52,7 +52,7 @@
     font-family:var(--font-family-monospace);font-size:12px;letter-spacing:1.4px;
     text-transform:uppercase;color:var(--brand-default)}
   .ph-eyebrow span{display:block;width:14px;height:2px;background:var(--brand-default);border-radius:2px}
-  .ph-title{font-family:var(--font-family-serif);font-weight:400;
+  .ph-title{font-family:"Inter",sans-serif;font-weight:700;
     font-size:clamp(36px,5vw,64px);line-height:1.04;letter-spacing:-2px;
     color:var(--text-light-default);margin:0 0 18px}
   .ph-sub{font-size:18px;line-height:1.55;color:var(--text-paragraph-muted);
@@ -75,11 +75,11 @@
   .pc{border-radius:20px;padding:36px;display:flex;flex-direction:column;
     transition:transform .2s var(--ease-standard),box-shadow .2s var(--ease-standard)}
 
-  /* Outline cards (Free, Ultra) */
+  /* Outline cards (Free, Pro) */
   .pc-outline{background:#fff;border:1.5px solid #e9e9e6}
   .pc-outline:hover{box-shadow:0 16px 44px rgba(17,24,39,.08);transform:translateY(-3px)}
 
-  /* Hero (Pro) card — white card with an animated glowing border */
+  /* Hero (Ultra) card — white card with an animated glowing border */
   /* @property enables smooth conic-gradient angle animation */
   @property --pc-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
 
@@ -120,11 +120,11 @@
     text-transform:uppercase;font-weight:700;padding:6px 12px;border-radius:999px;
     margin-bottom:20px;width:fit-content}
   .badge-free{background:#f5f5f5;color:#6b7280}
-  .badge-pro{background:var(--brand-fainter);color:var(--brand-default);border:1px solid var(--brand-faint)}
+  .badge-pro{background:#ef4444;color:#fff;border:none}
   .badge-ultra{background:var(--brand-fainter);color:var(--brand-default)}
 
   /* Tier name */
-  .pc-name{font-family:"Inter",sans-serif;font-weight:700;font-size:40px;
+  .pc-name{font-family:"Inter",sans-serif;font-weight:700;font-size:52px;
     letter-spacing:-.5px;margin:0 0 6px}
   .pc-outline .pc-name{color:var(--text-light-default)}
   .pc-hero .pc-name{color:var(--text-light-default)}
@@ -183,11 +183,6 @@
   .fi-lock svg{width:13px;height:13px}
   .pc-outline .fi-lock svg{color:#9ca3af}
   .locked-text{opacity:.42}
-
-  /* ROI note (Ultra only) */
-  .pc-roi{margin-top:18px;font-size:12.5px;line-height:1.55;padding:13px 15px;border-radius:10px;
-    background:var(--brand-fainter);color:var(--brand-dark);border:1px solid var(--brand-faint)}
-  .pc-roi strong{color:var(--brand-dark)}
 
   /* ── Feature comparison table ── */
   .compare-section{max-width:var(--pricing-page-container);margin:96px auto 0;padding:0 24px}
@@ -261,7 +256,7 @@
 
   /* ── Footer ── */
   footer{background:#fff;color:#1a1a1a}
-  .foot-top{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:32px;
+  .foot-top{display:grid;grid-template-columns:1.8fr repeat(3,1fr);gap:48px;
     max-width:1280px;margin:0 auto;padding:80px 24px 72px}
   .foot-brand .name{font-weight:600;letter-spacing:1.2px;font-size:12px;color:#6b7280;text-transform:uppercase}
   .foot-brand .desc{font-size:14px;line-height:1.55;color:#4b5563;margin:14px 0 22px;max-width:300px}
@@ -303,28 +298,35 @@
 <!-- Nav -->
 <header class="nav">
   <div class="wrap-wide">
-    <a class="nav-logo" href="index.html" aria-label="Miclea home">
+    <a class="nav-logo" href="index" aria-label="Miclea home">
       <img src="images/logo.png" alt="Miclea">
     </a>
     <nav class="center">
-      <a href="#">Products <span class="caret">&#9662;</span></a>
       <div class="nav-dd">
-        <a class="nav-dd__trigger" href="case-studies.html">Resources <span class="caret">&#9662;</span></a>
-        <div class="nav-dd__menu" role="menu" aria-label="Resources">
-          <a href="job-seekers.html" role="menuitem"><span class="nav-dd__t">Job seekers</span><span class="nav-dd__d">Land more callbacks and offers, faster</span></a>
-          <a href="bootcamps.html" role="menuitem"><span class="nav-dd__t">Bootcamps</span><span class="nav-dd__d">Lift cohort placement rates</span></a>
-          <a href="career-centers.html" role="menuitem"><span class="nav-dd__t">Career centers</span><span class="nav-dd__d">Coach more students with less staff</span></a>
-          <a href="universities.html" role="menuitem"><span class="nav-dd__t">Universities</span><span class="nav-dd__d">Raise graduate employment outcomes</span></a>
-          <a href="teams.html" role="menuitem"><span class="nav-dd__t">Teams</span><span class="nav-dd__d">Prep employees for internal moves</span></a>
-          <a class="nav-dd__all" href="case-studies.html" role="menuitem">All case studies &rarr;</a>
+        <a class="nav-dd__trigger" href="index.html#how-section">Products <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Products">
+          <a href="feature-voice-coaching" role="menuitem"><span class="nav-dd__t">Voice coaching</span><span class="nav-dd__d">Realistic mock interviews, out loud</span></a>
+          <a href="feature-instant-scoring" role="menuitem"><span class="nav-dd__t">Instant scoring</span><span class="nav-dd__d">Know exactly how you came across</span></a>
+          <a href="feature-practice-questions" role="menuitem"><span class="nav-dd__t">Practice questions</span><span class="nav-dd__d">Real questions from real interviews</span></a>
         </div>
       </div>
-      <a href="pricing.html" class="active">Pricing</a>
-      <a href="#">About</a>
+      <div class="nav-dd">
+        <a class="nav-dd__trigger" href="case-studies">Resources <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Resources">
+          <a href="job-seekers" role="menuitem"><span class="nav-dd__t">Job seekers</span><span class="nav-dd__d">Land more callbacks and offers, faster</span></a>
+          <a href="bootcamps" role="menuitem"><span class="nav-dd__t">Bootcamps</span><span class="nav-dd__d">Lift cohort placement rates</span></a>
+          <a href="career-centers" role="menuitem"><span class="nav-dd__t">Career centers</span><span class="nav-dd__d">Coach more students with less staff</span></a>
+          <a href="universities" role="menuitem"><span class="nav-dd__t">Universities</span><span class="nav-dd__d">Raise graduate employment outcomes</span></a>
+          <a href="teams" role="menuitem"><span class="nav-dd__t">Teams</span><span class="nav-dd__d">Prep employees for internal moves</span></a>
+          <a class="nav-dd__all" href="case-studies" role="menuitem">All case studies &rarr;</a>
+        </div>
+      </div>
+      <a href="pricing" class="active">Pricing</a>
+      <a href="about">About</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href="#">Log in</a>
-      <a class="btn btn-navy" href="#">Get Started &#8594;</a>
+      <a class="btn btn-ghost" href="login">Log in</a>
+      <a class="btn btn-navy" href="signup">Get Started &#8594;</a>
     </div>
     <button class="hamburger" aria-label="Open menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -360,7 +362,7 @@
       </div>
       <div class="pc-billing-note">Always free</div>
     </div>
-    <a href="#" class="pc-cta cta-free">Start free — no card needed</a>
+    <a href="signup" class="pc-cta cta-free">Start free — no card needed</a>
     <div class="pc-divider"></div>
     <ul class="pc-features">
       <li>
@@ -390,78 +392,38 @@
     </ul>
   </div>
 
-  <!-- Pro — star of the show -->
+  <!-- Ultra — star of the show -->
   <div class="pro-wrap">
   <div class="pc pc-hero">
-    <div class="pc-badge badge-pro">&#9733; Most Popular</div>
-    <div class="pc-name">Pro</div>
-    <p class="pc-tagline">Practice without limits. Interview with confidence.</p>
-    <div class="pc-price">
-      <div class="pc-amount">
-        <span class="pc-dollar">$</span>
-        <span class="pc-num" id="pro-price">19</span>
-        <span class="pc-period">/ month</span>
-      </div>
-      <div class="pc-billing-note" id="pro-note">$230 billed annually</div>
-    </div>
-    <a href="#" class="pc-cta cta-pro">Start your free trial</a>
-    <div class="pc-divider"></div>
-    <ul class="pc-features">
-      <li>
-        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span>Unlimited Speed &amp; Gauntlet Rounds</span>
-      </li>
-      <li>
-        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span>Full progress dashboard &amp; history</span>
-      </li>
-      <li>
-        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span>Question Bank — all roles &amp; difficulty levels</span>
-      </li>
-      <li>
-        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span>Resume Editor + AI rewrites</span>
-      </li>
-      <li>
-        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span>Cover Letter Editor + AI generation</span>
-      </li>
-      <li>
-        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span>Week-over-week improvement tips</span>
-      </li>
-    </ul>
-  </div>
-  </div>
-
-  <!-- Ultra -->
-  <div class="pc pc-outline">
-    <div class="pc-badge badge-ultra">Best ROI</div>
+    <div class="pc-badge badge-pro">Most Popular</div>
     <div class="pc-name">Ultra</div>
-    <p class="pc-tagline">Get the job. Negotiate the offer. Keep the edge.</p>
+    <p class="pc-tagline">Practice without limits. Walk in ready for anything.</p>
     <div class="pc-price">
       <div class="pc-amount">
         <span class="pc-dollar">$</span>
-        <span class="pc-num" id="ultra-price">39</span>
+        <span class="pc-num" id="ultra-price">23</span>
         <span class="pc-period">/ month</span>
       </div>
-      <div class="pc-billing-note" id="ultra-note">$470 billed annually</div>
+      <div class="pc-billing-note" id="ultra-note">$278 billed annually</div>
     </div>
-    <a href="#" class="pc-cta cta-ultra">Start your free trial</a>
+    <a href="signup" class="pc-cta cta-pro">Start your free trial</a>
     <div class="pc-divider"></div>
     <ul class="pc-features">
       <li>
         <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span>Everything in Pro</span>
+        <span><strong>Unlimited</strong> Speed &amp; Gauntlet Rounds</span>
       </li>
       <li>
         <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
-        <span><strong>Salary Negotiation Mode</strong> — AI plays the hiring manager</span>
+        <span>Full Question Bank — all roles, senior &amp; specialized</span>
       </li>
       <li>
         <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
         <span><strong>Company Packs</strong> — Amazon, Google, Goldman, Meta &amp; more</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Unlimited Resume &amp; Cover Letter AI rewrites</span>
       </li>
       <li>
         <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
@@ -476,9 +438,49 @@
         <span>Early access to new features</span>
       </li>
     </ul>
-    <div class="pc-roi">
-      The average negotiated offer adds <strong>$5,000–$20,000</strong> in base salary. Ultra pays for itself in the first conversation.
+  </div>
+  </div>
+
+  <!-- Pro -->
+  <div class="pc pc-outline">
+    <div class="pc-name">Pro</div>
+    <p class="pc-tagline">Everything you need to practice and prep.</p>
+    <div class="pc-price">
+      <div class="pc-amount">
+        <span class="pc-dollar">$</span>
+        <span class="pc-num" id="pro-price">15</span>
+        <span class="pc-period">/ month</span>
+      </div>
+      <div class="pc-billing-note" id="pro-note">$182 billed annually</div>
     </div>
+    <a href="signup" class="pc-cta cta-ultra">Start your free trial</a>
+    <div class="pc-divider"></div>
+    <ul class="pc-features">
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span><strong>50</strong> Speed &amp; Gauntlet Rounds / month</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Full progress dashboard &amp; history</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Question Bank — core roles &amp; standard difficulty</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Resume Editor — 10 AI rewrites / month</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Cover Letter Editor — 10 AI generations / month</span>
+      </li>
+      <li>
+        <div class="fi fi-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div>
+        <span>Week-over-week improvement tips</span>
+      </li>
+    </ul>
   </div>
 
 </div><!-- /pricing-cards -->
@@ -491,8 +493,8 @@
       <tr>
         <th scope="col">Feature</th>
         <th scope="col">Free</th>
-        <th scope="col" class="col-pro">Pro</th>
-        <th scope="col">Ultra</th>
+        <th scope="col">Pro</th>
+        <th scope="col" class="col-pro">Ultra</th>
       </tr>
     </thead>
     <tbody>
@@ -501,20 +503,14 @@
       <tr>
         <td>Speed Round</td>
         <td><span class="ct-text">1 session</span></td>
-        <td><span class="ct-text strong">Unlimited</span></td>
+        <td><span class="ct-text strong">50 / month</span></td>
         <td><span class="ct-text strong">Unlimited</span></td>
       </tr>
       <tr>
         <td>Gauntlet Round</td>
         <td><span class="ct-text">1 session</span></td>
+        <td><span class="ct-text strong">50 / month</span></td>
         <td><span class="ct-text strong">Unlimited</span></td>
-        <td><span class="ct-text strong">Unlimited</span></td>
-      </tr>
-      <tr>
-        <td>Salary Negotiation Mode</td>
-        <td><span class="ct-dash">—</span></td>
-        <td><span class="ct-dash">—</span></td>
-        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
       </tr>
       <tr>
         <td>Company-Specific Packs (Amazon, Google, Goldman &amp; more)</td>
@@ -559,20 +555,20 @@
       <tr>
         <td>Question Bank</td>
         <td><span class="ct-dash">—</span></td>
-        <td><span class="ct-text strong">Full access</span></td>
-        <td><span class="ct-text strong">Full access</span></td>
+        <td><span class="ct-text strong">Core roles</span></td>
+        <td><span class="ct-text strong">All roles + Packs</span></td>
       </tr>
       <tr>
         <td>Resume Editor + AI</td>
         <td><span class="ct-dash">—</span></td>
-        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
-        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><span class="ct-text strong">10 / month</span></td>
+        <td><span class="ct-text strong">Unlimited</span></td>
       </tr>
       <tr>
         <td>Cover Letter Editor + AI</td>
         <td><span class="ct-dash">—</span></td>
-        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
-        <td><div class="ct-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 8 6 11.5 13.5 4"/></svg></div></td>
+        <td><span class="ct-text strong">10 / month</span></td>
+        <td><span class="ct-text strong">Unlimited</span></td>
       </tr>
 
       <tr class="cat-row"><td colspan="4">Platform</td></tr>
@@ -634,7 +630,7 @@
       Do you offer student or team pricing?
       <div class="faq-icon"></div>
     </button>
-    <div class="faq-a-wrap"><p class="faq-a">Yes — we offer discounted plans for students and volume pricing for career centers, bootcamps, and recruiting teams. <a href="#">Get in touch</a> and we'll set you up.</p></div>
+    <div class="faq-a-wrap"><p class="faq-a">Yes — we offer discounted plans for students and volume pricing for career centers, bootcamps, and recruiting teams. <a href="contact">Get in touch</a> and we'll set you up.</p></div>
   </div>
 
 </section>
@@ -668,8 +664,8 @@
     <h2>Still on the fence?<br>Start free — no card needed.</h2>
     <p>Two minutes from now you could have your first score. Try it, then decide.</p>
     <div class="cta-btns">
-      <a href="#" class="cta-white">Start free trial</a>
-      <a href="index.html" class="cta-ghost">See how it works</a>
+      <a href="signup" class="cta-white">Start free trial</a>
+      <a href="index" class="cta-ghost">See how it works</a>
     </div>
   </div>
 </section>
@@ -695,44 +691,35 @@
 
     <div class="foot-col">
       <h5>Product</h5>
-      <a href="#">How it works</a>
-      <a href="#">Practice questions</a>
-      <a href="#">Instant scoring</a>
-      <a href="#">Voice coaching</a>
-      <a href="pricing.html">Pricing</a>
+      <a href="feature-practice-questions">Practice questions</a>
+      <a href="feature-instant-scoring">Instant scoring</a>
+      <a href="feature-voice-coaching">Voice coaching</a>
+      <a href="pricing">Pricing</a>
     </div>
 
     <div class="foot-col">
       <h5>Use cases</h5>
-      <a href="job-seekers.html">Job seekers</a>
-      <a href="bootcamps.html">Bootcamps</a>
-      <a href="career-centers.html">Career centers</a>
-      <a href="universities.html">Universities</a>
-      <a href="teams.html">Teams</a>
+      <a href="job-seekers">Job seekers</a>
+      <a href="bootcamps">Bootcamps</a>
+      <a href="career-centers">Career centers</a>
+      <a href="universities">Universities</a>
+      <a href="teams">Teams</a>
     </div>
 
     <div class="foot-col">
       <h5>Company</h5>
-      <a href="#">About</a>
-      <a href="#">Blog</a>
-      <a href="#">Careers</a>
-      <a href="#">Contact</a>
+      <a href="about">About</a>
+      <a href="contact">Contact</a>
     </div>
 
-    <div class="foot-col">
-      <h5>Support</h5>
-      <a href="#">FAQ</a>
-      <a href="#">Help center</a>
-      <a href="#">Talk to an expert</a>
-      <a href="#">Status</a>
-    </div>
+    
   </div>
 
   <div class="foot-bottom">
     <nav class="foot-legal" aria-label="Legal">
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="security.html">Security</a>
+      <a href="privacy">Privacy</a>
+      <a href="terms">Terms</a>
+      <a href="security">Security</a>
     </nav>
     <p class="foot-made">&#169; 2026 Miclea AI, Inc. All rights reserved.</p>
   </div>
@@ -740,8 +727,8 @@
 
 <script>
   const prices = {
-    monthly: { pro: 24, ultra: 49, proNote: 'billed monthly', ultraNote: 'billed monthly' },
-    annual:  { pro: 19, ultra: 39, proNote: '$230 billed annually', ultraNote: '$470 billed annually' }
+    monthly: { pro: 19, ultra: 29, proNote: 'billed monthly', ultraNote: 'billed monthly' },
+    annual:  { pro: 15, ultra: 23, proNote: '$182 billed annually', ultraNote: '$278 billed annually' }
   };
 
   function setBilling(mode) {

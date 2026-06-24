@@ -127,7 +127,7 @@ nav.center a .caret{font-size:9px;color:#9ca3af;margin-left:1px}
 
 /* ---------- Footer ---------- */
 footer{background:#fff;color:#1a1a1a}
-.foot-top{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:32px;max-width:1280px;margin:0 auto;padding:80px 24px 72px}
+.foot-top{display:grid;grid-template-columns:1.8fr repeat(3,1fr);gap:48px;max-width:1280px;margin:0 auto;padding:80px 24px 72px}
 .foot-brand .name{font-weight:600;letter-spacing:1.2px;font-size:12px;color:#6b7280;text-transform:uppercase}
 .foot-brand .desc{font-size:14px;line-height:1.55;color:#4b5563;margin:14px 0 22px;max-width:300px}
 .foot-col h5{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;font-weight:500}
@@ -138,12 +138,11 @@ footer{background:#fff;color:#1a1a1a}
   background:#f3f4f6;color:#4b5563;transition:background .15s,color .15s}
 .foot-social a:hover{background:var(--brand-default);color:#fff}
 .foot-social svg{width:17px;height:17px}
-.foot-bottom{background:#181815;min-height:128px;display:flex;align-items:center}
-.foot-bottom .wrap-wide{display:flex;justify-content:space-between;align-items:center;color:#fff;width:100%}
-.foot-bottom .legal{display:flex;gap:26px;font-size:14px}
-.foot-bottom .legal a:hover{opacity:.7}
-.foot-wordmark{font-family:var(--font-family-serif);font-size:22px;color:#fff;letter-spacing:.5px}
-.foot-bottom .made{font-size:14px;color:rgba(255,255,255,.85)}
+.foot-bottom{border-top:1px solid #e5e7eb;padding:32px 24px;text-align:center}
+.foot-legal{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:14px}
+.foot-legal a{color:#6b7280}
+.foot-legal a:hover{color:#111}
+.foot-made{margin-top:12px;font-size:13px;color:#9ca3af}
 
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
@@ -158,6 +157,5 @@ footer{background:#fff;color:#1a1a1a}
 @media (max-width:560px){
   .hub-grid{grid-template-columns:1fr}
   .cs-hero__metrics{gap:26px}
-  .foot-bottom .wrap-wide{flex-direction:column;gap:16px;text-align:center;padding:26px 24px}
-  .foot-bottom .legal{flex-wrap:wrap;justify-content:center;gap:14px 20px}
+  .foot-legal{gap:14px 20px}
 }

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cover Letter — Miclea</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app-shell.css">
+<style>
+  .doc-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .edits-chip{display:flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:100px;background:var(--brand-fainter);color:var(--brand);font-size:13px;font-weight:600}
+  .edits-chip svg{width:15px;height:15px}
+  .split{display:grid;grid-template-columns:0.85fr 1fr;gap:20px;align-items:start}
+  .ed{padding:20px}
+  .ed h4{font-family:var(--font-family-monospace);font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-subtle);margin:0 0 12px}
+  .inp{width:100%;border:1px solid var(--app-line);border-radius:9px;padding:11px 13px;font-size:14px;font-family:inherit;margin-bottom:12px;transition:.12s}
+  .inp:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
+  textarea.inp{resize:vertical;min-height:96px;line-height:1.5}
+  .ed-row{display:flex;gap:12px}.ed-row .inp{flex:1}
+  .body-edit{border:1px solid var(--app-line);border-radius:11px;padding:16px;font-size:14px;line-height:1.7;min-height:200px;outline:none;white-space:pre-wrap;margin-top:8px}
+  .body-edit:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
+  .body-edit:empty::before{content:"Fill in the details above and hit “Generate draft” — or write your own. Micl will help you polish it.";color:var(--ink-subtle)}
+  .pv-wrap{position:sticky;top:84px}
+  .paper{background:#fff;border:1px solid var(--app-line);border-radius:12px;box-shadow:var(--shadow);padding:44px;font-size:13.5px;line-height:1.75;color:#1f2937;max-height:78vh;overflow-y:auto;white-space:pre-wrap;font-family:var(--font-family-serif)}
+  .paper .pv-name{font-family:var(--font-family-serif);font-size:20px;color:#111;margin-bottom:2px}
+  .paper .pv-meta{font-family:var(--font-family-monospace);font-size:11px;color:var(--ink-muted);margin-bottom:22px;white-space:normal}
+  /* micl drawer (shared look) */
+  .drawer-scrim{position:fixed;inset:0;background:rgba(17,24,39,.4);opacity:0;visibility:hidden;transition:.2s;z-index:90}
+  .drawer-scrim.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:430px;max-width:92vw;background:#fbfaf8;z-index:91;transform:translateX(100%);transition:transform .28s var(--ease-standard);overflow-y:auto;box-shadow:var(--shadow-lg)}
+  .drawer.open{transform:none}
+  .drawer-head{padding:22px;background:#fff;border-bottom:1px solid var(--app-line);position:sticky;top:0;z-index:2}
+  .micl-row{display:flex;align-items:center;gap:11px;position:relative}
+  .micl-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(150deg,var(--brand),var(--brand-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-family-serif);flex:none}
+  .drawer-body{padding:18px}
+  .sugg{background:#fff;border:1px solid var(--app-line);border-radius:13px;padding:15px;margin-bottom:13px}
+  .sugg .sg-t{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:7px}.sugg .sg-t svg{width:15px;height:15px;color:var(--brand)}
+  .sugg .sg-why{font-size:12px;color:var(--ink-muted);margin-bottom:11px;line-height:1.45}
+  .sugg .sg-after{font-size:12.5px;color:#065f46;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 10px;margin-bottom:11px;line-height:1.5}
+  .sugg .sg-act{display:flex;gap:8px}.sg-act button{flex:1;border:none;border-radius:8px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .sg-accept{background:var(--brand);color:#fff}.sg-accept:hover{background:var(--brand-dark)}
+  .sg-reject{background:#fff;color:var(--ink-muted);border:1px solid var(--app-line)}
+  .sugg.done{opacity:.55}.sugg.done .sg-act{display:none}
+  .sg-status{font-size:11.5px;font-weight:700;display:none}.sugg.done .sg-status{display:block}
+  .x-btn{position:absolute;top:-2px;right:0;width:32px;height:32px;border-radius:8px;border:1px solid var(--app-line);background:#fff;display:flex;align-items:center;justify-content:center}
+  .paywall{display:none;text-align:center;padding:54px 28px}
+  body.tier-free .paywall{display:block}body.tier-free .doc-app{display:none}
+  .paywall .pw-badge{width:60px;height:60px;border-radius:16px;background:var(--brand-fainter);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+  .paywall h2{font-family:var(--font-family-serif);font-weight:400;font-size:30px;margin-bottom:10px}
+  .paywall p{color:var(--ink-muted);max-width:440px;margin:0 auto 22px;line-height:1.55}
+  @media(max-width:980px){.split{grid-template-columns:1fr}.pv-wrap{position:static}}
+</style>
+</head>
+<body data-page="cover-letter" data-search="Search your documents…">
+<div class="main">
+  <main class="content">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Document studio</span>
+        <h1 style="margin-top:8px">Cover Letter</h1>
+        <p class="sub">Drop in the role and a job description — Micl drafts a tailored letter in your voice, ready to refine.</p>
+      </div>
+    </div>
+
+    <div class="paywall card">
+      <div class="pw-badge"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></div>
+      <h2>The Cover Letter editor is a Pro feature</h2>
+      <p>Generate tailored cover letters from a job description and refine them with Micl — accept or reject every change.</p>
+      <a class="btn btn-brand btn-lg" href="pricing">See plans</a>
+    </div>
+
+    <div class="doc-app">
+      <div class="doc-bar">
+        <span class="edits-chip" id="editsChip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> <span id="editsLeft">10</span> AI edits left</span>
+        <div style="margin-left:auto;display:flex;gap:10px">
+          <button class="btn btn-soft" id="miclBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Ask Micl</button>
+          <button class="btn btn-brand" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export PDF</button>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="card ed">
+          <h4>Target</h4>
+          <input class="inp" id="iRole" placeholder="Role" value="Senior Software Engineer">
+          <input class="inp" id="iCompany" placeholder="Company" value="Northwind">
+          <h4 style="margin-top:6px">Job description / key points</h4>
+          <textarea class="inp" id="iJD" placeholder="Paste the job description or a few bullet points…">Looking for a full-stack engineer who's owned systems end to end, cares about performance, and works well across teams.</textarea>
+          <button class="btn btn-brand" style="width:100%" id="genBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Generate draft with Micl</button>
+          <h4 style="margin-top:20px">Letter body <span style="color:var(--ink-subtle);text-transform:none;letter-spacing:0">— editable</span></h4>
+          <div class="body-edit" id="bodyEdit" contenteditable></div>
+        </div>
+
+        <div class="pv-wrap">
+          <div class="paper" id="paper"><div class="pv-name">Thomas Hanks</div><div class="pv-meta">thomas@email.com · (555) 010-2048 · Brooklyn, NY</div><span id="pvBody" style="color:var(--ink-subtle)">Your letter preview appears here.</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="micl-row"><span class="micl-av">M</span><div><div style="font-weight:700">Micl's suggestions</div><div style="font-size:12px;color:var(--ink-muted)">Accept to apply · reject to skip</div></div>
+      <button class="x-btn" id="drawerClose"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+  </div>
+  <div class="drawer-body" id="suggBody"></div>
+</aside>
+
+<script src="app-shell.js"></script>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  document.body.classList.add('tier-'+(window.Miclea?Miclea.getTier():'pro'));
+  window.addEventListener('tierchange',function(){location.reload()});
+  var tier=window.Miclea?Miclea.getTier():'pro', unlimited=tier==='ultra', editsLeft=10;
+  if(unlimited) $('#editsChip').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Unlimited AI edits';
+
+  function draft(){
+    var role=$('#iRole').value.trim()||'the role', co=$('#iCompany').value.trim()||'your team';
+    return 'Dear Hiring Team at '+co+',\n\n'+
+    'I\'m applying for the '+role+' position, and it\'s exactly the kind of work I do best. Over the last five years I\'ve owned web platforms end to end — most recently re-architecting a payments pipeline that cut checkout latency from four seconds to under one and lifted conversion 8%.\n\n'+
+    'What draws me to '+co+' is the bar you set on performance and craft. I work fast without breaking things, I\'m comfortable across the stack, and I care as much about the people I build with as the code we ship.\n\n'+
+    'I\'d love to bring that energy to '+co+'. Thank you for your time and consideration.\n\nWarmly,\nThomas Hanks';
+  }
+  function setBody(text){$('#bodyEdit').textContent=text;renderPreview();}
+  function renderPreview(){var t=$('#bodyEdit').textContent.trim();$('#pvBody').textContent=t||'Your letter preview appears here.';$('#pvBody').style.color=t?'#1f2937':'var(--ink-subtle)';}
+  $('#bodyEdit').addEventListener('input',renderPreview);
+
+  $('#genBtn').addEventListener('click',function(){
+    if(!unlimited){ if(editsLeft<=0){Miclea.toast('No AI generations left this month','err');return;} editsLeft--; $('#editsLeft').textContent=editsLeft; }
+    var btn=this;btn.disabled=true;btn.style.opacity=.6;btn.innerHTML='Drafting…';
+    setTimeout(function(){ setBody(draft()); btn.disabled=false;btn.style.opacity=1;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Regenerate draft'; Miclea.toast('Draft ready — edit or refine with Micl'); },700);
+  });
+  $('#exportBtn').addEventListener('click',function(){if(!$('#bodyEdit').textContent.trim()){Miclea.toast('Write a letter first','err');return;}Miclea.toast('Cover letter exported to PDF');});
+
+  var SUGG=[
+    {id:'opening',title:'Stronger opening line',why:'Skip the generic "I\'m applying for…". Open with a hook that signals fit.',
+      transform:function(t){return t.replace(/I'm applying for the [^.]+\. It's exactly the kind of work I do best\./, 'The moment I read this role, it read like my résumé in job-posting form.');}},
+    {id:'tighten',title:'Tighten the middle',why:'Cut hedging and trim to keep momentum — recruiters skim.',
+      transform:function(t){return t.replace('I work fast without breaking things, I\'m comfortable across the stack, and I care as much about the people I build with as the code we ship.','I ship fast, work across the full stack, and care as much about my team as the code.');}},
+    {id:'close',title:'Confident close',why:'End on initiative, not just gratitude.',
+      transform:function(t){return t.replace('Thank you for your time and consideration.','I\'d welcome the chance to walk you through how I\'d make an impact in my first 90 days.');}}
+  ];
+  function openDrawer(){
+    if(!$('#bodyEdit').textContent.trim()){Miclea.toast('Generate or write a draft first','err');return;}
+    $('#suggBody').innerHTML=SUGG.map(function(s){
+      return '<div class="sugg" data-id="'+s.id+'"><div class="sg-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'+s.title+'</div><div class="sg-why">'+s.why+'</div><div class="sg-act"><button class="sg-accept">Accept</button><button class="sg-reject">Reject</button></div><div class="sg-status" style="color:#059669">✓ Applied</div></div>';
+    }).join('');
+    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+  }
+  function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');}
+  $('#miclBtn').addEventListener('click',openDrawer);
+  $('#drawerClose').addEventListener('click',closeDrawer);
+  $('#drawerScrim').addEventListener('click',closeDrawer);
+  $('#suggBody').addEventListener('click',function(e){
+    var card=e.target.closest('.sugg');if(!card)return;
+    var s=SUGG.filter(function(x){return x.id===card.dataset.id})[0];
+    if(e.target.classList.contains('sg-accept')){
+      if(!unlimited){ if(editsLeft<=0){Miclea.toast('No AI edits left this month','err');return;} editsLeft--; $('#editsLeft').textContent=editsLeft; }
+      setBody(s.transform($('#bodyEdit').textContent));
+      card.classList.add('done');card.querySelector('.sg-status').textContent='✓ Applied to your letter';card.querySelector('.sg-status').style.color='#059669';
+      Miclea.toast('Suggestion applied');
+    } else if(e.target.classList.contains('sg-reject')){
+      card.classList.add('done');card.querySelector('.sg-status').textContent='Skipped';card.querySelector('.sg-status').style.color='#9ca3af';
+    }
+  });
+})();
+</script>
+</body>
+</html>

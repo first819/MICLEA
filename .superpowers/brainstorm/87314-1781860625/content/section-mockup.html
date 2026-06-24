@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miclea — How It Works Mockup</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; background: #f6f7f9; color: #111; }
+
+/* ── Section wrapper ── */
+.how-section {
+  background: #fff;
+  padding: 96px 0;
+}
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ── Section header ── */
+.sec-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7c3aed;
+  margin-bottom: 12px;
+}
+.sec-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #0e1116;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+.sec-sub {
+  font-size: 18px;
+  color: #6b7280;
+  line-height: 1.6;
+  max-width: 540px;
+}
+.sec-header {
+  margin-bottom: 80px;
+}
+
+/* ── Zig-zag rows ── */
+.steps { display: flex; flex-direction: column; gap: 80px; }
+
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+}
+.step-row.reverse { flex-direction: row-reverse; }
+
+.step-text { flex: 0 0 38%; }
+.step-num-badge {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #7c3aed; color: #fff;
+  font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.step-title {
+  font-size: 26px; font-weight: 700; color: #0e1116;
+  letter-spacing: -0.02em; line-height: 1.2;
+  margin-bottom: 12px;
+}
+.step-desc {
+  font-size: 16px; color: #6b7280; line-height: 1.7;
+  margin-bottom: 20px;
+}
+.step-detail {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.step-detail-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 14px; color: #4b5563; line-height: 1.5;
+}
+.step-detail-item::before {
+  content: '✓';
+  color: #7c3aed; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+
+.step-visual { flex: 0 0 58%; }
+
+/* ── SCREEN 1: Role Picker ── */
+.screen {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px -12px rgba(0,0,0,0.18);
+  border: 1px solid rgba(0,0,0,0.07);
+}
+.screen-bar {
+  background: #1a1a2e;
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 6px;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #ff5f57; }
+.dot-y { background: #febc2e; }
+.dot-g { background: #28c840; }
+.screen-bar-title {
+  margin-left: auto; margin-right: auto;
+  font-size: 11px; color: #6b7280; font-family: monospace;
+  letter-spacing: 0.03em;
+}
+
+/* Setup screen body */
+.setup-body {
+  background: #0f0f1a;
+  padding: 36px 40px;
+  min-height: 320px;
+}
+.setup-logo {
+  font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 32px;
+  display: flex; align-items: center; gap: 8px;
+}
+.setup-logo-dot { width: 8px; height: 8px; background: #7c3aed; border-radius: 50%; }
+.setup-greeting {
+  font-size: 22px; font-weight: 600; color: #fff;
+  margin-bottom: 6px;
+}
+.setup-sub { font-size: 14px; color: #9ca3af; margin-bottom: 28px; }
+.setup-label { font-size: 12px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.setup-input {
+  background: #1e1e35; border: 1px solid #3b3b5c; border-radius: 10px;
+  padding: 12px 16px; color: #fff; font-size: 15px; width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.setup-input-placeholder { color: #6b7280; }
+.setup-input-caret { color: #7c3aed; }
+.setup-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+.chip {
+  padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+  border: 1px solid #3b3b5c; color: #9ca3af; background: #1e1e35; cursor: pointer;
+}
+.chip.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+.setup-btn {
+  background: #7c3aed; color: #fff; padding: 13px 28px;
+  border-radius: 10px; font-size: 15px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer; border: none;
+}
+.setup-btn-arrow { font-size: 18px; }
+
+/* ── SCREEN 2: Live Session ── */
+.live-body {
+  background: #0f0f1a;
+  padding: 28px 36px;
+  min-height: 320px;
+  display: flex; flex-direction: column;
+}
+.live-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.live-round {
+  font-size: 11px; font-weight: 600; color: #9ca3af;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.live-progress {
+  display: flex; gap: 4px;
+}
+.live-pip {
+  width: 24px; height: 4px; border-radius: 2px; background: #2a2a45;
+}
+.live-pip.done { background: #7c3aed; }
+.live-pip.active { background: #a78bfa; }
+
+.micl-row {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 20px;
+}
+.micl-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.micl-bubble {
+  background: #1e1e35; border-radius: 12px 12px 12px 4px;
+  padding: 14px 18px; flex: 1;
+}
+.micl-name { font-size: 11px; color: #7c3aed; font-weight: 600; margin-bottom: 6px; }
+.micl-q { font-size: 15px; color: #e5e7eb; line-height: 1.5; }
+
+.user-answer-area {
+  background: #1a1a2e; border-radius: 12px; padding: 16px 18px;
+  border: 1px solid #3b3b5c; margin-bottom: 18px; flex: 1;
+}
+.transcript-label {
+  font-size: 11px; color: #6b7280; font-weight: 500;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.mic-pulse {
+  width: 8px; height: 8px; border-radius: 50%; background: #ef4444;
+  animation: pulse 1.2s ease-in-out infinite;
+  display: inline-block;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+.transcript-text { font-size: 14px; color: #d1d5db; line-height: 1.6; }
+.transcript-cursor { display: inline-block; width: 2px; height: 14px; background: #7c3aed; margin-left: 2px; vertical-align: middle; animation: blink 0.9s step-end infinite; }
+@keyframes blink { 50%{opacity:0} }
+
+.live-bottombar {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.live-timer { font-size: 13px; color: #9ca3af; font-family: monospace; }
+.next-btn {
+  background: #7c3aed; color: #fff; padding: 9px 20px;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  border: none; cursor: pointer;
+}
+
+/* ── SCREEN 3: Insights ── */
+.insights-body {
+  background: #0f0f1a;
+  padding: 24px 32px;
+  min-height: 320px;
+}
+.insights-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.insights-title { font-size: 16px; font-weight: 700; color: #fff; }
+.insights-badge {
+  background: #14532d; color: #4ade80;
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+}
+.score-row {
+  display: flex; gap: 12px; margin-bottom: 20px;
+}
+.score-card {
+  flex: 1; background: #1e1e35; border-radius: 12px; padding: 14px 16px;
+  text-align: center;
+}
+.score-num { font-size: 28px; font-weight: 800; color: #fff; line-height: 1; }
+.score-num.good { color: #4ade80; }
+.score-num.mid { color: #fbbf24; }
+.score-label { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+
+.bars-section { margin-bottom: 20px; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bar-label { font-size: 12px; color: #9ca3af; width: 80px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 6px; background: #2a2a45; border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; background: #7c3aed; }
+.bar-fill.good { background: #4ade80; }
+.bar-fill.mid { background: #fbbf24; }
+.bar-val { font-size: 12px; color: #e5e7eb; font-weight: 600; width: 28px; text-align: right; }
+
+.insights-tips {
+  background: #1e1e35; border-radius: 12px; padding: 14px 16px;
+}
+.tips-label { font-size: 11px; font-weight: 600; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+.tip-item { display: flex; gap: 8px; font-size: 12px; color: #d1d5db; line-height: 1.5; margin-bottom: 6px; }
+.tip-item::before { content: '→'; color: #7c3aed; flex-shrink: 0; }
+
+/* ── Connector line ── */
+.connector {
+  display: flex; justify-content: center; align-items: center;
+  height: 48px; color: #e5e7eb;
+}
+.connector-line {
+  width: 2px; height: 100%; background: linear-gradient(to bottom, #ddd6fe, #ede9fe);
+  margin: 0 auto;
+}
+
+/* ── Bottom CTA ── */
+.section-cta {
+  text-align: center; margin-top: 80px;
+}
+.section-cta-text {
+  font-size: 16px; color: #6b7280; margin-bottom: 20px;
+}
+.section-cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #7c3aed; color: #fff; padding: 14px 32px;
+  border-radius: 10px; font-size: 16px; font-weight: 600;
+  text-decoration: none;
+}
+.section-cta-micro {
+  font-size: 13px; color: #9ca3af; margin-top: 10px;
+}
+</style>
+</head>
+<body>
+<section class="how-section">
+  <div class="section-inner">
+
+    <!-- Header -->
+    <div class="sec-header">
+      <div class="sec-eyebrow">How it works</div>
+      <h2 class="sec-title">From signup to offer-ready<br>in 3 steps</h2>
+      <p class="sec-sub">No courses. No PDFs. Just speak, get scored, and know exactly what to fix before the real interview.</p>
+    </div>
+
+    <div class="steps">
+
+      <!-- Step 1 -->
+      <div class="step-row">
+        <div class="step-text">
+          <div class="step-num-badge">1</div>
+          <h3 class="step-title">Pick your role.<br>Meet Micl.</h3>
+          <p class="step-desc">Tell Micl the job you're targeting — software engineer, PM, finance analyst — and the interview adapts to your field. Setup takes under 30 seconds.</p>
+          <div class="step-detail">
+            <div class="step-detail-item">Questions tailored to your exact role</div>
+            <div class="step-detail-item">Choose Speed Round or full Gauntlet</div>
+            <div class="step-detail-item">Mic setup with one click</div>
+          </div>
+        </div>
+        <div class="step-visual">
+          <div class="screen">
+            <div class="screen-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <div class="screen-bar-title">miclea.ai — Setup</div>
+            </div>
+            <div class="setup-body">
+              <div class="setup-logo"><div class="setup-logo-dot"></div> Miclea AI</div>
+              <div class="setup-greeting">Let's get you ready.</div>
+              <div class="setup-sub">What role are you interviewing for?</div>
+              <div class="setup-label">Job title</div>
+              <div class="setup-input">
+                <span>Software Engineer — Backend</span>
+                <span class="setup-input-caret">▾</span>
+              </div>
+              <div class="setup-label">Interview type</div>
+              <div class="setup-chips">
+                <div class="chip active">⚡ Speed Round</div>
+                <div class="chip">🏆 Gauntlet</div>
+                <div class="chip">Behavioral</div>
+                <div class="chip">Technical</div>
+              </div>
+              <button class="setup-btn">Start with Micl <span class="setup-btn-arrow">→</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div class="connector"><div class="connector-line"></div></div>
+
+      <!-- Step 2 -->
+      <div class="step-row reverse">
+        <div class="step-text">
+          <div class="step-num-badge">2</div>
+          <h3 class="step-title">Speak.<br>Get scored instantly.</h3>
+          <p class="step-desc">Answer Micl's questions out loud. Your words are transcribed live so you can see exactly what you said — then scored on clarity, structure, and confidence.</p>
+          <div class="step-detail">
+            <div class="step-detail-item">Real questions from real interviews</div>
+            <div class="step-detail-item">Live mic transcript as you speak</div>
+            <div class="step-detail-item">Instant per-answer feedback</div>
+          </div>
+        </div>
+        <div class="step-visual">
+          <div class="screen">
+            <div class="screen-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <div class="screen-bar-title">miclea.ai — Round 2 of 3</div>
+            </div>
+            <div class="live-body">
+              <div class="live-topbar">
+                <div class="live-round">Round 2 · Question 2 of 3</div>
+                <div class="live-progress">
+                  <div class="live-pip done"></div><div class="live-pip done"></div>
+                  <div class="live-pip done"></div><div class="live-pip done"></div>
+                  <div class="live-pip active"></div><div class="live-pip"></div>
+                  <div class="live-pip"></div><div class="live-pip"></div>
+                </div>
+              </div>
+              <div class="micl-row">
+                <div class="micl-avatar">M</div>
+                <div class="micl-bubble">
+                  <div class="micl-name">Micl</div>
+                  <div class="micl-q">"Tell me about a time you had to push back on a stakeholder decision. What was the outcome?"</div>
+                </div>
+              </div>
+              <div class="user-answer-area">
+                <div class="transcript-label">
+                  <span class="mic-pulse"></span> Listening — live transcript
+                </div>
+                <div class="transcript-text">
+                  "Sure — at my last role, the PM wanted to ship a feature without load testing. I raised the concern directly in our sprint review, showed data from a similar outage we'd had six months earlier, and proposed a one-day testing window instead<span class="transcript-cursor"></span>"
+                </div>
+              </div>
+              <div class="live-bottombar">
+                <div class="live-timer">01:24</div>
+                <button class="next-btn">Done → Next question</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div class="connector"><div class="connector-line"></div></div>
+
+      <!-- Step 3 -->
+      <div class="step-row">
+        <div class="step-text">
+          <div class="step-num-badge">3</div>
+          <h3 class="step-title">See exactly<br>where to improve.</h3>
+          <p class="step-desc">After every session your dashboard breaks down your score by clarity, structure, confidence, and relevance. You see what worked, what didn't, and what to practice before the real thing.</p>
+          <div class="step-detail">
+            <div class="step-detail-item">Score across 4 behavioral dimensions</div>
+            <div class="step-detail-item">Specific tips per answer</div>
+            <div class="step-detail-item">Progress tracked across every session</div>
+          </div>
+        </div>
+        <div class="step-visual">
+          <div class="screen">
+            <div class="screen-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <div class="screen-bar-title">miclea.ai — Session Results</div>
+            </div>
+            <div class="insights-body">
+              <div class="insights-header">
+                <div class="insights-title">Gauntlet Results</div>
+                <div class="insights-badge">↑ +8 from last time</div>
+              </div>
+              <div class="score-row">
+                <div class="score-card">
+                  <div class="score-num good">82</div>
+                  <div class="score-label">Overall score</div>
+                </div>
+                <div class="score-card">
+                  <div class="score-num mid">74</div>
+                  <div class="score-label">Clarity</div>
+                </div>
+                <div class="score-card">
+                  <div class="score-num good">91</div>
+                  <div class="score-label">Confidence</div>
+                </div>
+              </div>
+              <div class="bars-section">
+                <div class="bar-row">
+                  <div class="bar-label">Clarity</div>
+                  <div class="bar-track"><div class="bar-fill mid" style="width:74%"></div></div>
+                  <div class="bar-val">74</div>
+                </div>
+                <div class="bar-row">
+                  <div class="bar-label">Structure</div>
+                  <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+                  <div class="bar-val">80</div>
+                </div>
+                <div class="bar-row">
+                  <div class="bar-label">Confidence</div>
+                  <div class="bar-track"><div class="bar-fill good" style="width:91%"></div></div>
+                  <div class="bar-val">91</div>
+                </div>
+                <div class="bar-row">
+                  <div class="bar-label">Relevance</div>
+                  <div class="bar-track"><div class="bar-fill" style="width:83%"></div></div>
+                  <div class="bar-val">83</div>
+                </div>
+              </div>
+              <div class="insights-tips">
+                <div class="tips-label">Top improvements</div>
+                <div class="tip-item">Lead with the outcome first — your stories bury the result</div>
+                <div class="tip-item">Cut filler phrases: "um", "like", "you know" — down 40%</div>
+                <div class="tip-item">Round 3 curveball: stronger than last session — keep going</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="section-cta">
+      <p class="section-cta-text">Ready to hear how you actually sound in an interview?</p>
+      <a href="#" class="section-cta-btn">Try your first practice free →</a>
+      <p class="section-cta-micro">No credit card · Free plan · 2 minutes to your first score</p>
+    </div>
+
+  </div>
+</section>
+</body>
+</html>
