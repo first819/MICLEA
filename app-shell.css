@@ -272,3 +272,11 @@ body.theme-dark .lock .lock-badge{background:var(--app-card)}
 body.theme-dark ::selection{background:#2a3a66}
 body.theme-dark .pill-gray{background:#262a32;color:#c3c7d0}
 body.theme-dark .avatar{background:#e7e9ee;color:#111}
+
+/* ===================== Embed mode (loaded inside the dashboard iframe) ===================== */
+body.embed .rail,
+body.embed .sidebar,
+body.embed .scrim,
+body.embed .topbar { display: none !important; }
+body.embed .main { margin-left: 0 !important; }
+body.embed .content { padding-top: 24px; }
