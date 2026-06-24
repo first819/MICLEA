@@ -133,11 +133,6 @@ footer{background:#fff;color:#1a1a1a}
 .foot-col h5{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;font-weight:500}
 .foot-col a{display:block;font-weight:500;font-size:15px;color:#374151;padding:7px 0}
 .foot-col a:hover{color:#0d1b3e}
-.foot-social{display:flex;gap:12px;margin-top:4px}
-.foot-social a{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:#f3f4f6;color:#4b5563;transition:background .15s,color .15s}
-.foot-social a:hover{background:var(--brand-default);color:#fff}
-.foot-social svg{width:17px;height:17px}
 .foot-bottom{border-top:1px solid #e5e7eb;padding:32px 24px;text-align:center}
 .foot-legal{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:14px}
 .foot-legal a{color:#6b7280}
