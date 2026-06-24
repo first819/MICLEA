@@ -218,7 +218,7 @@
   /* In embed mode, keep navigation to other core features inside the embed:
      tell the parent dashboard to update its hash (which reloads this iframe). */
   function wireEmbedLinks() {
-    var CORE = { "speed-round":1,"gauntlet":1,"progress":1,"resume":1,"cover-letter":1,"question-bank":1,"company-packs":1 };
+    var CORE = { "speed-round":1,"gauntlet":1,"progress":1,"resume":1,"cover-letter":1,"question-bank":1,"company-packs":1,"settings":1,"help":1 };
     document.addEventListener("click", function (e) {
       var a = e.target.closest && e.target.closest("a[href]");
       if (!a || a.target === "_blank") return;

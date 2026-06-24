@@ -13,7 +13,9 @@
     "resume": "Résumé",
     "cover-letter": "Cover Letter",
     "question-bank": "Question Bank",
-    "company-packs": "Company Packs"
+    "company-packs": "Company Packs",
+    "settings": "Settings",
+    "help": "Help & Support"
   };
 
   var body = document.body;
