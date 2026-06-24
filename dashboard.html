@@ -770,5 +770,70 @@
     </div>
   </div><!-- /pm-dialog -->
 </div><!-- /pricing-modal -->
+<script>
+  // ── Pricing Modal ──
+  (function(){
+    var modal = document.getElementById('pricing-modal');
+    var closeBtn = document.getElementById('pm-close-btn');
+    var ctaBtn = document.getElementById('pm-cta-btn');
+
+    function openPricingModal() {
+      pmSelectPlan('ultra', 'Get Ultra');
+      pmSetBilling('annual');
+      modal.classList.add('pm-open');
+      document.body.style.overflow = 'hidden';
+      modal.querySelector('.pm-dialog').focus();
+    }
+
+    function closePricingModal() {
+      modal.classList.remove('pm-open');
+      document.body.style.overflow = '';
+    }
+
+    var upgradeLink = document.querySelector('.sb-pro a[href="pricing"]');
+    if (upgradeLink) {
+      upgradeLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        openPricingModal();
+      });
+    }
+
+    closeBtn.addEventListener('click', closePricingModal);
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal || e.target.classList.contains('pm-backdrop')) {
+        closePricingModal();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('pm-open')) {
+        closePricingModal();
+      }
+    });
+
+    ctaBtn.addEventListener('click', function() {
+      window.location.href = '#';
+    });
+  })();
+
+  function pmSetBilling(mode) {
+    document.querySelectorAll('.pm-bt-opt').forEach(function(o) { o.classList.remove('active'); });
+    document.getElementById('pm-btn-' + mode).classList.add('active');
+    var annual = mode === 'annual';
+    document.getElementById('pm-ultra-price').textContent = annual ? '23' : '29';
+    document.getElementById('pm-ultra-note').textContent = annual ? '$278 billed annually' : 'Billed monthly';
+    document.getElementById('pm-pro-price').textContent = annual ? '15' : '19';
+    document.getElementById('pm-pro-note').textContent = annual ? '$182 billed annually' : 'Billed monthly';
+  }
+
+  function pmSelectPlan(plan, label) {
+    document.querySelectorAll('.pm-card:not(.pm-card--current)').forEach(function(c) {
+      c.classList.remove('pm-card--selected');
+    });
+    document.getElementById('pm-card-' + plan).classList.add('pm-card--selected');
+    document.getElementById('pm-cta-btn').textContent = label;
+  }
+</script>
 </body>
 </html>
