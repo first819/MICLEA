@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to Miclea — Set up your account</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1f40ed;
+    --blue-dark:#1835cc;
+    --blue-soft:#f5f7ff;
+    --blue-tint:#e0e7ff;
+    --ink:#111;
+    --muted:#888;
+    --line:#e8e8e8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:#fff;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ── progress line (top) ── */
+  .progress{
+    position:fixed;top:0;left:0;right:0;height:4px;
+    background:#eef0f4;z-index:50;
+  }
+  .progress .bar{
+    height:100%;width:0;
+    background:var(--blue);
+    border-radius:0 4px 4px 0;
+    transition:width .45s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ── top bar ── */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 40px 0;
+    max-width:1100px;width:100%;margin:0 auto;
+  }
+  .topbar img{height:26px;width:auto;display:block}
+  .step-count{font-size:13px;font-weight:500;color:var(--muted)}
+
+  /* ── stage ── */
+  .stage{
+    flex:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px 20px 56px;
+  }
+  .greeting{text-align:center;margin-bottom:26px}
+  .greeting h1{
+    font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--ink);
+  }
+  .greeting p{
+    margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5;
+  }
+
+  /* ── card / carousel ── */
+  .card{
+    width:100%;max-width:560px;
+    background:#fff;
+    border:1px solid #f0f0f0;
+    border-radius:20px;
+    box-shadow:0 24px 70px rgba(17,24,60,.10);
+    overflow:hidden;
+  }
+  .viewport{overflow:hidden}
+  .track{
+    display:flex;
+    width:100%;
+    transition:transform .5s cubic-bezier(.45,.05,.2,1),height .4s cubic-bezier(.4,0,.2,1);
+    will-change:transform;
+  }
+  .slide{
+    flex:0 0 100%;width:100%;
+    padding:38px 38px 36px;
+    align-self:flex-start;
+  }
+
+  .q-label{font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.02em;margin-bottom:10px}
+  .q-title{font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.3;color:var(--ink)}
+  .q-hint{margin-top:8px;font-size:13.5px;color:var(--muted)}
+
+  /* ── option list ── */
+  .options{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+  .option{
+    display:flex;align-items:center;gap:14px;
+    padding:16px 18px;
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    background:#fff;
+    cursor:pointer;
+    text-align:left;
+    transition:border-color .15s,background .15s,box-shadow .15s;
+    font-family:inherit;
+  }
+  .option:hover{border-color:#cfd4ff;background:#fbfbff}
+  .option .o-body{flex:1;min-width:0;display:flex;flex-direction:column}
+  .option .o-title{display:block;font-size:15px;font-weight:600;color:var(--ink)}
+  .option .o-desc{display:block;font-size:13px;color:var(--muted);margin-top:3px}
+  .option .check{
+    width:24px;height:24px;border-radius:50%;flex:none;
+    border:1.5px solid #d8d8d8;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s,border-color .15s;
+  }
+  .option .check svg{width:13px;height:13px;opacity:0;transform:scale(.6);transition:opacity .15s,transform .15s}
+  .option.selected{
+    border-color:var(--blue);
+    background:var(--blue-soft);
+    box-shadow:0 0 0 3px rgba(31,64,237,.07);
+  }
+  .option.selected .check{background:var(--blue);border-color:var(--blue)}
+  .option.selected .check svg{opacity:1;transform:scale(1)}
+
+  /* ── resume upload ── */
+  .drop{
+    display:block;
+    margin-top:24px;
+    border:1.5px dashed #cdd2e8;
+    border-radius:14px;
+    background:var(--blue-soft);
+    padding:38px 24px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .15s,background .15s;
+  }
+  .drop:hover,.drop.drag{border-color:var(--blue);background:#eef1ff}
+  .drop .icon{
+    width:52px;height:52px;border-radius:14px;margin:0 auto 14px;
+    background:var(--blue-tint);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .drop .d-title{font-size:15px;font-weight:600;color:var(--ink)}
+  .drop .d-title b{color:var(--blue)}
+  .drop .d-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .file-pill{
+    display:none;margin-top:16px;align-items:center;gap:12px;
+    padding:14px 16px;border:1.5px solid var(--blue);border-radius:12px;
+    background:#fff;
+  }
+  .file-pill.show{display:flex}
+  .file-pill .fp-icon{
+    width:38px;height:38px;border-radius:9px;flex:none;
+    background:var(--blue-tint);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .file-pill .fp-body{flex:1;min-width:0}
+  .file-pill .fp-name{font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .file-pill .fp-size{font-size:12px;color:var(--muted);margin-top:1px}
+  .file-pill .fp-x{
+    background:none;border:none;cursor:pointer;color:#bbb;padding:6px;
+    display:flex;border-radius:8px;transition:background .15s,color .15s;
+  }
+  .file-pill .fp-x:hover{background:#f4f4f4;color:#555}
+  .skip-line{margin-top:16px;text-align:center;font-size:13px;color:var(--muted)}
+  .skip-line a{color:var(--blue);font-weight:500;text-decoration:none;cursor:pointer}
+  .skip-line a:hover{text-decoration:underline}
+
+  /* ── continue (inside slide) ── */
+  .continue{
+    margin-top:26px;width:100%;height:52px;border:none;border-radius:12px;
+    background:var(--blue);color:#fff;
+    font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;
+    transition:background .15s,transform .05s,opacity .15s;
+  }
+  .continue:hover{background:var(--blue-dark)}
+  .continue:active{transform:translateY(1px)}
+  .continue:disabled{background:#c7ccdd;cursor:not-allowed}
+
+  /* ── final slide ── */
+  .done{text-align:center;padding:14px 8px 6px}
+  .done .seal{
+    width:74px;height:74px;border-radius:50%;margin:0 auto 22px;
+    background:var(--blue);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .done h2{font-size:24px;font-weight:700;letter-spacing:-.02em}
+  .done p{margin-top:10px;font-size:14.5px;color:var(--muted);line-height:1.55;max-width:380px;margin-left:auto;margin-right:auto}
+
+  /* ── nav arrows (below card) ── */
+  .nav{
+    display:flex;align-items:center;justify-content:center;gap:18px;
+    margin-top:30px;
+  }
+  .arrow{
+    width:50px;height:50px;border-radius:50%;
+    border:1.5px solid var(--line);background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink);cursor:pointer;
+    transition:border-color .15s,background .15s,box-shadow .15s,opacity .15s,transform .1s;
+  }
+  .arrow:hover:not(:disabled){border-color:var(--blue);color:var(--blue);box-shadow:0 6px 18px rgba(31,64,237,.12)}
+  .arrow:active:not(:disabled){transform:scale(.94)}
+  .arrow:disabled{opacity:.4;cursor:not-allowed}
+  .dots{display:flex;align-items:center;gap:8px;margin:0 6px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#d8dbe6;transition:background .25s,width .25s}
+  .dot.active{background:var(--blue);width:22px;border-radius:4px}
+
+  @media (max-width:600px){
+    .topbar{padding:20px 22px 0}
+    .greeting h1{font-size:25px}
+    .slide{padding:30px 24px 30px}
+    .q-title{font-size:20px}
+    .card{border-radius:18px}
+  }
+</style>
+</head>
+<body>
+
+  <!-- progress line -->
+  <div class="progress"><div class="bar" id="progressBar"></div></div>
+
+  <!-- top bar -->
+  <header class="topbar">
+    <a href="index" aria-label="Miclea home"><img src="images/logo.png" alt="Miclea"></a>
+    <span class="step-count" id="stepCount">Step 1 of 5</span>
+  </header>
+
+  <!-- stage -->
+  <main class="stage">
+    <div class="greeting">
+      <h1 id="greetHeading">Hi there 👋</h1>
+      <p>We're excited to have you. A few quick questions to personalize your prep.</p>
+    </div>
+
+    <div class="card">
+      <div class="viewport">
+        <div class="track" id="track">
+
+          <!-- Q1 — career stage (single select) -->
+          <section class="slide" data-type="single" data-required="1">
+            <div class="q-label">Question 1 of 8</div>
+            <h2 class="q-title">Where are you in your career?</h2>
+            <p class="q-hint">This helps us tailor the difficulty of your mock interviews.</p>
+            <div class="options">
+              <button class="option" data-value="student"><span class="o-body"><span class="o-title">Student</span><span class="o-desc">Still in school or university</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="newgrad"><span class="o-body"><span class="o-title">Recent graduate</span><span class="o-desc">Looking for my first full-time role</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="early"><span class="o-body"><span class="o-title">Early career</span><span class="o-desc">1–4 years of experience</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="mid"><span class="o-body"><span class="o-title">Mid to senior</span><span class="o-desc">5+ years of experience</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q2 — main goal (single select) -->
+          <section class="slide" data-type="single" data-required="1">
+            <div class="q-label">Question 2 of 8</div>
+            <h2 class="q-title">What brings you to Miclea?</h2>
+            <p class="q-hint">Tell us what you're really after — we'll build everything around it.</p>
+            <div class="options">
+              <button class="option" data-value="first-job"><span class="o-body"><span class="o-title">Land my first real job</span><span class="o-desc">Break in and get that first offer</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="switch"><span class="o-body"><span class="o-title">Switch careers or industries</span><span class="o-desc">Make a move into something new</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="level-up"><span class="o-body"><span class="o-title">Land a bigger offer or promotion</span><span class="o-desc">Level up where I already am</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="confidence"><span class="o-body"><span class="o-title">Finally beat my interview nerves</span><span class="o-desc">Walk in calm and in control</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q3 — problems / pain points (multi select) -->
+          <section class="slide" data-type="multi" data-required="1">
+            <div class="q-label">Question 3 of 8</div>
+            <h2 class="q-title">What's holding you back right now?</h2>
+            <p class="q-hint">Be honest — the more we know, the more we can help. Pick all that feel true.</p>
+            <div class="options">
+              <button class="option" data-value="nerves"><span class="o-body"><span class="o-title">I freeze up and get nervous</span><span class="o-desc">My mind goes blank under pressure</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="answers"><span class="o-body"><span class="o-title">I struggle to put answers together</span><span class="o-desc">I ramble or lose my train of thought</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="feedback"><span class="o-body"><span class="o-title">I never get real feedback</span><span class="o-desc">I don't know what I'm doing wrong</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="unknown"><span class="o-body"><span class="o-title">I don't know what they'll ask</span><span class="o-desc">Every interview feels like a gamble</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="rejection"><span class="o-body"><span class="o-title">I keep getting rejected</span><span class="o-desc">I get interviews but not offers</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q4 — how they feel (single select, emotional) -->
+          <section class="slide" data-type="single" data-required="1">
+            <div class="q-label">Question 4 of 8</div>
+            <h2 class="q-title">How do interviews make you feel today?</h2>
+            <p class="q-hint">There's no wrong answer. We meet you exactly where you are.</p>
+            <div class="options">
+              <button class="option" data-value="dread"><span class="o-body"><span class="o-title">I dread them</span><span class="o-desc">They keep me up at night</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="anxious"><span class="o-body"><span class="o-title">Pretty anxious</span><span class="o-desc">Nervous but pushing through</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="okay"><span class="o-body"><span class="o-title">Somewhat ready</span><span class="o-desc">Okay, but I want to be sharper</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="confident"><span class="o-body"><span class="o-title">Confident</span><span class="o-desc">Just here to fine-tune</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q5 — target roles (multi select) -->
+          <section class="slide" data-type="multi" data-required="1">
+            <div class="q-label">Question 5 of 8</div>
+            <h2 class="q-title">What roles are you targeting?</h2>
+            <p class="q-hint">Select all that apply — we'll pull relevant questions for each.</p>
+            <div class="options">
+              <button class="option" data-value="swe"><span class="o-body"><span class="o-title">Software Engineering</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="product"><span class="o-body"><span class="o-title">Product Management</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="data"><span class="o-body"><span class="o-title">Data &amp; Analytics</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="finance"><span class="o-body"><span class="o-title">Finance &amp; Consulting</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="other"><span class="o-body"><span class="o-title">Something else</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q6 — timeline (single select) -->
+          <section class="slide" data-type="single" data-required="1">
+            <div class="q-label">Question 6 of 8</div>
+            <h2 class="q-title">When's your next interview?</h2>
+            <p class="q-hint">We'll set the right pace for your practice plan.</p>
+            <div class="options">
+              <button class="option" data-value="now"><span class="o-body"><span class="o-title">This week</span><span class="o-desc">I'm actively interviewing</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="soon"><span class="o-body"><span class="o-title">In a few weeks</span><span class="o-desc">Ramping up now</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="months"><span class="o-body"><span class="o-title">1–3 months out</span><span class="o-desc">Getting a head start</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="exploring"><span class="o-body"><span class="o-title">Just exploring</span><span class="o-desc">No set timeline yet</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q7 — focus areas (multi select) -->
+          <section class="slide" data-type="multi" data-required="1">
+            <div class="q-label">Question 7 of 8</div>
+            <h2 class="q-title">What do you want to practice most?</h2>
+            <p class="q-hint">Pick the interview types you want to focus on.</p>
+            <div class="options">
+              <button class="option" data-value="behavioral"><span class="o-body"><span class="o-title">Behavioral</span><span class="o-desc">Tell-me-about-a-time questions</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="technical"><span class="o-body"><span class="o-title">Technical &amp; coding</span><span class="o-desc">Problem solving and fundamentals</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="case"><span class="o-body"><span class="o-title">Case &amp; problem solving</span><span class="o-desc">Structured business cases</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="system"><span class="o-body"><span class="o-title">System &amp; product design</span><span class="o-desc">Open-ended design rounds</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q8 — resume upload -->
+          <section class="slide" data-type="upload" data-required="0">
+            <div class="q-label">Question 8 of 8</div>
+            <h2 class="q-title">Add your resume</h2>
+            <p class="q-hint">We'll generate questions tailored to your experience. PDF, DOC, or DOCX — up to 10MB.</p>
+
+            <label class="drop" id="drop">
+              <span class="icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </span>
+              <div class="d-title">Drag &amp; drop or <b>browse</b></div>
+              <div class="d-sub">Your resume stays private and is only used to personalize your prep.</div>
+              <input type="file" id="fileInput" accept=".pdf,.doc,.docx" hidden>
+            </label>
+
+            <div class="file-pill" id="filePill">
+              <span class="fp-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </span>
+              <div class="fp-body">
+                <div class="fp-name" id="fileName">resume.pdf</div>
+                <div class="fp-size" id="fileSize">—</div>
+              </div>
+              <button class="fp-x" id="fileRemove" type="button" aria-label="Remove file">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+
+            <button class="continue" data-next>Continue</button>
+            <p class="skip-line"><a data-skip>Skip for now</a></p>
+          </section>
+
+          <!-- Final -->
+          <section class="slide" data-type="final" data-required="0">
+            <div class="done">
+              <div class="seal">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <h2 id="doneHeading">You're all set!</h2>
+              <p>We've built a personalized practice plan based on your answers. Let's get you interview-ready.</p>
+              <button class="continue" id="finishBtn" style="max-width:280px;margin-left:auto;margin-right:auto;">Go to my dashboard</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- nav arrows below the card -->
+    <nav class="nav">
+      <button class="arrow" id="prevBtn" aria-label="Previous" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="dots" id="dots"></div>
+      <button class="arrow" id="nextBtn" aria-label="Next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </nav>
+  </main>
+
+<script>
+(function(){
+  // inject checkmark svg into every {{CHECK}} placeholder
+  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.querySelectorAll('.check').forEach(c=>{ if(c.textContent.trim()==='{{CHECK}}') c.innerHTML = CHECK; });
+
+  const track   = document.getElementById('track');
+  const slides  = Array.from(track.children);
+  const total   = slides.length;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const bar     = document.getElementById('progressBar');
+  const stepCount = document.getElementById('stepCount');
+  const dotsWrap  = document.getElementById('dots');
+  const answers = {};
+  let index = 0;
+
+  // build dots
+  slides.forEach((_,i)=>{
+    const d=document.createElement('span');
+    d.className='dot'+(i===0?' active':'');
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function isAnswered(i){
+    const s = slides[i];
+    if(s.dataset.required !== '1') return true;
+    return s.querySelectorAll('.option.selected').length > 0;
+  }
+
+  function setHeight(){
+    track.style.height = slides[index].offsetHeight + 'px';
+  }
+
+  function render(){
+    track.style.transform = 'translateX(' + (-index*100) + '%)';
+    setHeight();
+    // progress reflects furthest position
+    bar.style.width = ((index+1)/total*100) + '%';
+    const questionCount = total - 1; // exclude the final celebration slide
+    stepCount.textContent = slides[index].dataset.type === 'final'
+      ? 'All done'
+      : 'Step ' + (index+1) + ' of ' + questionCount;
+    dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+    prevBtn.disabled = index === 0;
+    // next arrow disabled when current step is unanswered (and not the final slide)
+    const onFinal = slides[index].dataset.type === 'final';
+    nextBtn.style.visibility = onFinal ? 'hidden' : 'visible';
+    nextBtn.disabled = !isAnswered(index);
+  }
+
+  function go(i){
+    index = Math.max(0, Math.min(total-1, i));
+    render();
+  }
+  function next(){ if(isAnswered(index)) go(index+1); }
+  function prev(){ go(index-1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  // option selection
+  slides.forEach(slide=>{
+    const type = slide.dataset.type;
+    const cont = slide.querySelector('[data-next]');
+    slide.querySelectorAll('.option').forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        if(type === 'single'){
+          slide.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+          opt.classList.add('selected');
+        } else { // multi
+          opt.classList.toggle('selected');
+        }
+        const sel = slide.querySelectorAll('.option.selected').length > 0;
+        if(cont) cont.disabled = slide.dataset.required==='1' ? !sel : false;
+        nextBtn.disabled = !isAnswered(index);
+        // single-select auto-advances after a beat
+        if(type === 'single' && sel){
+          setTimeout(()=>{ if(index===slides.indexOf(slide)) next(); }, 260);
+        }
+      });
+    });
+    // in-card continue buttons
+    if(cont && !cont.id){ cont.addEventListener('click', next); }
+  });
+
+  // resume upload
+  const drop = document.getElementById('drop');
+  const fileInput = document.getElementById('fileInput');
+  const filePill = document.getElementById('filePill');
+  const fileName = document.getElementById('fileName');
+  const fileSize = document.getElementById('fileSize');
+  const fileRemove = document.getElementById('fileRemove');
+  const skipLink = document.querySelector('[data-skip]');
+
+  function humanSize(b){
+    if(b < 1024) return b + ' B';
+    if(b < 1048576) return (b/1024).toFixed(0) + ' KB';
+    return (b/1048576).toFixed(1) + ' MB';
+  }
+  function showFile(f){
+    fileName.textContent = f.name;
+    fileSize.textContent = humanSize(f.size);
+    filePill.classList.add('show');
+    drop.style.display = 'none';
+    answers.resume = f.name;
+    setHeight();
+  }
+  function clearFile(){
+    fileInput.value = '';
+    filePill.classList.remove('show');
+    drop.style.display = '';
+    delete answers.resume;
+    setHeight();
+  }
+  fileInput.addEventListener('change', e=>{ if(e.target.files[0]) showFile(e.target.files[0]); });
+  fileRemove.addEventListener('click', clearFile);
+  skipLink.addEventListener('click', next);
+
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove('drag'); }));
+  drop.addEventListener('drop', e=>{ const f=e.dataTransfer.files[0]; if(f){ fileInput.files=e.dataTransfer.files; showFile(f);} });
+
+  // finish
+  document.getElementById('finishBtn').addEventListener('click', ()=>{
+    window.location.href = 'dashboard.html'; // → dashboard route
+  });
+
+  // keyboard: Enter advances, arrows navigate
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); if(!nextBtn.disabled && slides[index].dataset.type!=='final') next(); }
+    else if(e.key==='ArrowRight'){ if(!nextBtn.disabled) next(); }
+    else if(e.key==='ArrowLeft'){ if(!prevBtn.disabled) prev(); }
+  });
+
+  window.addEventListener('resize', setHeight);
+  render();
+})();
+</script>
+
+<!-- Personalize the greeting with the signed-in user's name (email signup or Google) -->
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/+esm'
+
+  // Same project as auth.js. We create a standalone client here (instead of
+  // importing auth.js) so its redirect-if-logged-in logic doesn't bounce the
+  // freshly-verified user away from onboarding.
+  const SUPABASE_URL  = 'https://eezjeiitzvtduarviume.supabase.co'
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlemplaWl0enZ0ZHVhcnZpdW1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTg4MjAsImV4cCI6MjA5NTg3NDgyMH0.Z2JC8QufY-sVp9VoUg8j08RZjHgKnePWJSZkP8U6oFc'
+
+  function firstNameFrom(user){
+    if(!user) return ''
+    const m = user.user_metadata || {}
+    // email signup stores `name`; Google OAuth provides full_name / name / given_name
+    let raw = m.given_name || m.name || m.full_name || ''
+    if(!raw && user.email){
+      raw = user.email.split('@')[0].replace(/[._-]+/g,' ') // local part of email
+    }
+    let first = (raw || '').trim().split(/\s+/)[0] || ''
+    // Tidy capitalization for email-derived names (e.g. "firstnoah164" → "Firstnoah164")
+    if(first) first = first.charAt(0).toUpperCase() + first.slice(1)
+    return first
+  }
+
+  function applyName(first){
+    if(!first) return // keep the neutral "Hi there" / "You're all set!" fallbacks
+    const greet = document.getElementById('greetHeading')
+    const done  = document.getElementById('doneHeading')
+    if(greet) greet.innerHTML = 'Hi, ' + first + ' 👋'
+    if(done)  done.textContent = "You're all set, " + first + '!'
+  }
+
+  try{
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON)
+    const { data } = await supabase.auth.getUser()
+    applyName(firstNameFrom(data?.user))
+  }catch(e){ /* offline / no session — neutral greeting stays */ }
+</script>
+</body>
+</html>

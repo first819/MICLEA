@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help & Resources — Miclea</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app-shell.css">
+<style>
+  .help-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
+  .help-search{position:relative;margin-bottom:18px}
+  .help-search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ink-subtle)}
+  .help-search input{width:100%;height:50px;border:1px solid var(--app-line);border-radius:13px;background:var(--app-card);color:var(--ink);padding:0 18px 0 46px;font-size:15px;font-family:inherit}
+  .help-search input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.12)}
+  .cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .cat{padding:7px 13px;border:1px solid var(--app-line);border-radius:100px;font-size:12.5px;font-weight:600;background:var(--app-card);cursor:pointer;transition:.14s}
+  .cat:hover{border-color:var(--brand-faint);color:var(--brand)}
+  .cat.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .faq{border:1px solid var(--app-line);border-radius:13px;overflow:hidden;background:var(--app-card)}
+  .qa{border-bottom:1px solid var(--app-line)}
+  .qa:last-child{border-bottom:none}
+  .qa-q{width:100%;text-align:left;background:none;border:none;padding:16px 18px;font-size:14.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:12px;cursor:pointer}
+  .qa-q svg{width:18px;height:18px;color:var(--ink-subtle);margin-left:auto;flex:none;transition:transform .2s}
+  .qa.open .qa-q svg{transform:rotate(180deg);color:var(--brand)}
+  .qa-a{max-height:0;overflow:hidden;transition:max-height .25s var(--ease-standard)}
+  .qa-a div{padding:0 18px 16px;font-size:13.5px;line-height:1.6;color:var(--ink-muted)}
+  .qa.open .qa-a{max-height:220px}
+  .no-res{display:none;text-align:center;padding:30px;color:var(--ink-muted)}
+  /* contact */
+  .contact{padding:24px;position:sticky;top:84px}
+  .contact h3{font-size:18px;font-weight:700;margin-bottom:4px}
+  .contact .csub{font-size:13px;color:var(--ink-muted);margin-bottom:18px}
+  .lbl{font-size:13px;font-weight:600;margin-bottom:7px;display:block}
+  .inp{width:100%;border:1px solid var(--app-line);border-radius:9px;padding:11px 13px;font-size:14px;font-family:inherit;margin-bottom:14px;background:var(--app-card);color:var(--ink);transition:.12s}
+  .inp:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
+  .inp.bad{border-color:#dc2626}
+  textarea.inp{resize:vertical;min-height:120px;line-height:1.5}
+  .inp[readonly]{background:var(--brand-fainter);color:var(--ink-muted)}
+  .sent{display:none;text-align:center;padding:34px 20px}
+  .sent .sb{width:54px;height:54px;border-radius:50%;background:#d1fae5;color:#059669;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+  .sent h3{font-family:var(--font-family-serif);font-weight:400;font-size:24px;margin-bottom:8px}
+  .sent p{font-size:13.5px;color:var(--ink-muted);line-height:1.55;max-width:300px;margin:0 auto 18px}
+  @media(max-width:900px){.help-grid{grid-template-columns:1fr}.contact{position:static}}
+</style>
+</head>
+<body data-page="help" data-search="Search help…">
+<div class="main">
+  <main class="content">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">We've got you</span>
+        <h1 style="margin-top:8px">Help &amp; Resources</h1>
+        <p class="sub">Find answers fast, or send us a note — we usually reply within a few hours.</p>
+      </div>
+    </div>
+
+    <div class="help-grid">
+      <div>
+        <div class="help-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="faqSearch" placeholder="Search FAQs — e.g. “microphone”, “billing”…"></div>
+        <div class="cat-tabs" id="cats">
+          <button class="cat on" data-c="all">All</button>
+          <button class="cat" data-c="rounds">Rounds</button>
+          <button class="cat" data-c="mic">Mic &amp; audio</button>
+          <button class="cat" data-c="billing">Billing</button>
+          <button class="cat" data-c="docs">Résumé &amp; letters</button>
+        </div>
+        <div class="faq" id="faq"></div>
+        <div class="no-res" id="noRes">No articles match “<span id="noResTerm"></span>”. Try the contact form →</div>
+      </div>
+
+      <div class="card contact">
+        <form id="contactForm">
+          <h3>Contact us for help</h3>
+          <p class="csub">Tell us what's up and we'll get back to you by email.</p>
+          <label class="lbl">Your email</label>
+          <input class="inp" id="cEmail" type="email" value="thomas@email.com" readonly>
+          <label class="lbl">Subject</label>
+          <input class="inp" id="cSubject" placeholder="What's this about?">
+          <label class="lbl">Message</label>
+          <textarea class="inp" id="cMessage" placeholder="Describe your question or issue…"></textarea>
+          <button class="btn btn-brand" style="width:100%" type="submit">Send message</button>
+        </form>
+        <div class="sent" id="sent">
+          <div class="sb"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h3>Message sent!</h3>
+          <p>Thanks — we've got your note and a confirmation is on its way to your inbox.</p>
+          <button class="btn btn-ghost" id="another">Send another</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="app-shell.js"></script>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  var FAQ=[
+    {c:'rounds',q:'What\'s the difference between a Speed Round and the Gauntlet?',a:'The Speed Round is a fast, low-pressure warm-up — 8 easy questions with light feedback. The Gauntlet is a realistic 3-round mock that escalates in difficulty and ends with a curveball, followed by a full performance breakdown.'},
+    {c:'rounds',q:'Why can\'t I skip the break in the Gauntlet?',a:'The 30-second break between rounds is mandatory by design — real interviews don\'t let you reset on demand. It resumes even if you refresh, so use it to breathe and refocus.'},
+    {c:'rounds',q:'Do incomplete sessions count toward my stats?',a:'No. If you abandon a session midway it\'s saved as incomplete and kept out of your "completed interviews" averages, so your numbers stay honest.'},
+    {c:'mic',q:'Miclea isn\'t hearing my microphone — what do I do?',a:'Make sure you granted mic permission when prompted, check your browser\'s site settings, and confirm the right input device is selected by your OS. You can always switch to typing your answers instead.'},
+    {c:'mic',q:'Can I practice without a microphone?',a:'Absolutely. Every round has a text fallback — just type your answers. We recommend speaking out loud when you can, since that\'s what builds real interview confidence.'},
+    {c:'billing',q:'How do I upgrade, downgrade, or cancel?',a:'Head to Settings → Manage billing, or the pricing page. Changes to a lower tier take effect at the end of your current billing period, so you keep what you paid for until then.'},
+    {c:'billing',q:'What happens to my data if I downgrade?',a:'Your history is never deleted. If you drop to a tier without a feature, it simply locks behind an upgrade prompt — re-subscribe and everything\'s exactly where you left it.'},
+    {c:'docs',q:'Will Micl make up experience on my résumé?',a:'Never. Micl only rewrites and strengthens what you provide — sharper verbs, quantified impact, better tailoring. It won\'t invent jobs, numbers, or skills you didn\'t enter.'},
+    {c:'docs',q:'How many AI edits do I get?',a:'Pro includes 10 AI edits per month each for the résumé and cover letter tools. Ultra is unlimited, with unlimited saved versions.'}
+  ];
+  var state={c:'all',q:''};
+  function render(){
+    var list=FAQ.filter(function(f){
+      if(state.c!=='all'&&f.c!==state.c)return false;
+      if(state.q){var t=(f.q+' '+f.a).toLowerCase();if(t.indexOf(state.q)<0)return false;}
+      return true;
+    });
+    $('#faq').innerHTML=list.map(function(f,i){
+      return '<div class="qa"><button class="qa-q">'+f.q+'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="qa-a"><div>'+f.a+'</div></div></div>';
+    }).join('');
+    $('#faq').style.display=list.length?'block':'none';
+    $('#noRes').style.display=list.length?'none':'block';
+    $('#noResTerm').textContent=state.q;
+  }
+  $('#faq').addEventListener('click',function(e){var b=e.target.closest('.qa-q');if(!b)return;b.parentElement.classList.toggle('open');});
+  $('#cats').addEventListener('click',function(e){var b=e.target.closest('.cat');if(!b)return;this.querySelectorAll('.cat').forEach(function(x){x.classList.remove('on')});b.classList.add('on');state.c=b.dataset.c;render();});
+  $('#faqSearch').addEventListener('input',function(){state.q=this.value.trim().toLowerCase();render();});
+  render();
+
+  // contact form
+  $('#contactForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var subj=$('#cSubject'), msg=$('#cMessage'), ok=true;
+    if(!subj.value.trim()){subj.classList.add('bad');ok=false;}else subj.classList.remove('bad');
+    if(!msg.value.trim()){msg.classList.add('bad');ok=false;}else msg.classList.remove('bad');
+    if(!ok){Miclea.toast('Add a subject and message','err');return;}
+    $('#contactForm').style.display='none';$('#sent').style.display='block';
+    Miclea.toast('Message sent');
+  });
+  $('#another').addEventListener('click',function(){
+    $('#sent').style.display='none';$('#contactForm').style.display='block';
+    $('#cSubject').value='';$('#cMessage').value='';
+  });
+})();
+</script>
+</body>
+</html>

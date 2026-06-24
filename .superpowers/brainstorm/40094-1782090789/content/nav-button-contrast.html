@@ -1,0 +1,133 @@
+<h2>How should "Get Started" contrast with "Sign in"?</h2>
+<p class="subtitle">Three nav treatments — all use your existing brand tokens. Pick the one that feels right.</p>
+
+<style>
+  .nav-mock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 10px 20px;
+    margin-bottom: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    font-family: "ABCDiatype","Trebuchet MS",sans-serif;
+  }
+  .nav-logo-mock {
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.5px;
+    color: #111;
+  }
+  .nav-links-mock {
+    display: flex;
+    gap: 22px;
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+  }
+  .nav-btns { display: flex; gap: 8px; align-items: center; }
+
+  /* Option A — Ghost + Solid Black */
+  .btn-ghost-a {
+    padding: 7px 14px; font-size: 14px; font-weight: 500; border-radius: 4px;
+    background: transparent; color: #111; border: 1px solid #d1d5db; cursor: pointer;
+  }
+  .btn-solid-a {
+    padding: 7px 14px; font-size: 14px; font-weight: 500; border-radius: 4px;
+    background: #000; color: #fff; border: 1px solid #000; cursor: pointer;
+  }
+
+  /* Option B — Text link + Brand Blue */
+  .btn-text-b {
+    padding: 7px 10px; font-size: 14px; font-weight: 500; border-radius: 4px;
+    background: transparent; color: #374151; border: none; cursor: pointer;
+  }
+  .btn-solid-b {
+    padding: 7px 14px; font-size: 14px; font-weight: 500; border-radius: 4px;
+    background: #1f40ed; color: #fff; border: 1px solid #1f40ed; cursor: pointer;
+  }
+
+  /* Option C — Ghost (border) + Brand Blue solid */
+  .btn-ghost-c {
+    padding: 7px 14px; font-size: 14px; font-weight: 500; border-radius: 4px;
+    background: transparent; color: #111; border: 1px solid #d1d5db; cursor: pointer;
+  }
+  .btn-solid-c {
+    padding: 7px 14px; font-size: 14px; font-weight: 500; border-radius: 4px;
+    background: #1f40ed; color: #fff; border: 1px solid #1f40ed; cursor: pointer;
+  }
+
+  .option-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+    color: #9ca3af; margin-bottom: 4px; margin-top: 14px;
+  }
+  .option-desc {
+    font-size: 13px; color: #6b7280; margin-top: 2px; margin-bottom: 12px;
+  }
+</style>
+
+<div class="options" style="flex-direction:column;gap:0">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)" style="flex-direction:column;align-items:flex-start;gap:6px">
+    <div style="display:flex;align-items:center;gap:12px;width:100%">
+      <div class="letter">A</div>
+      <div class="content" style="flex:1">
+        <h3 style="margin:0 0 8px">Ghost "Sign in" + Solid Black "Get Started"</h3>
+        <div class="nav-mock">
+          <span class="nav-logo-mock">Miclea</span>
+          <span class="nav-links-mock">
+            <span>Products</span><span>Pricing</span><span>Blog</span>
+          </span>
+          <div class="nav-btns">
+            <button class="btn-ghost-a">Sign in</button>
+            <button class="btn-solid-a">Get Started</button>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#6b7280;margin:4px 0 0">Low-key sign-in, black CTA — same family, clear hierarchy.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)" style="flex-direction:column;align-items:flex-start;gap:6px">
+    <div style="display:flex;align-items:center;gap:12px;width:100%">
+      <div class="letter">B</div>
+      <div class="content" style="flex:1">
+        <h3 style="margin:0 0 8px">Text "Sign in" + Brand Blue "Get Started"</h3>
+        <div class="nav-mock">
+          <span class="nav-logo-mock">Miclea</span>
+          <span class="nav-links-mock">
+            <span>Products</span><span>Pricing</span><span>Blog</span>
+          </span>
+          <div class="nav-btns">
+            <button class="btn-text-b">Sign in</button>
+            <button class="btn-solid-b">Get Started →</button>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#6b7280;margin:4px 0 0">Sign-in disappears into the nav; blue CTA pops hard. Max attention on conversion.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)" style="flex-direction:column;align-items:flex-start;gap:6px">
+    <div style="display:flex;align-items:center;gap:12px;width:100%">
+      <div class="letter">C</div>
+      <div class="content" style="flex:1">
+        <h3 style="margin:0 0 8px">Ghost "Sign in" + Brand Blue "Get Started"</h3>
+        <div class="nav-mock">
+          <span class="nav-logo-mock">Miclea</span>
+          <span class="nav-links-mock">
+            <span>Products</span><span>Pricing</span><span>Blog</span>
+          </span>
+          <div class="nav-btns">
+            <button class="btn-ghost-c">Sign in</button>
+            <button class="btn-solid-c">Get Started</button>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#6b7280;margin:4px 0 0">Balanced: sign-in is findable but clearly secondary; blue CTA is the action eye goes to first.</p>
+      </div>
+    </div>
+  </div>
+
+</div>

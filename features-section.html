@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miclea — Features Section</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-family-sans);color:var(--text-light-default);background:#fff;-webkit-font-smoothing:antialiased}
+
+  .fx{padding:104px 0;background:#fff}
+  .fx-wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+
+  /* Section head */
+  .fx-head{max-width:660px;margin:0 0 60px}
+  .fx-kicker{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .fx-kicker__dash{display:block;width:14px;height:3px;background:var(--brand-default);border-radius:2px}
+  .fx-kicker__label{font-family:var(--font-family-monospace);font-size:12.5px;font-weight:400;letter-spacing:1.4px;
+    text-transform:uppercase;color:var(--brand-default)}
+  .fx-head h2{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(32px,4.4vw,52px);line-height:1.06;
+    letter-spacing:-1.6px;color:var(--text-light-default)}
+  .fx-head h2 em{font-style:italic;color:var(--brand-default)}
+  .fx-head p{font-size:18.4px;line-height:1.5;letter-spacing:-.3px;color:var(--text-paragraph-muted);margin-top:20px;max-width:540px}
+
+  /* Grid */
+  .fx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .fx-card{display:flex;flex-direction:column;border:1px solid #e9e9e6;border-radius:16px;padding:26px 26px 28px;background:#fff;
+    position:relative;overflow:hidden;
+    transition:box-shadow var(--duration-fast) var(--ease-standard),transform var(--duration-fast) var(--ease-standard),border-color var(--duration-fast) var(--ease-standard)}
+  .fx-card:hover{box-shadow:0 14px 40px rgba(17,24,39,.09);transform:translateY(-3px);border-color:#dcdcd8}
+
+  /* Visual chip / icon */
+  .fx-vis{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;
+    background:var(--brand-fainter);color:var(--brand-default);flex:0 0 auto}
+  .fx-vis svg{width:23px;height:23px;display:block}
+  .fx-card.accent .fx-vis{background:var(--brand-default);color:#fff;
+    box-shadow:inset 0 -1.5px 2px 0 #638DFF,inset 0 0 10px 0 #0043FB}
+
+  /* Feature label (the "feature") */
+  .fx-tag{font-family:var(--font-family-monospace);font-size:11px;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--text-light-subtle);margin-bottom:10px}
+
+  /* Benefit headline (the "outcome") */
+  .fx-card h3{font-family:var(--font-family-serif);font-weight:400;font-size:25px;line-height:1.14;letter-spacing:-.7px;
+    color:var(--text-light-default);margin-bottom:12px}
+
+  .fx-card p{font-size:15px;line-height:1.6;color:var(--text-paragraph-muted);margin-bottom:18px}
+
+  .fx-out{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;color:var(--brand-dark)}
+  .fx-out svg{width:15px;height:15px;color:var(--accent-green)}
+
+  @media(max-width:900px){.fx-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.fx-grid{grid-template-columns:1fr}.fx{padding:72px 0}}
+</style>
+</head>
+<body>
+
+<section class="fx">
+  <div class="fx-wrap">
+
+    <div class="fx-head">
+      <div class="fx-kicker">
+        <span class="fx-kicker__dash"></span>
+        <span class="fx-kicker__label">Features</span>
+      </div>
+      <h2>Practice once. Walk in like you've <em>done this before.</em></h2>
+      <p>Miclea turns interview prep into reps with Micl, your AI interviewer — so the room
+         feels familiar before you ever sit down in it.</p>
+    </div>
+
+    <div class="fx-grid">
+
+      <!-- 1. Speed Round -->
+      <article class="fx-card">
+        <div class="fx-vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>
+        </div>
+        <div class="fx-tag">Speed Round</div>
+        <h3>Walk in warm, not nervous</h3>
+        <p>A fast burst of easy questions out loud with Micl shakes off the jitters,
+           so your first real answer isn't your first answer of the day.</p>
+        <div class="fx-out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          Confidence in ~3 minutes
+        </div>
+      </article>
+
+      <!-- 2. Gauntlet Round -->
+      <article class="fx-card accent">
+        <div class="fx-vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/></svg>
+        </div>
+        <div class="fx-tag">Gauntlet Round</div>
+        <h3>Feel the pressure here, not in the room</h3>
+        <p>Three rising rounds, a real curveball, and breaks you can't skip — a mock
+           interview that bites back, so the real one can't surprise you.</p>
+        <div class="fx-out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          Composure under fire
+        </div>
+      </article>
+
+      <!-- 3. Progress & Insights -->
+      <article class="fx-card">
+        <div class="fx-vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+        </div>
+        <div class="fx-tag">Progress &amp; Insights</div>
+        <h3>Watch yourself get better, week over week</h3>
+        <p>Scores, trends, and your strengths and weak spots in one view — proof
+           you're improving and a clear answer to what to practice next.</p>
+        <div class="fx-out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          Direction, not guesswork
+        </div>
+      </article>
+
+      <!-- 4. Question Bank -->
+      <article class="fx-card">
+        <div class="fx-vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 5v14"/></svg>
+        </div>
+        <div class="fx-tag">Question Bank</div>
+        <h3>Never get blindsided by a question</h3>
+        <p>Study from a searchable library plus every question you've already faced,
+           filtered by role and difficulty — so "tell me about a time…" lands easy.</p>
+        <div class="fx-out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          Prepared for the curveball
+        </div>
+      </article>
+
+      <!-- 5. Résumé Editor -->
+      <article class="fx-card">
+        <div class="fx-vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+        </div>
+        <div class="fx-tag">Résumé + Micl AI</div>
+        <h3>A résumé that earns the interview</h3>
+        <p>Micl sharpens your bullets into action and impact and tailors them to the
+           job — you accept the edits you like, so it still sounds like you.</p>
+        <div class="fx-out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          More callbacks
+        </div>
+      </article>
+
+      <!-- 6. Cover Letter Editor -->
+      <article class="fx-card">
+        <div class="fx-vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="m3 6 9 7 9-7"/></svg>
+        </div>
+        <div class="fx-tag">Cover Letter + Micl AI</div>
+        <h3>A tailored letter in minutes, not hours</h3>
+        <p>Drop in the role and job description and Micl drafts a letter in your voice,
+           pulled from your résumé — so applying never stalls on the blank page.</p>
+        <div class="fx-out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          Apply to more, faster
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Résumé — Miclea</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app-shell.css">
+<style>
+  .doc-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .ver{position:relative}
+  .ver-btn{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid var(--app-line);border-radius:10px;background:#fff;font-size:13.5px;font-weight:600}
+  .ver-btn svg{width:15px;height:15px;color:var(--ink-subtle)}
+  .ver-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:230px;background:#fff;border:1px solid var(--app-line);border-radius:12px;box-shadow:var(--shadow-lg);padding:6px;z-index:20;display:none}
+  .ver.open .ver-menu{display:block}
+  .ver-opt{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer}
+  .ver-opt:hover{background:var(--brand-fainter);color:var(--brand)}
+  .ver-opt small{color:var(--ink-subtle);font-weight:400}
+  .edits-chip{display:flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:100px;background:var(--brand-fainter);color:var(--brand);font-size:13px;font-weight:600}
+  .edits-chip svg{width:15px;height:15px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+  /* editor */
+  .ed{padding:0;overflow:hidden}
+  .ed-sec{padding:18px 20px;border-bottom:1px solid var(--app-line)}
+  .ed-sec:last-child{border-bottom:none}
+  .ed-sec h4{font-family:var(--font-family-monospace);font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-subtle);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+  .ed-sec h4 button{border:none;background:none;color:var(--brand);font-family:var(--font-family-sans);font-size:11.5px;font-weight:600;letter-spacing:0;text-transform:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+  .fld{border:1px solid transparent;border-radius:8px;padding:7px 9px;font-size:14px;line-height:1.5;transition:.12s;outline:none}
+  .fld:hover{background:#fbfaf8}
+  .fld:focus{background:#fff;border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
+  .fld.lg{font-size:18px;font-weight:700}
+  .ed-row{display:flex;gap:8px}.ed-row .fld{flex:1}
+  .bul{display:flex;gap:8px;align-items:flex-start;margin-bottom:4px}
+  .bul::before{content:"•";color:var(--brand);margin-top:8px}
+  .bul .fld{flex:1}
+  .exp-item{padding:12px;border:1px solid var(--app-line);border-radius:11px;margin-bottom:10px}
+  .skills-edit{display:flex;flex-wrap:wrap;gap:7px}
+  .sk{display:inline-flex;align-items:center;gap:6px;background:var(--brand-fainter);color:var(--brand);padding:5px 11px;border-radius:100px;font-size:12.5px;font-weight:600}
+  .sk .fld{padding:0;font-size:12.5px}
+  /* preview */
+  .pv-wrap{position:sticky;top:84px}
+  .paper{background:#fff;border:1px solid var(--app-line);border-radius:12px;box-shadow:var(--shadow);padding:40px;font-size:13px;line-height:1.5;color:#1f2937;max-height:78vh;overflow-y:auto}
+  .paper h1{font-family:var(--font-family-serif);font-weight:400;font-size:30px;letter-spacing:-.5px;color:#111}
+  .paper .pv-title{color:var(--brand);font-weight:600;font-size:14px;margin:2px 0 6px}
+  .paper .pv-contact{font-size:11.5px;color:var(--ink-muted);font-family:var(--font-family-monospace);margin-bottom:18px}
+  .paper .pv-h{font-family:var(--font-family-monospace);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--brand);border-bottom:1.5px solid var(--brand-fainter);padding-bottom:5px;margin:18px 0 10px}
+  .paper .pv-exp{margin-bottom:13px}
+  .paper .pv-exp .r{display:flex;justify-content:space-between;font-weight:700;font-size:13.5px}
+  .paper .pv-exp .c{color:var(--ink-muted);font-size:12px;margin-bottom:5px}
+  .paper .pv-exp ul{margin:0 0 0 16px;padding:0}.paper .pv-exp li{margin-bottom:3px}
+  .paper .pv-skills{display:flex;flex-wrap:wrap;gap:6px}
+  .paper .pv-skills span{background:#f3f4f6;border-radius:6px;padding:3px 9px;font-size:11.5px}
+  /* micl drawer */
+  .drawer-scrim{position:fixed;inset:0;background:rgba(17,24,39,.4);opacity:0;visibility:hidden;transition:.2s;z-index:90}
+  .drawer-scrim.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:430px;max-width:92vw;background:#fbfaf8;z-index:91;transform:translateX(100%);transition:transform .28s var(--ease-standard);overflow-y:auto;box-shadow:var(--shadow-lg)}
+  .drawer.open{transform:none}
+  .drawer-head{padding:22px;background:#fff;border-bottom:1px solid var(--app-line);position:sticky;top:0;z-index:2}
+  .micl-row{display:flex;align-items:center;gap:11px}
+  .micl-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(150deg,var(--brand),var(--brand-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-family-serif);flex:none}
+  .drawer-body{padding:18px}
+  .sugg{background:#fff;border:1px solid var(--app-line);border-radius:13px;padding:15px;margin-bottom:13px}
+  .sugg .sg-t{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:7px}
+  .sugg .sg-t svg{width:15px;height:15px;color:var(--brand)}
+  .sugg .sg-why{font-size:12px;color:var(--ink-muted);margin-bottom:11px;line-height:1.45}
+  .sugg .sg-before{font-size:12.5px;color:#9ca3af;text-decoration:line-through;background:#fbfaf8;border-radius:8px;padding:8px 10px;margin-bottom:6px;line-height:1.4}
+  .sugg .sg-after{font-size:12.5px;color:#065f46;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 10px;margin-bottom:11px;line-height:1.4}
+  .sugg .sg-act{display:flex;gap:8px}
+  .sg-act button{flex:1;border:none;border-radius:8px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .sg-accept{background:var(--brand);color:#fff}.sg-accept:hover{background:var(--brand-dark)}
+  .sg-reject{background:#fff;color:var(--ink-muted);border:1px solid var(--app-line)!important}
+  .sugg.done{opacity:.55}.sugg.done .sg-act{display:none}
+  .sg-status{font-size:11.5px;font-weight:700;display:none}.sugg.done .sg-status{display:block}
+  .sg-status.ok{color:#059669}.sg-status.no{color:#9ca3af}
+  /* free paywall */
+  .paywall{display:none;text-align:center;padding:54px 28px}
+  body.tier-free .paywall{display:block}body.tier-free .doc-app{display:none}
+  .paywall .pw-badge{width:60px;height:60px;border-radius:16px;background:var(--brand-fainter);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+  .paywall h2{font-family:var(--font-family-serif);font-weight:400;font-size:30px;margin-bottom:10px}
+  .paywall p{color:var(--ink-muted);max-width:440px;margin:0 auto 22px;line-height:1.55}
+  @media(max-width:980px){.split{grid-template-columns:1fr}.pv-wrap{position:static}}
+</style>
+</head>
+<body data-page="resume" data-search="Search your documents…">
+<div class="main">
+  <main class="content">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Document studio</span>
+        <h1 style="margin-top:8px">Résumé</h1>
+        <p class="sub">Build it, then let Micl sharpen every line — stronger verbs, quantified impact, tailored to the role.</p>
+      </div>
+    </div>
+
+    <!-- free paywall -->
+    <div class="paywall card">
+      <div class="pw-badge"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <h2>The Résumé editor is a Pro feature</h2>
+      <p>Create, version, and export résumés — with Micl's AI rewriting your bullets into quantified, role-tailored impact.</p>
+      <a class="btn btn-brand btn-lg" href="pricing">See plans</a>
+    </div>
+
+    <div class="doc-app">
+      <div class="doc-bar">
+        <div class="ver" id="ver">
+          <button class="ver-btn" id="verBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> <span id="verName">Software Engineer — v3</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="ver-menu">
+            <div class="ver-opt" data-v="Software Engineer — v3">Software Engineer — v3 <small>now</small></div>
+            <div class="ver-opt" data-v="Senior SWE (tailored)">Senior SWE (tailored) <small>Jun 20</small></div>
+            <div class="ver-opt" data-v="Startup generalist">Startup generalist <small>Jun 11</small></div>
+            <div class="ver-opt" data-v="+ New version" style="color:var(--brand)">+ New version</div>
+          </div>
+        </div>
+        <span class="edits-chip" id="editsChip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> <span id="editsLeft">10</span> AI edits left</span>
+        <div style="margin-left:auto;display:flex;gap:10px">
+          <button class="btn btn-soft" id="miclBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Ask Micl</button>
+          <button class="btn btn-brand" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export PDF</button>
+        </div>
+      </div>
+
+      <div class="split">
+        <!-- EDITOR -->
+        <div class="card ed">
+          <div class="ed-sec">
+            <h4>Header</h4>
+            <div class="fld lg" contenteditable data-f="name">Thomas Hanks</div>
+            <div class="fld" contenteditable data-f="title">Software Engineer</div>
+            <div class="ed-row"><div class="fld" contenteditable data-f="email">thomas@email.com</div><div class="fld" contenteditable data-f="phone">(555) 010-2048</div></div>
+            <div class="fld" contenteditable data-f="location">Brooklyn, NY</div>
+          </div>
+          <div class="ed-sec">
+            <h4>Summary <button data-ask="summary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Improve</button></h4>
+            <div class="fld" contenteditable data-f="summary">Software engineer with 5 years of experience. I work on web apps and like building things. Good team player who is always learning.</div>
+          </div>
+          <div class="ed-sec">
+            <h4>Experience <button data-ask="bullet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Improve</button></h4>
+            <div class="exp-item">
+              <div class="fld" contenteditable data-f="role" style="font-weight:700">Software Engineer</div>
+              <div class="ed-row"><div class="fld" contenteditable data-f="company">Northwind Labs</div><div class="fld" contenteditable data-f="dates">2022 — Present</div></div>
+              <div class="bul"><div class="fld" contenteditable data-f="b0">Worked on the payments system and made it faster.</div></div>
+              <div class="bul"><div class="fld" contenteditable data-f="b1">Helped the team ship features and fixed bugs.</div></div>
+            </div>
+          </div>
+          <div class="ed-sec">
+            <h4>Skills <button data-ask="skills"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Tailor</button></h4>
+            <div class="skills-edit"><span class="sk"><span class="fld" contenteditable data-f="skills">JavaScript, React, Node, SQL, Git</span></span></div>
+          </div>
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="pv-wrap">
+          <div class="paper" id="paper"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Micl drawer -->
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="micl-row"><span class="micl-av">M</span><div><div style="font-weight:700">Micl's suggestions</div><div style="font-size:12px;color:var(--ink-muted)">Accept to apply · reject to skip</div></div>
+      <button class="x-btn" id="drawerClose" style="position:absolute;top:18px;right:18px;width:32px;height:32px;border-radius:8px;border:1px solid var(--app-line);background:#fff;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+  </div>
+  <div class="drawer-body" id="suggBody"></div>
+</aside>
+
+<script src="app-shell.js"></script>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  document.body.classList.add('tier-'+(window.Miclea?Miclea.getTier():'pro'));
+  window.addEventListener('tierchange',function(){location.reload()});
+  var tier=window.Miclea?Miclea.getTier():'pro';
+  var unlimited=tier==='ultra';
+  if(unlimited){ $('#editsChip').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Unlimited AI edits'; }
+  var editsLeft=10;
+
+  var model={};
+  document.querySelectorAll('[data-f]').forEach(function(el){model[el.dataset.f]=el.textContent;});
+
+  function renderPreview(){
+    var m=model;
+    $('#paper').innerHTML=
+      '<h1>'+esc(m.name)+'</h1>'+
+      '<div class="pv-title">'+esc(m.title)+'</div>'+
+      '<div class="pv-contact">'+esc(m.email)+' · '+esc(m.phone)+' · '+esc(m.location)+'</div>'+
+      '<div class="pv-h">Summary</div><div>'+esc(m.summary)+'</div>'+
+      '<div class="pv-h">Experience</div><div class="pv-exp"><div class="r"><span>'+esc(m.role)+'</span></div><div class="c">'+esc(m.company)+' · '+esc(m.dates)+'</div><ul><li>'+esc(m.b0)+'</li><li>'+esc(m.b1)+'</li></ul></div>'+
+      '<div class="pv-h">Skills</div><div class="pv-skills">'+m.skills.split(',').map(function(s){return '<span>'+esc(s.trim())+'</span>'}).join('')+'</div>';
+  }
+  function esc(s){return (s||'').replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+
+  document.querySelectorAll('[data-f]').forEach(function(el){
+    el.addEventListener('input',function(){model[el.dataset.f]=el.textContent;renderPreview();});
+  });
+  renderPreview();
+
+  // version switcher
+  $('#verBtn').addEventListener('click',function(e){e.stopPropagation();$('#ver').classList.toggle('open');});
+  document.addEventListener('click',function(){$('#ver').classList.remove('open');});
+  document.querySelectorAll('.ver-opt').forEach(function(o){o.addEventListener('click',function(){
+    if(o.dataset.v.indexOf('New')<0){$('#verName').textContent=o.dataset.v;}
+    Miclea.toast(o.dataset.v.indexOf('New')<0?'Switched to '+o.dataset.v:'New version created');
+    $('#ver').classList.remove('open');
+  });});
+
+  $('#exportBtn').addEventListener('click',function(){Miclea.toast('Résumé exported to PDF');});
+
+  // Micl suggestions
+  var SUGG=[
+    {id:'summary',field:'summary',title:'Sharpen your summary',why:'Vague and passive. Lead with scope and a quantified signal.',
+      after:'Software engineer with 5 years building and scaling web platforms. Cut checkout failures 30% and page-load 75% by owning systems end to end. Pragmatic, fast, and obsessed with the user.'},
+    {id:'bullet',field:'b0',title:'Quantify this bullet',why:'"Made it faster" is unmeasurable. Add the metric and the action.',
+      after:'Re-architected the payments pipeline, cutting checkout latency from 4s to under 1s and lifting conversion 8%.'},
+    {id:'bullet2',field:'b1',title:'Add ownership & impact',why:'Passive and generic — show what you drove and the result.',
+      after:'Led delivery of 6 customer-facing features across 2 quarters, reducing support tickets 22% through proactive edge-case handling.'},
+    {id:'skills',field:'skills',title:'Tailor skills to the role',why:'Reorder toward the job description and add specifics that pass keyword screens.',
+      after:'React, TypeScript, Node.js, PostgreSQL, System Design, AWS, CI/CD, GraphQL'}
+  ];
+
+  function openDrawer(filterId){
+    var list = filterId ? SUGG.filter(function(s){return s.id===filterId||s.field===filterId||(filterId==='bullet'&&s.field.indexOf('b')===0)}) : SUGG;
+    if(!list.length) list=SUGG;
+    $('#suggBody').innerHTML=list.map(function(s){
+      return '<div class="sugg" data-field="'+s.field+'" data-id="'+s.id+'">'+
+        '<div class="sg-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'+s.title+'</div>'+
+        '<div class="sg-why">'+s.why+'</div>'+
+        '<div class="sg-before">'+esc(model[s.field])+'</div>'+
+        '<div class="sg-after">'+esc(s.after)+'</div>'+
+        '<div class="sg-act"><button class="sg-accept">Accept</button><button class="sg-reject">Reject</button></div>'+
+        '<div class="sg-status ok">✓ Applied</div>'+
+      '</div>';
+    }).join('');
+    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+  }
+  function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');}
+
+  $('#miclBtn').addEventListener('click',function(){openDrawer(null);});
+  document.querySelectorAll('[data-ask]').forEach(function(b){b.addEventListener('click',function(){openDrawer(b.dataset.ask);});});
+  $('#drawerClose').addEventListener('click',closeDrawer);
+  $('#drawerScrim').addEventListener('click',closeDrawer);
+
+  $('#suggBody').addEventListener('click',function(e){
+    var card=e.target.closest('.sugg');if(!card)return;
+    var sug=SUGG.filter(function(s){return s.id===card.dataset.id})[0];
+    if(e.target.classList.contains('sg-accept')){
+      if(!unlimited){ if(editsLeft<=0){Miclea.toast('No AI edits left this month — upgrade to Ultra','err');return;} editsLeft--; $('#editsLeft').textContent=editsLeft; }
+      model[sug.field]=sug.after;
+      var fld=document.querySelector('[data-f="'+sug.field+'"]'); if(fld)fld.textContent=sug.after;
+      renderPreview();
+      card.classList.add('done');card.querySelector('.sg-status').className='sg-status ok';card.querySelector('.sg-status').textContent='✓ Applied to your résumé';
+      Miclea.toast('Suggestion applied');
+    } else if(e.target.classList.contains('sg-reject')){
+      card.classList.add('done');card.querySelector('.sg-status').className='sg-status no';card.querySelector('.sg-status').textContent='Skipped';
+    }
+  });
+})();
+</script>
+</body>
+</html>

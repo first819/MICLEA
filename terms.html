@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of Service — Miclea AI</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  a{text-decoration:none;color:inherit}
+  body{overflow-x:hidden;background:#fff;color:#111}
+
+  .wrap-wide{max-width:1280px;margin:0 auto;padding:0 24px}
+
+  /* Nav */
+  header.nav{position:sticky;top:0;z-index:60;height:var(--nav-height);background:#fff;display:flex;
+    align-items:center;border-bottom:1px solid #f0f0f0}
+  .nav .wrap-wide{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;width:100%}
+  .nav .wrap-wide .nav-logo{justify-self:start;display:flex;align-items:center}
+  .nav .wrap-wide .nav-logo img{height:34px;width:auto;display:block}
+  .nav .wrap-wide nav.center{justify-self:center}
+  .nav .wrap-wide .nav-cta{justify-self:end}
+  nav.center{display:flex;gap:30px;align-items:center}
+  nav.center a{font-family:var(--font-family-sans);font-weight:500;font-size:16px;
+    color:var(--text-light-default);display:inline-flex;align-items:center;gap:5px;
+    padding:5px 10px;border-radius:6px;transition:background .15s,color .15s}
+  nav.center a:hover{background:rgba(0,0,0,.06)}
+  nav.center a .caret{font-size:9px;color:#9ca3af;margin-left:1px}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;border:0;cursor:pointer;
+    border-radius:4px;font-family:var(--font-family-sans);
+    transition:background .15s,color .15s}
+  .btn-dash{background:#000;color:#fff;padding:9px 16px;font-size:15px;font-weight:500}
+  .btn-dash:hover{background:#1a1a1a}
+  .hamburger{display:none;width:32px;height:32px;border:0;background:none;cursor:pointer;
+    align-items:center;justify-content:center}
+  .hamburger svg{width:22px;height:22px}
+
+  /* Content */
+  .legal-wrap{max-width:760px;margin:0 auto;padding:72px 24px 96px}
+  .legal-label{font-family:var(--font-family-sans);font-size:12px;font-weight:500;
+    letter-spacing:1.4px;text-transform:uppercase;color:#6b7280;margin-bottom:16px}
+  .legal-wrap h1{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(32px,4vw,52px);
+    line-height:1.08;letter-spacing:-1.5px;color:#111;margin:0 0 12px}
+  .legal-updated{font-size:14px;color:#6b7280;margin-bottom:56px}
+  .legal-wrap h2{font-family:var(--font-family-sans);font-size:18px;font-weight:600;
+    color:#111;margin:48px 0 12px;padding-top:48px;border-top:1px solid #e5e7eb}
+  .legal-wrap h2:first-of-type{margin-top:0;padding-top:0;border-top:none}
+  .legal-wrap h3{font-family:var(--font-family-sans);font-size:15px;font-weight:600;
+    color:#111;margin:28px 0 8px}
+  .legal-wrap p{font-size:16px;line-height:1.7;color:#374151;margin:0 0 16px}
+  .legal-wrap ul{font-size:16px;line-height:1.7;color:#374151;margin:0 0 16px;
+    padding-left:24px}
+  .legal-wrap ul li{margin-bottom:6px}
+  .legal-wrap a{color:var(--brand-default);text-decoration:underline;text-underline-offset:2px}
+  .legal-wrap a:hover{opacity:.8}
+
+  /* Footer */
+  .legal-footer{border-top:1px solid #e5e7eb;padding:32px 24px;text-align:center}
+  .legal-footer-links{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;
+    font-size:14px;color:#6b7280}
+  .legal-footer-links a{color:#6b7280}
+  .legal-footer-links a:hover{color:#111}
+  .legal-footer-copy{margin-top:12px;font-size:13px;color:#9ca3af}
+
+  @media(max-width:640px){
+    nav.center,.nav-cta{display:none}
+    .hamburger{display:flex}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap-wide">
+    <a class="nav-logo" href="index" aria-label="Miclea home">
+      <img src="images/logo.png" alt="Miclea">
+    </a>
+    <nav class="center">
+      <a href="#">Products <span class="caret">&#9662;</span></a>
+      <div class="nav-dd">
+        <a class="nav-dd__trigger" href="#">Resources <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Resources">
+          <a href="job-seekers" role="menuitem"><span class="nav-dd__t">Job seekers</span><span class="nav-dd__d">Land more callbacks and offers, faster</span></a>
+          <a href="bootcamps" role="menuitem"><span class="nav-dd__t">Bootcamps</span><span class="nav-dd__d">Lift cohort placement rates</span></a>
+          <a href="career-centers" role="menuitem"><span class="nav-dd__t">Career centers</span><span class="nav-dd__d">Coach more students with less staff</span></a>
+          <a href="universities" role="menuitem"><span class="nav-dd__t">Universities</span><span class="nav-dd__d">Raise graduate employment outcomes</span></a>
+          <a href="teams" role="menuitem"><span class="nav-dd__t">Teams</span><span class="nav-dd__d">Prep employees for internal moves</span></a>
+        </div>
+      </div>
+      <a href="pricing">Pricing</a>
+      <a href="about">About</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-dash" href="login">Log in</a>
+    </div>
+    <button class="hamburger" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="legal-wrap">
+  <p class="legal-label">Legal</p>
+  <h1>Terms of Service</h1>
+  <p class="legal-updated">Last updated: June 22, 2026</p>
+
+  <h2>Acceptance of Terms</h2>
+  <p>By creating an account or using the Miclea AI platform ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree, do not use the Service. If you are using the Service on behalf of an organization, you represent that you have authority to bind that organization to these Terms.</p>
+
+  <h2>Description of Service</h2>
+  <p>Miclea AI provides an AI-powered interview practice platform that allows users to rehearse job interviews, receive automated scoring and feedback, and track improvement over time. Features may change as we improve the product. We will notify you of material changes.</p>
+
+  <h2>Account Registration</h2>
+  <p>You must provide accurate information when creating your account and keep it up to date. You are responsible for all activity that occurs under your account. Keep your password confidential and notify us immediately at <a href="mailto:support@miclea.ai">support@miclea.ai</a> if you suspect unauthorized access.</p>
+  <p>You must be at least 16 years old to use the Service. Users under 18 must have parental or guardian consent.</p>
+
+  <h2>Acceptable Use</h2>
+  <p>You agree not to:</p>
+  <ul>
+    <li>Use the Service for any unlawful purpose or in violation of these Terms.</li>
+    <li>Upload content that is defamatory, obscene, harassing, or infringes third-party rights.</li>
+    <li>Attempt to reverse-engineer, scrape, or extract data from the platform at scale.</li>
+    <li>Use automated tools to access the Service beyond normal user interaction.</li>
+    <li>Share your account credentials with others or resell access to the Service.</li>
+    <li>Interfere with or disrupt the integrity or performance of the Service.</li>
+  </ul>
+
+  <h2>Intellectual Property</h2>
+  <p>Miclea AI and its licensors own all rights in the Service, including the software, AI models, design, and content we provide. Nothing in these Terms grants you ownership of any part of the Service.</p>
+  <p>You retain ownership of content you upload (resumes, answers, recordings). By uploading content, you grant Miclea a limited license to use it solely to provide and improve the Service for you.</p>
+
+  <h2>Subscriptions &amp; Payments</h2>
+  <p>Paid plans are billed in advance on a monthly or annual basis. All fees are non-refundable except as required by law or as stated in our refund policy. We reserve the right to change pricing with 30 days' notice to subscribers. Continued use after a price change constitutes acceptance.</p>
+
+  <h2>Disclaimers</h2>
+  <p>The Service is provided "as is" and "as available" without warranties of any kind, express or implied. We do not guarantee that interview practice using Miclea will result in job offers or any particular employment outcome. AI-generated feedback is for practice purposes only and is not professional career advice.</p>
+
+  <h2>Limitation of Liability</h2>
+  <p>To the maximum extent permitted by law, Miclea AI will not be liable for any indirect, incidental, special, consequential, or punitive damages, including lost profits or lost data, arising out of or related to your use of the Service. Our total liability to you for any claim will not exceed the amount you paid us in the 12 months preceding the claim.</p>
+
+  <h2>Termination</h2>
+  <p>We may suspend or terminate your account at any time if you violate these Terms or if we decide to discontinue the Service. You may cancel your account at any time from your account settings. Upon termination, your right to use the Service ends immediately.</p>
+
+  <h2>Governing Law</h2>
+  <p>These Terms are governed by the laws of the State of New York, USA, without regard to conflict-of-law principles. Any disputes will be resolved in the state or federal courts located in New York County, New York, and you consent to personal jurisdiction there.</p>
+
+  <h2>Contact Us</h2>
+  <p>Questions about these Terms? Email us at <a href="mailto:legal@miclea.ai">legal@miclea.ai</a> or write to:</p>
+  <p>Miclea AI, Inc.<br>Legal Team<br>New York, NY, USA</p>
+</main>
+
+<footer class="legal-footer">
+  <nav class="legal-footer-links" aria-label="Legal pages">
+    <a href="privacy">Privacy</a>
+    <a href="terms">Terms</a>
+    <a href="security">Security</a>
+    <a href="index">← Back to home</a>
+  </nav>
+  <p class="legal-footer-copy">© 2026 Miclea AI, Inc. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

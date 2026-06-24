@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Miclea</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app-shell.css">
+<style>
+  .set-wrap{max-width:760px}
+  .set-card{padding:24px;margin-bottom:20px}
+  .set-card .sc-head{display:flex;align-items:flex-start;gap:13px;margin-bottom:20px}
+  .sc-ic{width:40px;height:40px;border-radius:11px;background:var(--brand-fainter);color:var(--brand);display:flex;align-items:center;justify-content:center;flex:none}
+  .sc-ic svg{width:20px;height:20px}
+  .sc-head h3{font-size:17px;font-weight:700}
+  .sc-head p{font-size:13px;color:var(--ink-muted);margin-top:2px}
+  .frm{display:grid;gap:14px}
+  .lbl{font-size:13px;font-weight:600;margin-bottom:7px;display:block}
+  .inp{width:100%;border:1px solid var(--app-line);border-radius:9px;padding:11px 13px;font-size:14px;font-family:inherit;background:var(--app-card);color:var(--ink);transition:.12s}
+  .inp:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
+  .inp.bad{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.1)}
+  .err{font-size:12px;color:#dc2626;margin-top:6px;display:none}
+  .err.show{display:block}
+  .hint{font-size:12px;color:var(--ink-muted);margin-top:6px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sc-actions{margin-top:18px;display:flex;gap:10px;align-items:center}
+  /* strength meter */
+  .meter{height:6px;border-radius:100px;background:var(--app-line);overflow:hidden;margin-top:9px}
+  .meter i{display:block;height:100%;width:0;border-radius:100px;transition:width .25s,background .25s}
+  .meter-lbl{font-size:11.5px;margin-top:5px;font-weight:600}
+  /* theme picker */
+  .theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .theme-opt{border:1.5px solid var(--app-line);border-radius:13px;padding:13px;cursor:pointer;transition:.14s;text-align:center}
+  .theme-opt:hover{border-color:var(--brand-faint)}
+  .theme-opt.on{border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
+  .theme-prev{height:54px;border-radius:9px;margin-bottom:10px;border:1px solid var(--app-line);overflow:hidden;display:flex}
+  .theme-prev .sb{width:30%;border-right:1px solid var(--app-line)}
+  .theme-prev .bd{flex:1;padding:7px}
+  .theme-prev .ln{height:6px;border-radius:3px;margin-bottom:4px}
+  .tp-light{background:#faf9f7}.tp-light .sb{background:#fff}.tp-light .ln{background:#e5e3de}.tp-light .ln.a{background:#1f40ed;width:60%}
+  .tp-dark{background:#0e1014}.tp-dark .sb{background:#171a20;border-color:#262a32}.tp-dark .ln{background:#2a2f38}.tp-dark .ln.a{background:#5b6bf0;width:60%}
+  .tp-sys{background:linear-gradient(120deg,#faf9f7 50%,#0e1014 50%)}.tp-sys .sb{background:linear-gradient(120deg,#fff 50%,#171a20 50%);border:none}.tp-sys .ln{background:linear-gradient(120deg,#e5e3de 50%,#2a2f38 50%)}.tp-sys .ln.a{background:#1f40ed;width:60%}
+  .theme-opt .tn{font-size:13px;font-weight:600}
+  /* tier switcher (demo) */
+  .tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .tier-opt{border:1.5px solid var(--app-line);border-radius:13px;padding:16px;cursor:pointer;transition:.14s}
+  .tier-opt:hover{border-color:var(--brand-faint)}
+  .tier-opt.on{border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
+  .tier-opt .tt{font-family:var(--font-family-serif);font-size:19px;margin-bottom:3px}
+  .tier-opt .tp{font-size:12px;color:var(--ink-muted)}
+  .tier-opt .tcheck{margin-top:10px;font-size:11.5px;font-weight:700;color:var(--brand);display:none}
+  .tier-opt.on .tcheck{display:block}
+  .demo-note{font-size:12px;color:var(--ink-muted);background:var(--brand-fainter);border-radius:9px;padding:10px 12px;margin-top:14px;display:flex;gap:8px}
+  .demo-note svg{width:15px;height:15px;flex:none;color:var(--brand);margin-top:1px}
+  .link-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--app-line)}
+  .link-row:first-child{border-top:none}
+  .link-row .lr-b svg{width:18px;height:18px;color:var(--ink-subtle)}
+  @media(max-width:680px){.row2,.theme-grid,.tier-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="settings" data-search="Search settings…">
+<div class="main">
+  <main class="content">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Your account</span>
+        <h1 style="margin-top:8px">Settings</h1>
+        <p class="sub">Manage your profile, security, and how Miclea looks and feels.</p>
+      </div>
+    </div>
+
+    <div class="set-wrap">
+      <!-- Profile -->
+      <div class="card set-card">
+        <div class="sc-head"><span class="sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><div><h3>Profile</h3><p>How you show up across the app.</p></div></div>
+        <div class="frm">
+          <div><label class="lbl">Display name</label><input class="inp" id="name" value="Thomas Hanks"></div>
+          <div><label class="lbl">Username</label><input class="inp" id="username" value="thomas.h"><div class="hint">miclea.ai/@<span id="unameMirror">thomas.h</span></div></div>
+        </div>
+        <div class="sc-actions"><button class="btn btn-brand" id="saveProfile">Save changes</button></div>
+      </div>
+
+      <!-- Email -->
+      <div class="card set-card">
+        <div class="sc-head"><span class="sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></span><div><h3>Email</h3><p>Changing this sends a verification link to the new address.</p></div></div>
+        <div><label class="lbl">Email address</label><input class="inp" id="email" type="email" value="thomas@email.com"><div class="err" id="emailErr">Enter a valid email address.</div></div>
+        <div class="sc-actions"><button class="btn btn-brand" id="saveEmail">Update email</button><span class="hint" id="emailHint"></span></div>
+      </div>
+
+      <!-- Password -->
+      <div class="card set-card">
+        <div class="sc-head"><span class="sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><div><h3>Password</h3><p>Confirm your current password to set a new one.</p></div></div>
+        <div class="frm">
+          <div><label class="lbl">Current password</label><input class="inp" id="curPw" type="password" placeholder="••••••••"><div class="err" id="curErr">Current password is required.</div></div>
+          <div class="row2">
+            <div><label class="lbl">New password</label><input class="inp" id="newPw" type="password" placeholder="At least 8 characters">
+              <div class="meter"><i id="meterBar"></i></div><div class="meter-lbl" id="meterLbl"></div>
+            </div>
+            <div><label class="lbl">Confirm new password</label><input class="inp" id="confPw" type="password" placeholder="Re-enter"><div class="err" id="confErr">Passwords don't match.</div></div>
+          </div>
+        </div>
+        <div class="sc-actions"><button class="btn btn-brand" id="savePw">Change password</button></div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="card set-card">
+        <div class="sc-head"><span class="sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg></span><div><h3>Appearance</h3><p>Choose a theme — applied everywhere and remembered.</p></div></div>
+        <div class="theme-grid" id="themeGrid">
+          <div class="theme-opt" data-t="light"><div class="theme-prev tp-light"><div class="sb"></div><div class="bd"><div class="ln a"></div><div class="ln"></div><div class="ln"></div></div></div><div class="tn">Light</div></div>
+          <div class="theme-opt" data-t="dark"><div class="theme-prev tp-dark"><div class="sb"></div><div class="bd"><div class="ln a"></div><div class="ln"></div><div class="ln"></div></div></div><div class="tn">Dark</div></div>
+          <div class="theme-opt" data-t="system"><div class="theme-prev tp-sys"><div class="sb"></div><div class="bd"><div class="ln a"></div><div class="ln"></div><div class="ln"></div></div></div><div class="tn">System</div></div>
+        </div>
+      </div>
+
+      <!-- Plan / tier (demo switcher) -->
+      <div class="card set-card">
+        <div class="sc-head"><span class="sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8.6 22 9.3 17 14 18.2 21 12 17.5 5.8 21 7 14 2 9.3 9 8.6 12 2"/></svg></span><div><h3>Plan</h3><p>Your subscription gates premium features across the app.</p></div></div>
+        <div class="tier-grid" id="tierGrid">
+          <div class="tier-opt" data-tier="free"><div class="tt">Free</div><div class="tp">1 of each round · transcript + scoring</div><div class="tcheck">✓ Current plan</div></div>
+          <div class="tier-opt" data-tier="pro"><div class="tt">Pro</div><div class="tp">50 rounds/mo · insights · bank · docs</div><div class="tcheck">✓ Current plan</div></div>
+          <div class="tier-opt" data-tier="ultra"><div class="tt">Ultra</div><div class="tp">Unlimited · packs · replay · priority</div><div class="tcheck">✓ Current plan</div></div>
+        </div>
+        <div class="demo-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Demo switch — flip your tier to see how feature locks open and close across the app. Real billing lives on the <a href="pricing" style="color:var(--brand);font-weight:600">pricing page</a>.</span></div>
+      </div>
+
+      <!-- Billing & help links -->
+      <div class="card set-card">
+        <a class="link-row" href="pricing"><div class="lr-b"><div style="font-size:14.5px;font-weight:600">Manage billing</div><div style="font-size:12.5px;color:var(--ink-muted)">Update payment, invoices, cancel or change plan</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+        <a class="link-row" href="help"><div class="lr-b"><div style="font-size:14.5px;font-weight:600">Help &amp; resources</div><div style="font-size:12.5px;color:var(--ink-muted)">FAQs, guides, and contact support</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+        <a class="link-row" href="login"><div class="lr-b"><div style="font-size:14.5px;font-weight:600;color:#dc2626">Log out</div><div style="font-size:12.5px;color:var(--ink-muted)">Sign out of this device</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="app-shell.js"></script>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  // username mirror
+  $('#username').addEventListener('input',function(){$('#unameMirror').textContent=this.value||'username';});
+  $('#saveProfile').addEventListener('click',function(){
+    if(!$('#name').value.trim()){$('#name').classList.add('bad');Miclea.toast('Name can\'t be empty','err');return;}
+    $('#name').classList.remove('bad');Miclea.toast('Profile saved');
+  });
+
+  // email
+  $('#saveEmail').addEventListener('click',function(){
+    var v=$('#email').value.trim(), ok=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+    $('#email').classList.toggle('bad',!ok);$('#emailErr').classList.toggle('show',!ok);
+    if(!ok){Miclea.toast('Enter a valid email','err');return;}
+    $('#emailHint').textContent='Verification link sent to '+v;
+    Miclea.toast('Verification email sent');
+  });
+
+  // password strength
+  function strength(p){
+    var s=0; if(p.length>=8)s++; if(/[A-Z]/.test(p))s++; if(/[0-9]/.test(p))s++; if(/[^A-Za-z0-9]/.test(p))s++;
+    return s;
+  }
+  $('#newPw').addEventListener('input',function(){
+    var s=strength(this.value), pct=[0,30,55,80,100][s];
+    var col=['#dc2626','#dc2626','#f59e0b','#3b82f6','#10b981'][s];
+    var lbl=['','Weak','Fair','Good','Strong'][s];
+    $('#meterBar').style.width=pct+'%';$('#meterBar').style.background=col;
+    $('#meterLbl').textContent=this.value?lbl:'';$('#meterLbl').style.color=col;
+  });
+  $('#savePw').addEventListener('click',function(){
+    var cur=$('#curPw').value, np=$('#newPw').value, cf=$('#confPw').value, ok=true;
+    if(!cur){$('#curPw').classList.add('bad');$('#curErr').classList.add('show');ok=false;}else{$('#curPw').classList.remove('bad');$('#curErr').classList.remove('show');}
+    if(strength(np)<2){$('#newPw').classList.add('bad');ok=false;}else{$('#newPw').classList.remove('bad');}
+    if(np!==cf||!cf){$('#confPw').classList.add('bad');$('#confErr').classList.add('show');ok=false;}else{$('#confPw').classList.remove('bad');$('#confErr').classList.remove('show');}
+    if(!ok){Miclea.toast('Fix the highlighted fields','err');return;}
+    Miclea.toast('Password updated');
+    $('#curPw').value=$('#newPw').value=$('#confPw').value='';$('#meterBar').style.width=0;$('#meterLbl').textContent='';
+  });
+
+  // theme
+  function paintTheme(){var t=Miclea.getTheme();document.querySelectorAll('.theme-opt').forEach(function(o){o.classList.toggle('on',o.dataset.t===t)});}
+  $('#themeGrid').addEventListener('click',function(e){var o=e.target.closest('.theme-opt');if(!o)return;Miclea.setTheme(o.dataset.t);paintTheme();Miclea.toast('Theme set to '+o.dataset.t);});
+  paintTheme();
+
+  // tier
+  function paintTier(){var t=Miclea.getTier();document.querySelectorAll('.tier-opt').forEach(function(o){o.classList.toggle('on',o.dataset.tier===t)});}
+  $('#tierGrid').addEventListener('click',function(e){var o=e.target.closest('.tier-opt');if(!o)return;Miclea.setTier(o.dataset.tier);paintTier();Miclea.toast('Switched to '+o.dataset.tier.charAt(0).toUpperCase()+o.dataset.tier.slice(1));});
+  paintTier();
+})();
+</script>
+</body>
+</html>

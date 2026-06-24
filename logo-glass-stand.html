@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miclea — Glass Stand Logo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .logo-stand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* The logo */
+  .logo-stand__mark {
+    width: 300px;
+    height: auto;
+    display: block;
+    position: relative;
+    z-index: 2;
+    filter:
+      drop-shadow(0 16px 40px rgba(13, 33, 137, 0.18))
+      drop-shadow(0 4px 12px rgba(13, 33, 137, 0.10));
+  }
+
+  /* Thin dividing line */
+  .logo-stand__ground {
+    width: 320px;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(100, 140, 220, 0.25) 15%,
+      rgba(160, 195, 245, 0.6) 50%,
+      rgba(100, 140, 220, 0.25) 85%,
+      transparent 100%
+    );
+    margin-top: -1px;
+    position: relative;
+    z-index: 3;
+  }
+
+  /* Glass / acrylic base block */
+  .logo-stand__base {
+    width: 340px;
+    height: 22px;
+    border-radius: 6px;
+    position: relative;
+    z-index: 3;
+    overflow: hidden;
+    /* Outer border */
+    border: 1px solid rgba(160, 195, 245, 0.55);
+    box-shadow:
+      0 4px 16px rgba(80, 120, 200, 0.12),
+      0 1px 3px rgba(80, 120, 200, 0.08);
+    background: linear-gradient(
+      180deg,
+      rgba(225, 235, 255, 0.80) 0%,
+      rgba(195, 215, 250, 0.60) 35%,
+      rgba(175, 200, 245, 0.40) 65%,
+      rgba(155, 185, 240, 0.20) 100%
+    );
+  }
+
+  /* Top specular highlight on glass */
+  .logo-stand__base::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 6px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.85),
+      rgba(255, 255, 255, 0)
+    );
+    border-radius: 4px 4px 0 0;
+  }
+
+  /* Subtle logo reflection below stand */
+  .logo-stand__reflection-wrap {
+    width: 300px;
+    height: 70px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%);
+    pointer-events: none;
+    transform-origin: top center;
+  }
+
+  .logo-stand__reflection-wrap img {
+    width: 300px;
+    height: auto;
+    transform: scaleY(-1);
+    filter: blur(2px);
+    transform-origin: top center;
+    opacity: 0.18;
+  }
+</style>
+</head>
+<body>
+
+<div class="logo-stand">
+  <img class="logo-stand__mark" src="images/logo.png" alt="Miclea">
+  <div class="logo-stand__ground"></div>
+  <div class="logo-stand__base"></div>
+  <div class="logo-stand__reflection-wrap">
+    <img src="images/logo.png" alt="">
+  </div>
+</div>
+
+</body>
+</html>

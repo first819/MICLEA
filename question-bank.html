@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question Bank — Miclea</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app-shell.css">
+<style>
+  .qb-toolbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .qb-search{flex:1;min-width:220px;position:relative}
+  .qb-search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ink-subtle)}
+  .qb-search input{width:100%;height:46px;border:1px solid var(--app-line);border-radius:var(--r-pill);background:#fff;padding:0 18px 0 42px;font-size:14.5px;font-family:inherit}
+  .qb-search input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.12)}
+  .filt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .fchip{padding:8px 14px;border:1px solid var(--app-line);border-radius:var(--r-pill);font-size:13px;font-weight:500;background:#fff;transition:.14s}
+  .fchip:hover{border-color:var(--brand-faint);color:var(--brand)}
+  .fchip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .fchip.toggle.on{background:#fff;color:var(--brand);border-color:var(--brand)}
+  .fsep{width:1px;align-self:stretch;background:var(--app-line);margin:0 4px}
+  .qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .qcard{padding:20px;cursor:pointer;transition:.15s;position:relative;display:flex;flex-direction:column;gap:12px}
+  .qcard:hover{border-color:var(--brand-faint);box-shadow:var(--shadow);transform:translateY(-2px)}
+  .qcard .qtop{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .qcard .qq{font-family:var(--font-family-serif);font-size:18px;line-height:1.28;letter-spacing:-.3px}
+  .qcard .qfoot{display:flex;align-items:center;gap:8px;margin-top:auto;font-size:12px;color:var(--ink-subtle)}
+  .qcard .asked{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:#059669}
+  .qcard .asked svg{width:14px;height:14px}
+  .qcard.locked .qq,.qcard.locked .qtop{filter:blur(5px);user-select:none}
+  .qcard .qlock{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(250,249,247,.7);border-radius:var(--r-card);text-align:center;padding:18px}
+  .qcard.locked{cursor:default}.qcard.locked .qlock{display:flex}
+  .qlock .pill{font-size:11px}
+  .count{font-size:13px;color:var(--ink-muted);margin-bottom:14px}
+  .count b{color:var(--ink)}
+  /* free paywall */
+  .paywall{display:none;text-align:center;padding:54px 28px}
+  body.tier-free .paywall{display:block}
+  body.tier-free .qb-data{display:none}
+  .paywall .pw-badge{width:60px;height:60px;border-radius:16px;background:var(--brand-fainter);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+  .paywall h2{font-family:var(--font-family-serif);font-weight:400;font-size:30px;margin-bottom:10px}
+  .paywall p{color:var(--ink-muted);max-width:440px;margin:0 auto 22px;line-height:1.55}
+  .pw-peek{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:740px;margin:0 auto 26px;filter:blur(3px);opacity:.6;pointer-events:none}
+  .pw-peek .card{padding:18px;text-align:left}.pw-peek .qq{font-family:var(--font-family-serif);font-size:16px}
+  /* drawer */
+  .drawer-scrim{position:fixed;inset:0;background:rgba(17,24,39,.4);opacity:0;visibility:hidden;transition:.2s;z-index:90}
+  .drawer-scrim.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:480px;max-width:92vw;background:#fff;z-index:91;transform:translateX(100%);transition:transform .28s var(--ease-standard);overflow-y:auto;box-shadow:var(--shadow-lg)}
+  .drawer.open{transform:none}
+  .drawer-head{padding:24px 24px 20px;border-bottom:1px solid var(--app-line);position:relative}
+  .drawer-body{padding:24px}
+  .x-btn{position:absolute;top:20px;right:20px;width:34px;height:34px;border-radius:9px;border:1px solid var(--app-line);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink-muted)}
+  .d-block{margin-bottom:22px}
+  .d-block h5{font-family:var(--font-family-monospace);font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-subtle);margin-bottom:9px}
+  .d-ans{font-size:14px;line-height:1.6;color:#374151;background:#fbfaf8;border:1px solid var(--app-line);border-radius:11px;padding:14px}
+  .d-fb{font-size:13.5px;line-height:1.6;color:#1f2937;background:var(--brand-fainter);border-radius:11px;padding:14px;display:flex;gap:10px}
+  .d-fb svg{width:18px;height:18px;flex:none;color:var(--brand);margin-top:1px}
+  .d-empty{font-size:13.5px;color:var(--ink-muted);background:#fbfaf8;border:1px dashed var(--app-line);border-radius:11px;padding:16px;text-align:center}
+</style>
+</head>
+<body data-page="question-bank" data-search="Search the question bank…">
+<div class="main">
+  <main class="content">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Study deliberately</span>
+        <h1 style="margin-top:8px">Question Bank</h1>
+        <p class="sub">Hundreds of real interview questions — plus every one Micl has asked you — searchable and ready to drill.</p>
+      </div>
+      <span class="pill pill-brand" id="tierPill" style="height:32px">Pro · core roles</span>
+    </div>
+
+    <!-- FREE paywall -->
+    <div class="paywall card">
+      <div class="pw-badge"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h2>The Question Bank is a Pro feature</h2>
+      <p>Unlock the full library across roles and categories — and revisit every question you've been asked, with your past answers and feedback.</p>
+      <div class="pw-peek">
+        <div class="card"><div class="qq">Tell me about a time you failed.</div></div>
+        <div class="card"><div class="qq">Design a URL shortener.</div></div>
+        <div class="card"><div class="qq">Why do you want this role?</div></div>
+      </div>
+      <a class="btn btn-brand btn-lg" href="pricing">See plans</a>
+    </div>
+
+    <!-- bank -->
+    <div class="qb-data">
+      <div class="qb-toolbar">
+        <div class="qb-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="search" type="text" placeholder="Search by keyword…"></div>
+      </div>
+      <div class="filt" id="filters">
+        <button class="fchip on" data-grp="diff" data-v="all">All levels</button>
+        <button class="fchip" data-grp="diff" data-v="easy">Easy</button>
+        <button class="fchip" data-grp="diff" data-v="medium">Medium</button>
+        <button class="fchip" data-grp="diff" data-v="hard">Hard</button>
+        <span class="fsep"></span>
+        <button class="fchip on" data-grp="type" data-v="all">All types</button>
+        <button class="fchip" data-grp="type" data-v="behavioral">Behavioral</button>
+        <button class="fchip" data-grp="type" data-v="technical">Technical</button>
+        <button class="fchip" data-grp="type" data-v="situational">Situational</button>
+        <button class="fchip" data-grp="type" data-v="system">System Design</button>
+        <span class="fsep"></span>
+        <button class="fchip toggle" data-grp="asked" data-v="1">Asked of me</button>
+      </div>
+      <div class="count" id="count"></div>
+      <div class="qgrid" id="grid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- drawer -->
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <button class="x-btn" id="drawerClose"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div style="display:flex;gap:8px;margin-bottom:10px" id="dTags"></div>
+    <h2 class="serif" style="font-size:25px;line-height:1.2" id="dQ">Question</h2>
+  </div>
+  <div class="drawer-body">
+    <div class="d-block"><h5>Your past answer</h5><div id="dAnswer"></div></div>
+    <div class="d-block"><h5>Coaching</h5><div id="dFeedback"></div></div>
+    <a class="btn btn-brand" style="width:100%" href="speed-round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Practice this question</a>
+  </div>
+</aside>
+
+<script src="app-shell.js"></script>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  document.body.classList.add('tier-'+(window.Miclea?Miclea.getTier():'pro'));
+  window.addEventListener('tierchange',function(){location.reload()});
+  var tier=window.Miclea?Miclea.getTier():'pro';
+  $('#tierPill').textContent = tier==='ultra'?'Ultra · all roles + Packs':tier==='pro'?'Pro · core roles':'Free';
+
+  var BANK=[
+    {q:"Tell me about yourself.",d:"easy",t:"behavioral",asked:true,a:"I'm a software engineer with five years across two startups, most recently owning a payments flow end to end.",f:"Lead with a one-line headline before the detail."},
+    {q:"Why do you want to work here?",d:"easy",t:"behavioral",asked:true,a:"The product solves a problem I care about and the team ships fast — that's where I learn best.",f:"Tie it to something specific about the company."},
+    {q:"What are your biggest strengths?",d:"easy",t:"behavioral"},
+    {q:"Tell me about a time you failed.",d:"medium",t:"behavioral",asked:true,a:"We shipped a feature nobody used because I skipped research. I owned it, ran interviews, and rebuilt it.",f:"Great structure — quantify the recovery."},
+    {q:"Describe a conflict with a coworker and how you resolved it.",d:"medium",t:"situational"},
+    {q:"How do you prioritize when everything is urgent?",d:"medium",t:"situational"},
+    {q:"Walk me through a hard technical trade-off you made.",d:"medium",t:"technical",asked:true,a:"Consistency vs latency on a cache — I chose eventual consistency with a short TTL and documented the failure mode.",f:"Excellent specificity. This is the bar."},
+    {q:"Reverse a linked list in place.",d:"medium",t:"technical"},
+    {q:"What's the difference between a process and a thread?",d:"easy",t:"technical"},
+    {q:"Design a URL shortener.",d:"hard",t:"system"},
+    {q:"Design the backend for a ride-sharing app.",d:"hard",t:"system",tier:"ultra"},
+    {q:"How would you scale a service to 10M users?",d:"hard",t:"system",tier:"ultra"},
+    {q:"Tell me about a time you led without authority.",d:"medium",t:"behavioral"},
+    {q:"How do you handle ambiguous requirements?",d:"medium",t:"situational"},
+    {q:"Explain a complex topic to a non-technical person.",d:"medium",t:"behavioral"},
+    {q:"What would you do in your first 90 days here?",d:"medium",t:"situational"},
+    {q:"Describe your most impactful project.",d:"medium",t:"behavioral",asked:true,a:"A migration that cut page load from 4s to under 1s, shipped in six weeks with zero downtime.",f:"Strong outcome. Add the trade-off you weighed."},
+    {q:"How do you mentor junior engineers?",d:"hard",t:"behavioral",tier:"ultra"},
+    {q:"Design a rate limiter.",d:"hard",t:"system",tier:"ultra"},
+    {q:"When have you changed your mind based on data?",d:"medium",t:"behavioral"},
+    {q:"How do you make a build vs. buy decision?",d:"hard",t:"situational",tier:"ultra"},
+    {q:"What's a risk you took that didn't pay off?",d:"medium",t:"behavioral"}
+  ];
+
+  var state={diff:'all',type:'all',asked:false,q:''};
+  var grid=$('#grid');
+
+  function render(){
+    var list=BANK.filter(function(x){
+      if(state.diff!=='all'&&x.d!==state.diff)return false;
+      if(state.type!=='all'&&x.t!==state.type)return false;
+      if(state.asked&&!x.asked)return false;
+      if(state.q&&x.q.toLowerCase().indexOf(state.q)<0)return false;
+      return true;
+    });
+    $('#count').innerHTML='<b>'+list.length+'</b> question'+(list.length===1?'':'s')+(state.asked?' you\'ve been asked':'');
+    grid.innerHTML=list.map(function(x,i){
+      var idx=BANK.indexOf(x);
+      var locked=x.tier==='ultra'&&tier!=='ultra';
+      return '<div class="card qcard'+(locked?' locked':'')+'" data-i="'+idx+'">'+
+        '<div class="qlock"><span class="pill pill-purple">Ultra</span><div style="font-size:12.5px;color:var(--ink-muted);max-width:200px">Senior &amp; specialized questions unlock with Ultra.</div><a class="btn btn-soft btn-sm" href="pricing">Upgrade</a></div>'+
+        '<div class="qtop"><span class="diff diff-'+x.d+'">'+x.d+'</span><span class="pill pill-gray">'+typeName(x.t)+'</span>'+(x.tier==='ultra'?'<span class="pill pill-purple">Ultra</span>':'')+'</div>'+
+        '<div class="qq">'+x.q+'</div>'+
+        '<div class="qfoot">'+(x.asked?'<span class="asked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Asked of you</span>':'<span>Not yet asked</span>')+'</div>'+
+      '</div>';
+    }).join('');
+    if(!list.length) grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-muted)">No questions match those filters.</div>';
+  }
+  function typeName(t){return {behavioral:'Behavioral',technical:'Technical',situational:'Situational',system:'System Design'}[t]}
+
+  $('#filters').addEventListener('click',function(e){
+    var b=e.target.closest('.fchip');if(!b)return;
+    var grp=b.dataset.grp;
+    if(grp==='asked'){ state.asked=!state.asked; b.classList.toggle('on',state.asked); render(); return; }
+    this.querySelectorAll('.fchip[data-grp="'+grp+'"]').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    state[grp==='diff'?'diff':'type']=b.dataset.v;
+    render();
+  });
+  $('#search').addEventListener('input',function(){state.q=this.value.trim().toLowerCase();render();});
+
+  // drawer
+  grid.addEventListener('click',function(e){
+    var c=e.target.closest('.qcard');if(!c||c.classList.contains('locked'))return;
+    var x=BANK[+c.dataset.i];
+    $('#dTags').innerHTML='<span class="diff diff-'+x.d+'">'+x.d+'</span><span class="pill pill-gray">'+typeName(x.t)+'</span>';
+    $('#dQ').textContent=x.q;
+    if(x.asked){$('#dAnswer').innerHTML='<div class="d-ans">'+x.a+'</div>';$('#dFeedback').innerHTML='<div class="d-fb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg><span>'+x.f+'</span></div>';}
+    else{$('#dAnswer').innerHTML='<div class="d-empty">You haven\'t answered this one yet. Practice it to capture your answer and feedback here.</div>';$('#dFeedback').innerHTML='<div class="d-empty">No coaching yet — give it a go.</div>';}
+    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+  });
+  function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');}
+  $('#drawerClose').addEventListener('click',closeDrawer);
+  $('#drawerScrim').addEventListener('click',closeDrawer);
+
+  render();
+})();
+</script>
+</body>
+</html>

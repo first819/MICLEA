@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company Packs — Miclea</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app-shell.css">
+<style>
+  .ultra-banner{display:flex;align-items:center;gap:16px;padding:20px 24px;border-radius:16px;margin-bottom:24px;
+    background:linear-gradient(120deg,#2a1a5e,#1f40ed);color:#fff;position:relative;overflow:hidden}
+  .ultra-banner::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.1)}
+  .ub-ic{width:48px;height:48px;border-radius:13px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:none}
+  .ub-b{flex:1;position:relative}.ub-b h3{font-size:17px;font-weight:700}.ub-b p{font-size:13px;opacity:.9;margin-top:3px}
+  .ultra-banner .btn{background:#fff;color:var(--brand);position:relative}
+  .pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+  .pack{padding:0;overflow:hidden;position:relative;cursor:pointer;transition:.15s;display:flex;flex-direction:column}
+  .pack:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .pack-top{padding:20px;display:flex;align-items:center;gap:13px}
+  .pack-logo{width:46px;height:46px;border-radius:12px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;flex:none;font-family:var(--font-family-serif)}
+  .pack-top h3{font-size:17px;font-weight:700}.pack-top .pt-style{font-size:12px;color:var(--ink-muted);margin-top:2px}
+  .pack-body{padding:0 20px 18px;flex:1}
+  .pack-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .pack-meta{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink-subtle);border-top:1px solid var(--app-line);padding:13px 20px}
+  .pack-meta .upd{display:flex;align-items:center;gap:6px}.pack-meta svg{width:13px;height:13px}
+  .pack.soon{opacity:.7}
+  .pack.soon .pack-logo{filter:grayscale(.4)}
+  .soon-tag{font-family:var(--font-family-monospace);font-size:10px;letter-spacing:.6px;text-transform:uppercase;background:var(--app-line);color:var(--ink-muted);padding:4px 9px;border-radius:100px}
+  /* locked (non-ultra) */
+  .pack.locked{cursor:default}
+  .pack.locked .pack-top,.pack.locked .pack-body,.pack.locked .pack-meta{filter:blur(4px)}
+  .pack-lock{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(250,249,247,.66);text-align:center;padding:18px;border-radius:var(--r-card)}
+  body.tier-locked .pack.locked .pack-lock{display:flex}
+  body.theme-dark .pack-lock{background:rgba(14,16,20,.66)}
+  .pack-lock .pl-ic{width:42px;height:42px;border-radius:11px;background:var(--app-card);color:var(--brand);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
+  /* drawer */
+  .drawer-scrim{position:fixed;inset:0;background:rgba(17,24,39,.4);opacity:0;visibility:hidden;transition:.2s;z-index:90}
+  .drawer-scrim.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:92vw;background:var(--app-card);z-index:91;transform:translateX(100%);transition:transform .28s var(--ease-standard);overflow-y:auto;box-shadow:var(--shadow-lg)}
+  .drawer.open{transform:none}
+  .drawer-head{padding:24px;border-bottom:1px solid var(--app-line);position:relative;display:flex;align-items:center;gap:14px}
+  .x-btn{position:absolute;top:18px;right:18px;width:32px;height:32px;border-radius:8px;border:1px solid var(--app-line);background:var(--app-card);display:flex;align-items:center;justify-content:center;color:var(--ink-muted)}
+  .drawer-body{padding:24px}
+  .dq{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--app-line)}
+  .dq:last-child{border-bottom:none}
+  .dq-n{width:26px;height:26px;border-radius:8px;background:var(--brand-fainter);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;font-family:var(--font-family-monospace)}
+  .dq-q{font-size:14px;line-height:1.45}.dq-meta{margin-top:5px}
+  .start-bar{position:sticky;bottom:0;background:var(--app-card);border-top:1px solid var(--app-line);padding:16px 24px;display:flex;gap:10px}
+</style>
+</head>
+<body data-page="company-packs" data-search="Search company packs…">
+<div class="main">
+  <main class="content">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow" style="color:#6d28d9">Ultra</span>
+        <h1 style="margin-top:8px">Company Packs</h1>
+        <p class="sub">Drill the exact style each company is known for — Amazon's Leadership Principles, Google's behavioral bar, Goldman's case math. Curated and kept current.</p>
+      </div>
+    </div>
+
+    <div class="ultra-banner" id="ultraBanner" style="display:none">
+      <span class="ub-ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+      <div class="ub-b"><h3>Company Packs are an Ultra feature</h3><p>Unlock every pack, run them as full Gauntlet or Speed sessions, and track per-company readiness.</p></div>
+      <a class="btn" href="pricing">Upgrade to Ultra</a>
+    </div>
+
+    <div class="pack-grid" id="packGrid"></div>
+  </main>
+</div>
+
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <span class="pack-logo" id="dLogo">A</span>
+    <div><h2 class="serif" style="font-size:23px" id="dName">Pack</h2><div style="font-size:13px;color:var(--ink-muted)" id="dStyle"></div></div>
+    <button class="x-btn" id="drawerClose"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="drawer-body">
+    <p style="font-size:13.5px;color:var(--ink-muted);line-height:1.55;margin-bottom:18px" id="dDesc"></p>
+    <div style="font-family:var(--font-family-monospace);font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-subtle);margin-bottom:6px">Sample questions</div>
+    <div id="dQs"></div>
+  </div>
+  <div class="start-bar">
+    <a class="btn btn-brand" style="flex:1" href="gauntlet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8.6 22 9.3 17 14 18.2 21 12 17.5 5.8 21 7 14 2 9.3 9 8.6 12 2"/></svg> Start as Gauntlet</a>
+    <a class="btn btn-ghost" href="speed-round">Speed</a>
+  </div>
+</aside>
+
+<script src="app-shell.js"></script>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  var tier=window.Miclea?Miclea.getTier():'pro';
+  var locked=tier!=='ultra';
+  document.body.classList.toggle('tier-locked',locked);
+  $('#ultraBanner').style.display=locked?'flex':'none';
+  window.addEventListener('tierchange',function(){location.reload()});
+
+  var PACKS=[
+    {n:'Amazon',c:'#ff9900',style:'Leadership Principles',tags:['behavioral','leadership-principle'],upd:'Jun 18',qn:24,
+     desc:'Amazon lives and dies by its 16 Leadership Principles. Expect relentless "tell me about a time…" behavioral questions probing ownership, customer obsession, and bias for action — each answered in crisp STAR form.',
+     qs:['Tell me about a time you disagreed with your manager.','Describe when you took ownership of a problem outside your role.','Give an example of when you had to dive deep to solve an issue.','Tell me about a time you delivered results under a tight deadline.']},
+    {n:'Google',c:'#4285f4',style:'Behavioral + Googleyness',tags:['behavioral','technical'],upd:'Jun 16',qn:21,
+     desc:'Google blends structured behavioral interviews with a strong "Googleyness & Leadership" signal. They want collaboration, comfort with ambiguity, and clear reasoning over rote answers.',
+     qs:['Tell me about a project where requirements changed constantly.','How do you handle a teammate who isn\'t pulling their weight?','Describe a time you used data to change a decision.','What would you do if you disagreed with a popular technical direction?']},
+    {n:'Meta',c:'#0866ff',style:'Behavioral + "Move fast"',tags:['behavioral','situational'],upd:'Jun 14',qn:19,
+     desc:'Meta\'s behavioral loop centers on impact, speed, and conflict resolution. They probe how you operate in ambiguity and whether you bias toward shipping and iterating.',
+     qs:['Tell me about the most impactful project you\'ve shipped.','Describe a time you shipped something fast and iterated later.','How did you resolve a serious conflict on your team?','When did you have to make a decision with incomplete information?']},
+    {n:'Microsoft',c:'#00a4ef',style:'Behavioral + collaboration',tags:['behavioral','technical'],upd:'Jun 10',qn:18,
+     desc:'Microsoft emphasizes growth mindset and cross-team collaboration. Expect a mix of behavioral and lightweight technical questions delivered in a conversational style.',
+     qs:['Tell me about something you learned recently and how.','Describe a time you collaborated across teams to ship.','How do you give difficult feedback to a peer?','Walk me through how you debug an unfamiliar system.']},
+    {n:'Goldman Sachs',c:'#6f9fd8',style:'Finance cases + behavioral',tags:['case','behavioral'],upd:'Jun 06',qn:16,
+     desc:'Goldman pairs market-sizing and finance case questions with values-driven behavioral screens. Composure and structured thinking under pressure are the whole game.',
+     qs:['Walk me through how you\'d value a company.','Estimate the size of the US coffee market.','Why finance, and why Goldman specifically?','Tell me about a time you worked under intense pressure.']},
+    {n:'McKinsey',c:'#0b1f3a',style:'Case interviews',tags:['case','situational'],upd:'Coming soon',qn:0,soon:true},
+    {n:'Apple',c:'#555555',style:'Behavioral + craft',tags:['behavioral','technical'],upd:'Coming soon',qn:0,soon:true},
+    {n:'Stripe',c:'#635bff',style:'Practical + behavioral',tags:['technical','behavioral'],upd:'Coming soon',qn:0,soon:true}
+  ];
+
+  $('#packGrid').innerHTML=PACKS.map(function(p,i){
+    var lk=locked&&!p.soon;
+    return '<div class="card pack'+(p.soon?' soon':'')+(lk?' locked':'')+'" data-i="'+i+'">'+
+      (lk?'<div class="pack-lock"><span class="pl-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><span class="pill pill-purple">Ultra</span><a class="btn btn-soft btn-sm" href="pricing">Unlock</a></div>':'')+
+      '<div class="pack-top"><span class="pack-logo" style="background:'+p.c+'">'+p.n[0]+'</span><div><h3>'+p.n+'</h3><div class="pt-style">'+p.style+'</div></div></div>'+
+      '<div class="pack-body"><div class="pack-tags">'+p.tags.map(function(t){return '<span class="pill pill-gray">'+t+'</span>'}).join('')+'</div></div>'+
+      '<div class="pack-meta">'+(p.soon?'<span class="soon-tag">Coming soon</span><span></span>':'<span class="upd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Updated '+p.upd+'</span><span>'+p.qn+' questions</span>')+'</div>'+
+    '</div>';
+  }).join('');
+
+  function openPack(i){
+    var p=PACKS[i];
+    if(p.soon){Miclea.toast(p.n+' pack is coming soon');return;}
+    $('#dLogo').textContent=p.n[0];$('#dLogo').style.background=p.c;
+    $('#dName').textContent=p.n;$('#dStyle').textContent=p.style+' · '+p.qn+' questions';
+    $('#dDesc').textContent=p.desc;
+    $('#dQs').innerHTML=p.qs.map(function(q,k){return '<div class="dq"><span class="dq-n">'+(k+1)+'</span><div><div class="dq-q">'+q+'</div><div class="dq-meta"><span class="pill pill-gray">'+p.tags[0]+'</span></div></div></div>';}).join('');
+    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+  }
+  $('#packGrid').addEventListener('click',function(e){
+    var c=e.target.closest('.pack');if(!c)return;
+    if(c.classList.contains('locked'))return;
+    openPack(+c.dataset.i);
+  });
+  function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');}
+  $('#drawerClose').addEventListener('click',closeDrawer);
+  $('#drawerScrim').addEventListener('click',closeDrawer);
+})();
+</script>
+</body>
+</html>

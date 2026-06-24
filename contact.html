@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Miclea AI</title>
+<meta name="description" content="Get in touch with the Miclea AI team. Questions, partnerships, institutional plans — we're here.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="case-study.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-family-sans);color:var(--text-light-default);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Hero ── */
+.contact-hero{padding:80px 24px 64px;text-align:center;background:#fff;border-bottom:1px solid #f0f0f0}
+.contact-eyebrow{font-family:var(--font-family-monospace);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--brand-default);margin-bottom:18px;display:block}
+.contact-hero h1{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(38px,5.5vw,68px);line-height:1.04;letter-spacing:-2px;color:var(--text-light-default);margin:0 auto 18px}
+.contact-hero p{font-size:18px;line-height:1.6;color:var(--text-paragraph-muted);max-width:480px;margin:0 auto}
+
+/* ── Form layout ── */
+.contact-body{max-width:1040px;margin:0 auto;padding:80px 24px 96px;display:grid;grid-template-columns:1fr 400px;gap:64px;align-items:start}
+.form-col h2{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(24px,3vw,36px);letter-spacing:-1px;line-height:1.1;color:var(--text-light-default);margin-bottom:8px}
+.form-col .form-sub{font-size:16px;line-height:1.6;color:var(--text-paragraph-muted);margin-bottom:36px}
+
+/* Form fields */
+.form-group{margin-bottom:22px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+label{display:block;font-size:13.5px;font-weight:600;color:#374151;margin-bottom:7px;letter-spacing:.1px}
+input[type="text"],input[type="email"],select,textarea{width:100%;font-family:var(--font-family-sans);font-size:15px;color:#111;background:#fff;border:1.5px solid #d1d5db;border-radius:8px;padding:11px 14px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
+input[type="text"]:focus,input[type="email"]:focus,select:focus,textarea:focus{border-color:var(--brand-default);box-shadow:0 0 0 3px rgba(31,64,237,.1)}
+input::placeholder,textarea::placeholder{color:#9ca3af}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+textarea{resize:vertical;min-height:140px;line-height:1.6}
+.btn-submit{width:100%;background:#000;color:#fff;padding:14px 24px;font-size:16px;font-weight:600;border-radius:8px;border:none;cursor:pointer;font-family:var(--font-family-sans);transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+.btn-submit:hover{background:#1a1a1a}
+.form-note{font-size:13px;color:#9ca3af;text-align:center;margin-top:14px;line-height:1.5}
+
+/* Info sidebar */
+.info-col{padding-top:8px}
+.info-block{margin-bottom:40px}
+.info-block:last-child{margin-bottom:0}
+.info-label{font-family:var(--font-family-monospace);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#9ca3af;margin-bottom:10px}
+.info-block h3{font-size:16px;font-weight:600;color:var(--text-light-default);margin-bottom:6px}
+.info-block p{font-size:15px;line-height:1.65;color:#4b5563}
+.info-block a{color:var(--brand-default);font-weight:500}
+.info-block a:hover{text-decoration:underline;text-underline-offset:2px}
+.info-divider{height:1px;background:#e9e9e6;margin:40px 0}
+
+.tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tag{font-size:13px;font-weight:500;padding:5px 12px;border-radius:6px;background:#f3f4f6;color:#374151}
+
+/* Nav-dd */
+.nav-dd{position:relative;display:inline-flex;align-items:center}
+.nav-dd__trigger{cursor:pointer}
+.nav-dd__menu{display:none;position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 32px rgba(17,24,39,.12);padding:8px;min-width:240px;z-index:100}
+.nav-dd:hover .nav-dd__menu{display:block}
+.nav-dd__menu a{display:flex;flex-direction:column;padding:10px 12px;border-radius:8px;gap:2px}
+.nav-dd__menu a:hover{background:#f5f5f5}
+.nav-dd__t{font-size:14.5px;font-weight:600;color:#111}
+.nav-dd__d{font-size:12.5px;color:#6b7280}
+.nav-dd__all{border-top:1px solid #f0f0f0;margin-top:4px;padding-top:10px;font-size:13.5px;font-weight:500;color:var(--brand-default)}
+
+@media(max-width:900px){
+  nav.center,.nav-cta{display:none}
+  .hamburger{display:flex}
+  .contact-body{grid-template-columns:1fr;gap:48px}
+  .form-row{grid-template-columns:1fr}
+  .info-col{border-top:1px solid #e9e9e6;padding-top:40px}
+}
+@media(max-width:560px){
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<header class="nav">
+  <div class="wrap-wide">
+    <a class="nav-logo" href="index" aria-label="Miclea home">
+      <img src="images/logo.png" alt="Miclea">
+    </a>
+    <nav class="center">
+      <div class="nav-dd">
+        <a class="nav-dd__trigger" href="index.html#how-section">Products <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Products">
+          <a href="feature-voice-coaching" role="menuitem"><span class="nav-dd__t">Voice coaching</span><span class="nav-dd__d">Realistic mock interviews, out loud</span></a>
+          <a href="feature-instant-scoring" role="menuitem"><span class="nav-dd__t">Instant scoring</span><span class="nav-dd__d">Know exactly how you came across</span></a>
+          <a href="feature-practice-questions" role="menuitem"><span class="nav-dd__t">Practice questions</span><span class="nav-dd__d">Real questions from real interviews</span></a>
+        </div>
+      </div>
+      <div class="nav-dd">
+        <a class="nav-dd__trigger" href="case-studies">Resources <span class="caret">&#9662;</span></a>
+        <div class="nav-dd__menu" role="menu" aria-label="Resources">
+          <a href="job-seekers" role="menuitem"><span class="nav-dd__t">Job seekers</span><span class="nav-dd__d">Land more callbacks and offers, faster</span></a>
+          <a href="bootcamps" role="menuitem"><span class="nav-dd__t">Bootcamps</span><span class="nav-dd__d">Lift cohort placement rates</span></a>
+          <a href="career-centers" role="menuitem"><span class="nav-dd__t">Career centers</span><span class="nav-dd__d">Coach more students with less staff</span></a>
+          <a href="universities" role="menuitem"><span class="nav-dd__t">Universities</span><span class="nav-dd__d">Raise graduate employment outcomes</span></a>
+          <a href="teams" role="menuitem"><span class="nav-dd__t">Teams</span><span class="nav-dd__d">Prep employees for internal moves</span></a>
+          <a class="nav-dd__all" href="case-studies" role="menuitem">All case studies &rarr;</a>
+        </div>
+      </div>
+      <a href="pricing">Pricing</a>
+      <a href="about">About</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="login">Log in</a>
+      <a class="btn btn-navy" href="signup">Get Started &#8594;</a>
+    </div>
+    <button class="hamburger" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="contact-hero">
+  <span class="contact-eyebrow">Contact</span>
+  <h1>Let's talk.</h1>
+  <p>Questions about the product, institutional pricing, or partnerships — we read every message and reply fast.</p>
+</section>
+
+<!-- Body -->
+<div class="contact-body">
+
+  <!-- Form -->
+  <div class="form-col">
+    <h2>Send us a message</h2>
+    <p class="form-sub">Fill out the form and we'll get back to you within one business day.</p>
+
+    <form action="#" method="post" novalidate>
+      <div class="form-row">
+        <div>
+          <label for="first-name">First name</label>
+          <input type="text" id="first-name" name="first_name" placeholder="Jane" autocomplete="given-name" required>
+        </div>
+        <div>
+          <label for="last-name">Last name</label>
+          <input type="text" id="last-name" name="last_name" placeholder="Smith" autocomplete="family-name" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Work email</label>
+        <input type="email" id="email" name="email" placeholder="jane@company.com" autocomplete="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="inquiry">What's this about?</label>
+        <select id="inquiry" name="inquiry" required>
+          <option value="" disabled selected>Select a topic</option>
+          <option value="general">General question</option>
+          <option value="teams">Teams &amp; institutional pricing</option>
+          <option value="partnership">Partnership or integration</option>
+          <option value="press">Press &amp; media</option>
+          <option value="other">Something else</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Tell us what's on your mind…" required></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">Send message &rarr;</button>
+      <p class="form-note">We typically reply within one business day. No spam, ever.</p>
+    </form>
+  </div>
+
+  <!-- Sidebar info -->
+  <aside class="info-col">
+    <div class="info-block">
+      <p class="info-label">Email</p>
+      <h3>hello@miclea.ai</h3>
+      <p>For general questions, product feedback, and everything else.</p>
+    </div>
+
+    <div class="info-divider"></div>
+
+    <div class="info-block">
+      <p class="info-label">Institutions &amp; teams</p>
+      <h3>Volume &amp; custom plans</h3>
+      <p>Running a bootcamp, career center, or corporate training program? We offer custom pricing and white-glove onboarding. <a href="contact.html?topic=teams">Tell us about your program.</a></p>
+    </div>
+
+    <div class="info-divider"></div>
+
+    <div class="info-block">
+      <p class="info-label">We're good at helping with</p>
+      <div class="tag-list">
+        <span class="tag">Billing &amp; plans</span>
+        <span class="tag">Team accounts</span>
+        <span class="tag">Integrations</span>
+        <span class="tag">Partnerships</span>
+        <span class="tag">Press</span>
+        <span class="tag">Feature requests</span>
+      </div>
+    </div>
+
+    <div class="info-divider"></div>
+
+    <div class="info-block">
+      <p class="info-label">Based in</p>
+      <h3>New York, NY</h3>
+      <p>Miclea AI, Inc.<br>New York, NY, USA</p>
+    </div>
+  </aside>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <div class="name">Miclea AI</div>
+      <p class="desc">Your AI interview coach. Practice real questions out loud, get scored instantly, and walk in already warmed up.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="Miclea on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="#" aria-label="Miclea on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+        <a href="#" aria-label="Miclea on YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.08 0 12 0 12s0 3.92.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.8zM9.6 15.57V8.43L15.82 12z"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Product</h5>
+      <a href="feature-practice-questions">Practice questions</a>
+      <a href="feature-instant-scoring">Instant scoring</a>
+      <a href="feature-voice-coaching">Voice coaching</a>
+      <a href="pricing">Pricing</a>
+    </div>
+    <div class="foot-col">
+      <h5>Use cases</h5>
+      <a href="job-seekers">Job seekers</a>
+      <a href="bootcamps">Bootcamps</a>
+      <a href="career-centers">Career centers</a>
+      <a href="universities">Universities</a>
+      <a href="teams">Teams</a>
+    </div>
+    <div class="foot-col">
+      <h5>Company</h5>
+      <a href="about">About</a>
+      <a href="contact">Contact</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div class="wrap-wide">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span class="foot-wordmark">Miclea</span>
+        <span class="made">&copy; 2026 Miclea AI, Inc. All rights reserved.</span>
+      </div>
+      <nav class="legal" aria-label="Legal">
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
+        <a href="security">Security</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

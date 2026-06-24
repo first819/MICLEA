@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miclea — Features (Bento)</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-family-sans);color:var(--text-light-default);background:#fff;-webkit-font-smoothing:antialiased}
+
+  .fx{padding:104px 0;background:#fff}
+  .fx-wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+
+  /* ---------- Section head ---------- */
+  .fx-head{max-width:680px;margin:0 0 56px}
+  .fx-kicker{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .fx-kicker__dash{display:block;width:14px;height:3px;background:var(--brand-default);border-radius:2px}
+  .fx-kicker__label{font-family:var(--font-family-monospace);font-size:12.5px;letter-spacing:1.4px;
+    text-transform:uppercase;color:var(--brand-default)}
+  .fx-head h2{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(32px,4.4vw,52px);line-height:1.06;
+    letter-spacing:-1.6px;color:var(--text-light-default)}
+  .fx-head h2 em{font-style:italic;color:var(--brand-default)}
+  .fx-head p{font-size:18.4px;line-height:1.5;letter-spacing:-.3px;color:var(--text-paragraph-muted);margin-top:20px;max-width:560px}
+
+  /* ---------- Bento grid ---------- */
+  .bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(150px,auto);gap:16px;
+    grid-template-areas:
+      "gaunt gaunt speed speed"
+      "gaunt gaunt prog  prog"
+      "bank  resume resume cover";}
+
+  .cell{position:relative;display:flex;flex-direction:column;overflow:hidden;
+    border:1px solid #e9e9e6;border-radius:18px;padding:24px;background:#fff;
+    transition:box-shadow var(--duration-fast) var(--ease-standard),
+               transform var(--duration-fast) var(--ease-standard),
+               border-color var(--duration-fast) var(--ease-standard)}
+  .cell:hover{box-shadow:0 16px 44px rgba(17,24,39,.09);transform:translateY(-3px);border-color:#dcdcd8}
+
+  .a-gaunt{grid-area:gaunt}
+  .a-speed{grid-area:speed}
+  .a-prog{grid-area:prog}
+  .a-bank{grid-area:bank}
+  .a-resume{grid-area:resume}
+  .a-cover{grid-area:cover}
+
+  /* Icon chip */
+  .vis{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:var(--brand-fainter);color:var(--brand-default);flex:0 0 auto;margin-bottom:18px}
+  .vis svg{width:22px;height:22px;display:block}
+
+  .tag{font-family:var(--font-family-monospace);font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--text-light-subtle);margin-bottom:9px}
+  .cell h3{font-family:var(--font-family-serif);font-weight:400;line-height:1.12;letter-spacing:-.6px;
+    color:var(--text-light-default);font-size:22px;margin-bottom:10px}
+  .cell p{font-size:14.5px;line-height:1.55;color:var(--text-paragraph-muted)}
+  .out{margin-top:14px;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:var(--brand-dark)}
+  .out svg{width:14px;height:14px;color:var(--accent-green)}
+
+  /* ---------- Hero cell: Gauntlet ---------- */
+  .a-gaunt{background:linear-gradient(168deg,#0d2189 0%,#1f40ed 58%,#2043f9 100%);
+    border-color:transparent;color:#fff;justify-content:space-between;padding:30px}
+  .a-gaunt:hover{box-shadow:0 22px 60px rgba(31,64,237,.32)}
+  .a-gaunt .vis{background:rgba(255,255,255,.14);color:#fff;
+    box-shadow:inset 0 -1.5px 2px 0 #638DFF,inset 0 0 12px 0 rgba(0,67,251,.5)}
+  .a-gaunt .tag{color:#a1aff7}
+  .a-gaunt h3{color:#fff;font-size:30px;letter-spacing:-1px;max-width:11ch}
+  .a-gaunt p{color:#c6cfff;font-size:15.5px;max-width:34ch}
+  .a-gaunt .out{color:#fff}
+  .a-gaunt .out svg{color:#9fe870}
+  .gaunt-top{position:relative;z-index:1}
+
+  /* Embedded mock-interview visual */
+  .gaunt-vis{position:relative;z-index:1;margin-top:24px;border-radius:14px;padding:16px;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(2px)}
+  .gv-rounds{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .gv-pill{font-family:var(--font-family-monospace);font-size:10px;letter-spacing:.4px;padding:5px 10px;border-radius:999px;
+    background:rgba(255,255,255,.1);color:#c6cfff;border:1px solid rgba(255,255,255,.12);white-space:nowrap}
+  .gv-pill.on{background:#fff;color:var(--brand-dark);border-color:#fff;font-weight:700}
+  .gv-line{flex:1;height:1px;background:rgba(255,255,255,.18)}
+  .gv-q{font-size:14px;line-height:1.4;color:#eef1ff;margin-bottom:12px}
+  .gv-q b{color:#fff}
+  .gv-wave{display:flex;align-items:flex-end;gap:3px;height:26px}
+  .gv-wave i{width:3px;border-radius:2px;background:#9fe870;animation:gw 1.1s var(--ease-standard) infinite}
+  .gv-wave i:nth-child(2n){background:#788ff6}
+  @keyframes gw{0%,100%{height:30%}50%{height:100%}}
+  .gv-wave i:nth-child(1){animation-delay:0s}.gv-wave i:nth-child(2){animation-delay:.08s}
+  .gv-wave i:nth-child(3){animation-delay:.16s}.gv-wave i:nth-child(4){animation-delay:.24s}
+  .gv-wave i:nth-child(5){animation-delay:.32s}.gv-wave i:nth-child(6){animation-delay:.4s}
+  .gv-wave i:nth-child(7){animation-delay:.48s}.gv-wave i:nth-child(8){animation-delay:.56s}
+  .gv-wave i:nth-child(9){animation-delay:.64s}.gv-wave i:nth-child(10){animation-delay:.72s}
+  .gv-meta{margin-left:auto;font-family:var(--font-family-monospace);font-size:10px;color:#a1aff7}
+  .gv-foot{display:flex;align-items:center;gap:10px;margin-top:12px}
+
+  /* ---------- Progress cell with mini chart ---------- */
+  .a-prog{flex-direction:row;gap:22px;align-items:center}
+  .prog-copy{flex:1 1 auto}
+  .prog-chart{flex:0 0 168px;align-self:stretch;display:flex;align-items:flex-end;gap:8px;
+    border-left:1px solid #eee;padding-left:20px;min-height:120px}
+  .pc-bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%}
+  .pc-bar span{display:block;border-radius:5px 5px 2px 2px;background:var(--brand-fainter)}
+  .pc-bar.up span{background:var(--brand-default)}
+  .pc-bar small{font-family:var(--font-family-monospace);font-size:9px;color:var(--text-light-subtle);text-align:center}
+
+  /* ---------- Speed cell ---------- */
+  .a-speed{flex-direction:row;gap:20px;align-items:center}
+  .speed-copy{flex:1 1 auto}
+  .speed-meter{flex:0 0 92px;align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:8px;
+    border-left:1px solid #eee;padding-left:18px}
+  .sm-track{height:7px;border-radius:99px;background:var(--brand-fainter);overflow:hidden}
+  .sm-track i{display:block;height:100%;border-radius:99px;background:var(--brand-default)}
+  .sm-lbl{font-family:var(--font-family-monospace);font-size:10px;color:var(--text-light-subtle)}
+
+  @media(max-width:860px){
+    .bento{grid-template-columns:1fr 1fr;
+      grid-template-areas:
+        "gaunt gaunt"
+        "speed speed"
+        "prog  prog"
+        "bank  resume"
+        "cover resume";}
+  }
+  @media(max-width:560px){
+    .fx{padding:72px 0}
+    .bento{grid-template-columns:1fr;grid-auto-rows:auto;
+      grid-template-areas:"gaunt" "speed" "prog" "bank" "resume" "cover";}
+    .a-prog,.a-speed{flex-direction:column;align-items:stretch}
+    .prog-chart,.speed-meter{border-left:0;border-top:1px solid #eee;padding-left:0;padding-top:18px;margin-top:4px;flex-basis:auto}
+    .prog-chart{min-height:96px}
+  }
+</style>
+</head>
+<body>
+
+<section class="fx">
+  <div class="fx-wrap">
+
+    <div class="fx-head">
+      <div class="fx-kicker">
+        <span class="fx-kicker__dash"></span>
+        <span class="fx-kicker__label">Features</span>
+      </div>
+      <h2>Everything you need to walk in <em>already prepared.</em></h2>
+      <p>Practice out loud with Micl, your AI interviewer — then sharpen the résumé and
+         cover letter that get you in the room.</p>
+    </div>
+
+    <div class="bento">
+
+      <!-- HERO · Gauntlet Round (double-width, embedded visual) -->
+      <article class="cell a-gaunt">
+        <div class="gaunt-top">
+          <div class="vis">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/></svg>
+          </div>
+          <div class="tag">Gauntlet Round · Flagship</div>
+          <h3>Feel the pressure here, not in the room</h3>
+          <p>Three rising rounds, a real curveball, and breaks you can't skip — a mock interview that bites back.</p>
+        </div>
+
+        <div class="gaunt-vis">
+          <div class="gv-rounds">
+            <span class="gv-pill">Broad</span>
+            <span class="gv-line"></span>
+            <span class="gv-pill on">Harder</span>
+            <span class="gv-line"></span>
+            <span class="gv-pill">Curveball</span>
+          </div>
+          <div class="gv-q"><b>Micl:</b> Walk me through a decision you got wrong — and what you'd do differently.</div>
+          <div class="gv-foot">
+            <div class="gv-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="gv-meta">listening · round 2 of 3</span>
+          </div>
+        </div>
+
+        <div class="out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6-11 11-5-5"/></svg>
+          Composure under fire
+        </div>
+      </article>
+
+      <!-- Speed Round -->
+      <article class="cell a-speed">
+        <div class="speed-copy">
+          <div class="vis">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>
+          </div>
+          <div class="tag">Speed Round</div>
+          <h3>Walk in warm, not nervous</h3>
+          <p>A fast burst of easy questions with Micl shakes off the jitters before it counts.</p>
+        </div>
+        <div class="speed-meter">
+          <span class="sm-lbl">Warm-up</span>
+          <div class="sm-track"><i style="width:82%"></i></div>
+          <span class="sm-lbl">~3 min</span>
+        </div>
+      </article>
+
+      <!-- Progress & Insights (double-width, mini chart) -->
+      <article class="cell a-prog">
+        <div class="prog-copy">
+          <div class="vis">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+          </div>
+          <div class="tag">Progress &amp; Insights</div>
+          <h3>Watch yourself get better, week over week</h3>
+          <p>Scores, trends, and your weak spots in one view — so you always know what to practice next.</p>
+        </div>
+        <div class="prog-chart" aria-hidden="true">
+          <div class="pc-bar"><span style="height:34%"></span><small>W1</small></div>
+          <div class="pc-bar"><span style="height:48%"></span><small>W2</small></div>
+          <div class="pc-bar"><span style="height:44%"></span><small>W3</small></div>
+          <div class="pc-bar"><span style="height:66%"></span><small>W4</small></div>
+          <div class="pc-bar up"><span style="height:88%"></span><small>W5</small></div>
+        </div>
+      </article>
+
+      <!-- Question Bank -->
+      <article class="cell a-bank">
+        <div class="vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 5v14"/></svg>
+        </div>
+        <div class="tag">Question Bank · Premium</div>
+        <h3>Never get blindsided by a question</h3>
+        <p>A searchable library plus every question you've faced, filtered by role and difficulty.</p>
+      </article>
+
+      <!-- Résumé Editor (wider) -->
+      <article class="cell a-resume">
+        <div class="vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+        </div>
+        <div class="tag">Résumé + Micl AI</div>
+        <h3>A résumé that earns the interview</h3>
+        <p>Micl sharpens your bullets into action and impact and tailors them to the job — you accept only the edits you like, so it still sounds like you.</p>
+      </article>
+
+      <!-- Cover Letter Editor -->
+      <article class="cell a-cover">
+        <div class="vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="m3 6 9 7 9-7"/></svg>
+        </div>
+        <div class="tag">Cover Letter + Micl AI</div>
+        <h3>A tailored letter in minutes</h3>
+        <p>Drop in the role and Micl drafts it in your voice, pulled from your résumé.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

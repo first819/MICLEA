@@ -1,0 +1,128 @@
+<h2>How should the 3 steps be laid out?</h2>
+<p class="subtitle">"From signup to offer-ready in 3 steps" — pick the layout that fits best</p>
+
+<style>
+.cards { display: flex; flex-direction: column; gap: 24px; max-width: 900px; margin: 0 auto; }
+.card { background: #fff; border: 2px solid #e5e7eb; border-radius: 16px; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
+.card.selected { border-color: #6d28d9; }
+.card-label { background: #f6f7f9; padding: 14px 20px; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #e5e7eb; }
+.card-preview { padding: 24px; }
+
+/* Layout A — Zig-zag */
+.zigzag { display: flex; flex-direction: column; gap: 12px; }
+.zz-row { display: flex; align-items: center; gap: 16px; padding: 10px 0; }
+.zz-row.reverse { flex-direction: row-reverse; }
+.zz-text { flex: 0 0 38%; }
+.zz-num { width: 28px; height: 28px; border-radius: 50%; background: #6d28d9; color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+.zz-title { font-weight: 700; font-size: 14px; color: #111; margin-bottom: 3px; }
+.zz-desc { font-size: 12px; color: #6b7280; line-height: 1.4; }
+.zz-screen { flex: 0 0 58%; height: 90px; background: #f3f0ff; border-radius: 10px; border: 1px solid #ddd6fe; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #7c3aed; font-weight: 500; }
+
+/* Layout B — Numbered cards in a row */
+.three-col { display: flex; gap: 14px; }
+.step-card { flex: 1; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+.step-screen { height: 80px; background: #f3f0ff; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #7c3aed; font-weight: 500; }
+.step-body { padding: 10px 12px; }
+.step-num { width: 22px; height: 22px; border-radius: 50%; background: #6d28d9; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+.step-t { font-size: 12px; font-weight: 700; color: #111; }
+.step-d { font-size: 11px; color: #6b7280; margin-top: 3px; line-height: 1.4; }
+
+/* Layout C — Tabbed stepper */
+.stepper { display: flex; flex-direction: column; gap: 10px; }
+.step-tabs { display: flex; gap: 0; border-bottom: 2px solid #e5e7eb; }
+.step-tab { padding: 8px 18px; font-size: 12px; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+.step-tab.active { color: #6d28d9; border-bottom-color: #6d28d9; }
+.step-panel { display: flex; gap: 16px; align-items: center; padding: 12px 0; }
+.sp-text { flex: 0 0 40%; }
+.sp-t { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 4px; }
+.sp-d { font-size: 12px; color: #6b7280; line-height: 1.4; }
+.sp-screen { flex: 1; height: 90px; background: #f3f0ff; border-radius: 10px; border: 1px solid #ddd6fe; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #7c3aed; font-weight: 500; }
+</style>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-label">A — Zig-zag rows (text alternates left/right, screenshot fills the other side)</div>
+    <div class="card-preview">
+      <div class="zigzag">
+        <div class="zz-row">
+          <div class="zz-text">
+            <div class="zz-num">1</div>
+            <div class="zz-title">Pick your role</div>
+            <div class="zz-desc">Tell Micl the job you're targeting. Setup takes under 30 seconds.</div>
+          </div>
+          <div class="zz-screen">[ Setup / Role Picker screen ]</div>
+        </div>
+        <div class="zz-row reverse">
+          <div class="zz-text">
+            <div class="zz-num">2</div>
+            <div class="zz-title">Speak. Get scored instantly.</div>
+            <div class="zz-desc">Micl asks questions, you answer out loud. Live transcript + instant feedback.</div>
+          </div>
+          <div class="zz-screen">[ Live session screen ]</div>
+        </div>
+        <div class="zz-row">
+          <div class="zz-text">
+            <div class="zz-num">3</div>
+            <div class="zz-title">See exactly where to improve</div>
+            <div class="zz-desc">Your dashboard shows score trends, weak spots, and what to fix next.</div>
+          </div>
+          <div class="zz-screen">[ Results / Insights screen ]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-label">B — 3-column cards (screenshot on top, text below, all visible at once)</div>
+    <div class="card-preview">
+      <div class="three-col">
+        <div class="step-card">
+          <div class="step-screen">[ Setup screen ]</div>
+          <div class="step-body">
+            <div class="step-num">1</div>
+            <div class="step-t">Pick your role</div>
+            <div class="step-d">30-second setup. Tell Micl what job you're targeting.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-screen">[ Live session ]</div>
+          <div class="step-body">
+            <div class="step-num">2</div>
+            <div class="step-t">Speak. Get scored.</div>
+            <div class="step-d">Answer out loud. Live transcript + instant feedback per answer.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-screen">[ Results screen ]</div>
+          <div class="step-body">
+            <div class="step-num">3</div>
+            <div class="step-t">Track your growth</div>
+            <div class="step-d">Score trends, weak spots, and what to practice next.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-label">C — Tabbed stepper (one large screen, user clicks through steps)</div>
+    <div class="card-preview">
+      <div class="stepper">
+        <div class="step-tabs">
+          <div class="step-tab active">① Pick your role</div>
+          <div class="step-tab">② Speak. Get scored.</div>
+          <div class="step-tab">③ Track your growth</div>
+        </div>
+        <div class="step-panel">
+          <div class="sp-text">
+            <div class="sp-t">Pick your role</div>
+            <div class="sp-d">Tell Micl the job you're targeting. Setup takes under 30 seconds and the questions adapt to your field.</div>
+          </div>
+          <div class="sp-screen">[ Setup / Role Picker — large screen ]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
