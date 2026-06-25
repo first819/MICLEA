@@ -156,6 +156,16 @@
     overflow:hidden;
     border-radius:20px;
   }
+  .noise-canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    opacity:0.12;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+    border-radius:inherit;
+  }
 
   @media (max-width:900px){
     .shell{grid-template-columns:1fr;max-width:500px;min-height:auto}
@@ -233,6 +243,7 @@
 
   <!-- RIGHT -->
   <aside class="right">
+    <canvas class="noise-canvas" id="noiseCanvas"></canvas>
   </aside>
 
 </div>
@@ -242,6 +253,20 @@
     const pw = document.getElementById('password');
     pw.type = pw.type === 'password' ? 'text' : 'password';
   });
+
+  (function(){
+    const c = document.getElementById('noiseCanvas');
+    const r = c.parentElement.getBoundingClientRect();
+    c.width = r.width; c.height = r.height;
+    const ctx = c.getContext('2d');
+    const img = ctx.createImageData(c.width, c.height);
+    for(let i=0;i<img.data.length;i+=4){
+      const v = Math.random()*255|0;
+      img.data[i]=img.data[i+1]=img.data[i+2]=v;
+      img.data[i+3]=255;
+    }
+    ctx.putImageData(img,0,0);
+  })();
 </script>
 </body>
 </html>
