@@ -31,6 +31,7 @@
     display:grid;
     grid-template-columns:1fr 1fr;
     overflow:hidden;
+    padding:16px 16px 16px 0;
   }
 
   /* ── LEFT ── */
@@ -153,19 +154,7 @@
     flex-direction:column;
     position:relative;
     overflow:hidden;
-  }
-
-  /* company logos */
-  .logos{
-    margin-top:auto;
-    display:flex;align-items:center;gap:24px;
-    flex-wrap:wrap;
-  }
-  .logos img{
-    height:18px;width:auto;
-    filter:brightness(0) invert(1);
-    opacity:.6;
-    object-fit:contain;
+    border-radius:20px;
   }
 
   @media (max-width:900px){
