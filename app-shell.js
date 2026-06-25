@@ -180,7 +180,7 @@
     return '' +
       '<aside class="sidebar">' +
         '<div class="sb-head">' +
-          '<a href="dashboard" class="sb-logo" aria-label="Miclea home"><img src="images/logo.svg" alt="Miclea"></a>' +
+          '<a href="dashboard" class="sb-logo" aria-label="Miclea home"><img src="images/logo.png" alt="Miclea"></a>' +
           '<button class="sb-toggle" id="collapseBtn" aria-label="Collapse sidebar">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' +
           '</button>' +
