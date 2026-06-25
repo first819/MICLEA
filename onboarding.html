@@ -241,7 +241,7 @@
 
           <!-- Q1 — career stage (single select) -->
           <section class="slide" data-type="single" data-required="1">
-            <div class="q-label">Question 1 of 8</div>
+            <div class="q-label">Question 1 of 9</div>
             <h2 class="q-title">Where are you in your career?</h2>
             <p class="q-hint">This helps us tailor the difficulty of your mock interviews.</p>
             <div class="options">
@@ -255,7 +255,7 @@
 
           <!-- Q2 — main goal (single select) -->
           <section class="slide" data-type="single" data-required="1">
-            <div class="q-label">Question 2 of 8</div>
+            <div class="q-label">Question 2 of 9</div>
             <h2 class="q-title">What brings you to Miclea?</h2>
             <p class="q-hint">Tell us what you're really after — we'll build everything around it.</p>
             <div class="options">
@@ -269,7 +269,7 @@
 
           <!-- Q3 — problems / pain points (multi select) -->
           <section class="slide" data-type="multi" data-required="1">
-            <div class="q-label">Question 3 of 8</div>
+            <div class="q-label">Question 3 of 9</div>
             <h2 class="q-title">What's holding you back right now?</h2>
             <p class="q-hint">Be honest — the more we know, the more we can help. Pick all that feel true.</p>
             <div class="options">
@@ -284,7 +284,7 @@
 
           <!-- Q4 — how they feel (single select, emotional) -->
           <section class="slide" data-type="single" data-required="1">
-            <div class="q-label">Question 4 of 8</div>
+            <div class="q-label">Question 4 of 9</div>
             <h2 class="q-title">How do interviews make you feel today?</h2>
             <p class="q-hint">There's no wrong answer. We meet you exactly where you are.</p>
             <div class="options">
@@ -298,7 +298,7 @@
 
           <!-- Q5 — target roles (multi select) -->
           <section class="slide" data-type="multi" data-required="1">
-            <div class="q-label">Question 5 of 8</div>
+            <div class="q-label">Question 5 of 9</div>
             <h2 class="q-title">What roles are you targeting?</h2>
             <p class="q-hint">Select all that apply — we'll pull relevant questions for each.</p>
             <div class="options">
@@ -313,7 +313,7 @@
 
           <!-- Q6 — timeline (single select) -->
           <section class="slide" data-type="single" data-required="1">
-            <div class="q-label">Question 6 of 8</div>
+            <div class="q-label">Question 6 of 9</div>
             <h2 class="q-title">When's your next interview?</h2>
             <p class="q-hint">We'll set the right pace for your practice plan.</p>
             <div class="options">
@@ -327,7 +327,7 @@
 
           <!-- Q7 — focus areas (multi select) -->
           <section class="slide" data-type="multi" data-required="1">
-            <div class="q-label">Question 7 of 8</div>
+            <div class="q-label">Question 7 of 9</div>
             <h2 class="q-title">What do you want to practice most?</h2>
             <p class="q-hint">Pick the interview types you want to focus on.</p>
             <div class="options">
@@ -339,9 +339,25 @@
             <button class="continue" data-next disabled>Continue</button>
           </section>
 
-          <!-- Q8 — resume upload -->
+          <!-- Q8 — how did you hear about us (single select) -->
+          <section class="slide" data-type="single" data-required="1">
+            <div class="q-label">Question 8 of 9</div>
+            <h2 class="q-title">How did you hear about us?</h2>
+            <p class="q-hint">Helps us understand how people find Miclea.</p>
+            <div class="options">
+              <button class="option" data-value="google"><span class="o-body"><span class="o-title">Google / Search</span><span class="o-desc">Found us while searching online</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="social"><span class="o-body"><span class="o-title">Social media</span><span class="o-desc">TikTok, Instagram, Twitter/X, etc.</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="friend"><span class="o-body"><span class="o-title">Friend or colleague</span><span class="o-desc">Someone recommended it to me</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="linkedin"><span class="o-body"><span class="o-title">LinkedIn</span><span class="o-desc">Saw a post or ad on LinkedIn</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="youtube"><span class="o-body"><span class="o-title">YouTube</span></span><span class="check">{{CHECK}}</span></button>
+              <button class="option" data-value="other"><span class="o-body"><span class="o-title">Other</span></span><span class="check">{{CHECK}}</span></button>
+            </div>
+            <button class="continue" data-next disabled>Continue</button>
+          </section>
+
+          <!-- Q9 — resume upload -->
           <section class="slide" data-type="upload" data-required="0">
-            <div class="q-label">Question 8 of 8</div>
+            <div class="q-label">Question 9 of 9</div>
             <h2 class="q-title">Add your resume</h2>
             <p class="q-hint">We'll generate questions tailored to your experience. PDF, DOC, or DOCX — up to 10MB.</p>
 
@@ -523,10 +539,7 @@
   ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove('drag'); }));
   drop.addEventListener('drop', e=>{ const f=e.dataTransfer.files[0]; if(f){ fileInput.files=e.dataTransfer.files; showFile(f);} });
 
-  // finish
-  document.getElementById('finishBtn').addEventListener('click', ()=>{
-    window.location.href = 'dashboard.html'; // → dashboard route
-  });
+  // finish — redirect handled by module script after saving
 
   // keyboard: Enter advances, arrows navigate
   document.addEventListener('keydown', e=>{
@@ -572,11 +585,56 @@
     if(done)  done.textContent = "You're all set, " + first + '!'
   }
 
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON)
+
   try{
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON)
     const { data } = await supabase.auth.getUser()
     applyName(firstNameFrom(data?.user))
   }catch(e){ /* offline / no session — neutral greeting stays */ }
+
+  // Collect selected answers from each question slide by index
+  function collectAnswers(){
+    const track = document.getElementById('track')
+    function getSelected(slideIndex, multi){
+      const slide = track.children[slideIndex]
+      if(!slide) return multi ? [] : null
+      const vals = [...slide.querySelectorAll('.option.selected')].map(o => o.dataset.value)
+      return multi ? vals : (vals[0] || null)
+    }
+    return {
+      career_stage:       getSelected(0, false),
+      main_goal:          getSelected(1, false),
+      pain_points:        getSelected(2, true),
+      interview_feeling:  getSelected(3, false),
+      target_roles:       getSelected(4, true),
+      interview_timeline: getSelected(5, false),
+      practice_focus:     getSelected(6, true),
+      referral_source:    getSelected(7, false),
+      resume_filename:    document.getElementById('filePill')?.classList.contains('show')
+                            ? document.getElementById('fileName')?.textContent || null
+                            : null,
+    }
+  }
+
+  const finishBtn = document.getElementById('finishBtn')
+  if(finishBtn){
+    finishBtn.addEventListener('click', async ()=>{
+      finishBtn.disabled = true
+      finishBtn.textContent = 'Setting up…'
+      try{
+        const { data } = await supabase.auth.getUser()
+        if(data?.user){
+          await supabase.from('onboarding_answers').upsert({
+            user_id: data.user.id,
+            ...collectAnswers(),
+            completed_at: new Date().toISOString(),
+            updated_at:   new Date().toISOString(),
+          }, { onConflict: 'user_id' })
+        }
+      }catch(e){ /* non-blocking — redirect regardless */ }
+      window.location.href = 'dashboard.html'
+    })
+  }
 </script>
 </body>
 </html>
