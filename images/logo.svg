@@ -1,0 +1,15 @@
+<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue background -->
+  <rect width="1000" height="1000" fill="#1f40ed"/>
+
+  <!-- White curved symbol -->
+  <g transform="translate(500, 500)">
+    <!-- Lower left curve -->
+    <path d="M -280 120 Q -280 280 -120 280 Q 40 280 120 200"
+          stroke="white" stroke-width="90" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Upper right curve -->
+    <path d="M 120 -200 Q 40 -120 -120 -120 Q -260 -120 -260 40"
+          stroke="white" stroke-width="90" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -96,10 +96,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         redirectTo: window.location.origin + '/new-password'
       })
 
+      if (error) {
+        alert(error.message)
+        resetPasswordBtn.textContent = 'Send Reset Link'
+        resetPasswordBtn.disabled = false
+        return
+      }
+
+      // Send custom password reset email
+      try {
+        await fetch(`${SUPABASE_URL}/functions/v1/send-password-reset-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+          },
+          body: JSON.stringify({
+            email: email,
+            token: email,
+          }),
+        })
+      } catch (emailError) {
+        console.error('Email send failed:', emailError)
+      }
+
       resetPasswordBtn.textContent = 'Send Reset Link'
       resetPasswordBtn.disabled = false
-
-      if (error) { alert(error.message); return; }
 
       document.getElementById('resetForm').style.display = 'none'
       document.querySelector('.headline').style.display = 'none'
@@ -168,15 +190,40 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!password) { alert('Please enter a password'); return; }
       if (!terms) { alert('Please agree to the Terms & Privacy'); return; }
 
-      const { error } = await supabase.auth.signUp({
+      signupBtn.textContent = 'Creating account…'
+      signupBtn.disabled = true
+
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { name } }
       })
 
-      if (error) { alert(error.message); return; }
+      if (error) { alert(error.message); signupBtn.textContent = 'Sign Up'; signupBtn.disabled = false; return; }
+
+      // Send custom verification email
+      if (data?.user?.id) {
+        try {
+          await fetch(`${SUPABASE_URL}/functions/v1/send-verification-email`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${SUPABASE_ANON}`,
+            },
+            body: JSON.stringify({
+              email: email,
+              userId: data.user.id,
+            }),
+          })
+        } catch (emailError) {
+          console.error('Email send failed:', emailError)
+        }
+      }
+
+      signupBtn.textContent = 'Sign Up'
+      signupBtn.disabled = false
       alert('Account created! Please check your email to verify.')
-      window.location.replace(ONBOARDING_URL)
+      // Don't redirect yet - user must verify email first
     })
   }
 })
