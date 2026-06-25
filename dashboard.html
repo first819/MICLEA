@@ -695,6 +695,23 @@
   })();
 </script>
 
+<!-- Logout handler -->
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/+esm'
+
+  const SUPABASE_URL  = 'https://eezjeiitzvtduarviume.supabase.co'
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlemplaWl0enZ0ZHVhcnZpdW1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTg4MjAsImV4cCI6MjA5NTg3NDgyMH0.Z2JC8QufY-sVp9VoUg8j08RZjHgKnePWJSZkP8U6oFc'
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON)
+
+  document.querySelectorAll('[data-action="signout"]').forEach(el => {
+    el.addEventListener('click', async e => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      window.location.replace('/login')
+    })
+  })
+</script>
+
 <!-- ── Pricing Modal ── -->
 <div id="pricing-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
   <div class="pm-backdrop"></div>
@@ -853,7 +870,6 @@
     document.getElementById('pm-cta-btn').textContent = label;
   }
 </script>
-<script type="module" src="auth.js"></script>
 <script src="dashboard-router.js"></script>
 </body>
 </html>
