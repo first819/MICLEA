@@ -109,6 +109,7 @@
   <div class="drawer-body" id="suggBody"></div>
 </aside>
 
+<script type="module" src="ai-client.js"></script>
 <script src="app-shell.js"></script>
 <script>
 (function(){
@@ -129,10 +130,18 @@
   function renderPreview(){var t=$('#bodyEdit').textContent.trim();$('#pvBody').textContent=t||'Your letter preview appears here.';$('#pvBody').style.color=t?'#1f2937':'var(--ink-subtle)';}
   $('#bodyEdit').addEventListener('input',renderPreview);
 
-  $('#genBtn').addEventListener('click',function(){
-    if(!unlimited){ if(editsLeft<=0){Miclea.toast('No AI generations left this month','err');return;} editsLeft--; $('#editsLeft').textContent=editsLeft; }
-    var btn=this;btn.disabled=true;btn.style.opacity=.6;btn.innerHTML='Drafting…';
-    setTimeout(function(){ setBody(draft()); btn.disabled=false;btn.style.opacity=1;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Regenerate draft'; Miclea.toast('Draft ready — edit or refine with Micl'); },700);
+  $('#genBtn').addEventListener('click',async function(){
+    var company=$('#iCompany').value.trim(), role=$('#iRole').value.trim();
+    if(!company||!role){ Miclea.toast('Add a company and role first','err'); return; }
+    if(!unlimited && editsLeft<=0){ Miclea.toast('No AI generations left this month','err'); return; }
+    var btn=this;btn.disabled=true;btn.style.opacity=.6;var label=btn.innerHTML;btn.innerHTML='Drafting…';
+    try{
+      var out = await window.Micl.ai('ai-cover-letter', { company: company, jobTitle: role });
+      setBody(out.content);
+      if(!unlimited){ editsLeft--; $('#editsLeft').textContent=editsLeft; }
+      Miclea.toast('Draft ready — edit or refine with Micl');
+    }catch(e){ window.Micl.onAiError(e); }
+    finally{ btn.disabled=false;btn.style.opacity=1;btn.innerHTML=label.indexOf('Drafting')<0?label:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/><path d="M9 18h6"/></svg> Regenerate draft'; }
   });
   $('#exportBtn').addEventListener('click',function(){if(!$('#bodyEdit').textContent.trim()){Miclea.toast('Write a letter first','err');return;}Miclea.toast('Cover letter exported to PDF');});
 

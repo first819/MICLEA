@@ -244,22 +244,24 @@
 
   $('#exportBtn').addEventListener('click',function(){Miclea.toast('Résumé exported to PDF');});
 
-  // Micl suggestions
-  var SUGG=[
-    {id:'summary',field:'summary',title:'Sharpen your summary',why:'Vague and passive. Lead with scope and a quantified signal.',
-      after:'Software engineer with 5 years building and scaling web platforms. Cut checkout failures 30% and page-load 75% by owning systems end to end. Pragmatic, fast, and obsessed with the user.'},
-    {id:'bullet',field:'b0',title:'Quantify this bullet',why:'"Made it faster" is unmeasurable. Add the metric and the action.',
-      after:'Re-architected the payments pipeline, cutting checkout latency from 4s to under 1s and lifting conversion 8%.'},
-    {id:'bullet2',field:'b1',title:'Add ownership & impact',why:'Passive and generic — show what you drove and the result.',
-      after:'Led delivery of 6 customer-facing features across 2 quarters, reducing support tickets 22% through proactive edge-case handling.'},
-    {id:'skills',field:'skills',title:'Tailor skills to the role',why:'Reorder toward the job description and add specifics that pass keyword screens.',
-      after:'React, TypeScript, Node.js, PostgreSQL, System Design, AWS, CI/CD, GraphQL'}
-  ];
+  // Micl suggestions — fetched live from the ai-resume edge function
+  var SUGG=[];
 
-  function openDrawer(filterId){
-    var list = filterId ? SUGG.filter(function(s){return s.id===filterId||s.field===filterId||(filterId==='bullet'&&s.field.indexOf('b')===0)}) : SUGG;
-    if(!list.length) list=SUGG;
-    $('#suggBody').innerHTML=list.map(function(s){
+  async function fetchSuggestions(field){
+    try{
+      var out = await window.Micl.ai('ai-resume', { field: field || null });
+      SUGG = (out.suggestions || []).map(function(s,i){ return {
+        id: (s.field||'s')+i, field: s.field, title: s.title, why: s.why, after: s.after
+      };});
+    }catch(e){ window.Micl.onAiError(e); SUGG=[]; }
+  }
+
+  async function openDrawer(filterId){
+    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+    $('#suggBody').innerHTML='<div class="sg-loading" style="padding:24px;color:var(--ink-muted)">Micl is reviewing your résumé…</div>';
+    await fetchSuggestions(typeof filterId==='string'?filterId:null);
+    if(!SUGG.length){ $('#suggBody').innerHTML='<div style="padding:24px;color:var(--ink-muted)">No suggestions right now.</div>'; return; }
+    $('#suggBody').innerHTML=SUGG.map(function(s){
       return '<div class="sugg" data-field="'+s.field+'" data-id="'+s.id+'">'+
         '<div class="sg-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'+s.title+'</div>'+
         '<div class="sg-why">'+s.why+'</div>'+
@@ -269,7 +271,6 @@
         '<div class="sg-status ok">✓ Applied</div>'+
       '</div>';
     }).join('');
-    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
   }
   function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');}
 

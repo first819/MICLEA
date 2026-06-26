@@ -208,6 +208,7 @@
   </main>
 </div>
 
+<script type="module" src="ai-client.js"></script>
 <script src="app-shell.js"></script>
 <script>
 (function(){
@@ -237,7 +238,21 @@
   function clear(){ LS.removeItem(KEY); }
   function load(){ try{return JSON.parse(LS.getItem(KEY))}catch(e){return null} }
 
-  function startGauntlet(){
+  // global slot index across rounds → into the flat AI question list
+  function globalIdx(r,q){ var n=0; for(var i=0;i<r;i++) n+=ROUNDS[i].qs.length; return n+q; }
+  function aiQ(r,q){ var a=window.miclGauntletQs; var i=globalIdx(r,q); return (a&&a[i])||null; }
+
+  async function startGauntlet(){
+    try{
+      var slots=0; ROUNDS.forEach(function(R){slots+=R.qs.length;});
+      var out = await window.Micl.ai('ai-question', { count: slots, mode: 'gauntlet' });
+      if(out.questions && out.questions.length) window.miclGauntletQs = out.questions.map(function(q){return q.content;});
+    }catch(e){ window.Micl.onAiError(e); }
+    try{
+      var uid=(await window.miclSupabase.auth.getUser()).data.user.id;
+      var s=await window.miclSupabase.from('practice_sessions').insert({user_id:uid,mode:'gauntlet'}).select('id').single();
+      window.miclSessionId=s.data&&s.data.id;
+    }catch(e){ /* non-blocking */ }
     state={role:document.querySelector('#roleChips .on').textContent, r:0, q:0, scores:[[],[],[]], breakEnd:null, t0:Date.now()};
     save(); showSession();
   }
@@ -246,7 +261,7 @@
     show('session');
     var R=ROUNDS[state.r];
     $('#roundTag').textContent=R.tag; $('#roundTag').className='roundtag '+R.cls;
-    $('#qText').textContent=R.qs[state.q].q;
+    $('#qText').textContent=aiQ(state.r,state.q)||R.qs[state.q].q;
     $('#qMeta').textContent='Q'+(state.q+1)+' of '+R.qs.length;
     $('#ttext').textContent=''; $('#answer').classList.remove('live');
     recording=false; setRecUI();
@@ -260,11 +275,16 @@
   }
   function setRecUI(){var b=$('#recBtn');b.classList.toggle('rec',recording);$('#recHint').textContent=recording?'Listening… tap to pause':'Tap to answer out loud';$('#answer').classList.toggle('live',recording);}
   function toggleRec(){recording=!recording;setRecUI();if(recording)simulateSpeech();else clearTimeout(typeTimer);}
-  function simulateSpeech(){var full=ROUNDS[state.r].qs[state.q].a,el=$('#ttext'),words=full.split(' '),i=0;el.textContent='';(function step(){if(!recording||i>=words.length)return;el.textContent+=(i?' ':'')+words[i];i++;typeTimer=setTimeout(step,70+Math.random()*70);})();}
+  function simulateSpeech(){var full=aiQ(state.r,state.q)?'':ROUNDS[state.r].qs[state.q].a,el=$('#ttext');if(!full){el.textContent='';return;}var words=full.split(' '),i=0;el.textContent='';(function step(){if(!recording||i>=words.length)return;el.textContent+=(i?' ':'')+words[i];i++;typeTimer=setTimeout(step,70+Math.random()*70);})();}
 
   function submit(){
     clearTimeout(typeTimer);
     var ans=$('#ttext').textContent.trim();
+    if(ans.length>0 && aiQ(state.r,state.q)){
+      window.Micl.ai('ai-feedback', { question: aiQ(state.r,state.q), answer: ans, sessionId: window.miclSessionId })
+        .then(function(fb){ if(fb && fb.score!=null && window.Miclea) Miclea.toast('Micl scored that '+fb.score+'/10'); })
+        .catch(window.Micl.onAiError);
+    }
     var base=state.r===0?78:state.r===1?70:74;
     state.scores[state.r].push(ans.length>50?base+Math.floor(Math.random()*16):base-10+Math.floor(Math.random()*12));
     var R=ROUNDS[state.r];
@@ -331,7 +351,7 @@
 
   $('#recBtn').addEventListener('click',toggleRec);
   $('#nextBtn').addEventListener('click',submit);
-  $('#startBtn').addEventListener('click',startGauntlet);
+  $('#startBtn').addEventListener('click',function(){startGauntlet();});
   $('#againBtn').addEventListener('click',function(){clear();location.reload();});
 
   /* resume an in-progress gauntlet (handles refresh during break) */
