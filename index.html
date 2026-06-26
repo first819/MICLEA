@@ -7,6 +7,8 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
 <link rel="stylesheet" href="tokens.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
 <script type="module" src="auth.js"></script>
 <style>
   *{box-sizing:border-box}
@@ -54,8 +56,9 @@
   /* Nav */
   header.nav{position:sticky;top:0;z-index:60;height:var(--nav-height);background:#fff;display:flex;align-items:center;border-bottom:1px solid transparent}
   .nav .wrap-wide{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;width:100%}
-  .nav .wrap-wide .nav-logo{justify-self:start;display:flex;align-items:center}
-  .nav .wrap-wide .nav-logo img{height:34px;width:auto;display:block}
+  .nav .wrap-wide .nav-logo{justify-self:start;display:flex;align-items:center;gap:9px}
+  .nav .wrap-wide .nav-logo img{height:44px;width:auto;display:block}
+  .nav-logo-text{font-family:'Inter',sans-serif;font-weight:600;font-size:18px;color:#111;letter-spacing:-.02em;line-height:1}
   .nav .wrap-wide nav.center{justify-self:center}
   .nav .wrap-wide .nav-cta{justify-self:end}
   .logo{display:flex;align-items:center}
@@ -580,7 +583,7 @@
 <header class="nav">
   <div class="wrap-wide">
     <a class="nav-logo" href="#" aria-label="Miclea home">
-      <img src="images/logo-new.png" alt="Miclea">
+      <img src="images/logo-new.png" alt="Miclea"><span class="nav-logo-text">Miclea</span>
     </a>
     <nav class="center">
       <div class="nav-dd">
