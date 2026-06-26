@@ -517,6 +517,7 @@
     return (b/1048576).toFixed(1) + ' MB';
   }
   function showFile(f){
+    window.miclResumeFile = f;
     fileName.textContent = f.name;
     fileSize.textContent = humanSize(f.size);
     filePill.classList.add('show');
@@ -525,6 +526,7 @@
     setHeight();
   }
   function clearFile(){
+    window.miclResumeFile = null;
     fileInput.value = '';
     filePill.classList.remove('show');
     drop.style.display = '';
@@ -624,12 +626,34 @@
       try{
         const { data } = await supabase.auth.getUser()
         if(data?.user){
+          const uid = data.user.id
           await supabase.from('onboarding_answers').upsert({
-            user_id: data.user.id,
+            user_id: uid,
             ...collectAnswers(),
             completed_at: new Date().toISOString(),
             updated_at:   new Date().toISOString(),
           }, { onConflict: 'user_id' })
+
+          // Upload the actual résumé file (if one was chosen) and record its path
+          const file = window.miclResumeFile
+          if(file){
+            const path = `${uid}/${file.name}`
+            const up = await supabase.storage.from('resumes').upload(path, file, { upsert: true })
+            if(!up.error){
+              await supabase.from('resumes').upsert(
+                { user_id: uid, file_path: path, updated_at: new Date().toISOString() },
+                { onConflict: 'user_id' }
+              )
+              // Kick off server-side text extraction (non-blocking)
+              const sess = (await supabase.auth.getSession()).data.session
+              if(sess){
+                fetch('https://eezjeiitzvtduarviume.supabase.co/functions/v1/ai-ingest-resume', {
+                  method: 'POST',
+                  headers: { 'Authorization': `Bearer ${sess.access_token}` },
+                }).catch(()=>{})
+              }
+            }
+          }
         }
       }catch(e){ /* non-blocking — redirect regardless */ }
       window.location.href = 'dashboard.html'

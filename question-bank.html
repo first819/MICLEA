@@ -123,6 +123,7 @@
   </div>
 </aside>
 
+<script type="module" src="ai-client.js"></script>
 <script src="app-shell.js"></script>
 <script>
 (function(){
@@ -181,7 +182,36 @@
     }).join('');
     if(!list.length) grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-muted)">No questions match those filters.</div>';
   }
-  function typeName(t){return {behavioral:'Behavioral',technical:'Technical',situational:'Situational',system:'System Design'}[t]}
+  function typeName(t){return {behavioral:'Behavioral',technical:'Technical',situational:'Situational',system:'System Design','system-design':'System Design',analytical:'Analytical'}[t] || (t?t.charAt(0).toUpperCase()+t.slice(1):'General');}
+
+  // Load real questions (curated + the user's AI questions) from Supabase
+  async function loadBank(){
+    try{
+      var sb = window.miclSupabase; if(!sb) return;
+      var res = await sb.from('question_bank').select('id, content, role, topic, difficulty, source').order('created_at',{ascending:false}).limit(200);
+      if(res.data && res.data.length){
+        BANK = res.data.map(function(r){ return { q:r.content, d:r.difficulty||'medium', t:r.topic||'behavioral', ai:r.source==='ai' }; });
+        render();
+      }
+    }catch(e){ /* keep static BANK */ }
+  }
+  // Generate fresh questions with Micl
+  async function generate(){
+    try{
+      Miclea.toast('Micl is writing fresh questions…');
+      await window.Micl.ai('ai-question', { count: 5, mode: 'speed' });
+      await loadBank();
+      Miclea.toast('Added 5 new questions');
+    }catch(e){ window.Micl.onAiError(e); }
+  }
+  // inject a Generate button into the page head
+  (function(){
+    var head=document.querySelector('.page-head')||document.querySelector('.content');
+    if(head){ var b=document.createElement('button'); b.className='btn btn-brand btn-sm'; b.id='genQs';
+      b.style.cssText='margin-top:10px'; b.textContent='✨ Generate with Micl';
+      b.addEventListener('click',generate); head.appendChild(b); }
+  })();
+  if(window.miclSupabase) loadBank(); else window.addEventListener('micl-ai-ready', loadBank);
 
   $('#filters').addEventListener('click',function(e){
     var b=e.target.closest('.fchip');if(!b)return;

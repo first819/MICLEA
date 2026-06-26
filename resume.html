@@ -168,6 +168,7 @@
   <div class="drawer-body" id="suggBody"></div>
 </aside>
 
+<script type="module" src="ai-client.js"></script>
 <script src="app-shell.js"></script>
 <script>
 (function(){
@@ -199,6 +200,39 @@
   });
   renderPreview();
 
+  // --- Persistence: load from / save to public.resumes.fields ---
+  function applyModelToDOM(){
+    document.querySelectorAll('[data-f]').forEach(function(el){
+      if(model[el.dataset.f] != null){ el.textContent = model[el.dataset.f]; }
+    });
+    renderPreview();
+  }
+  async function loadResume(){
+    var sb = window.miclSupabase; if(!sb) return;
+    var u = (await sb.auth.getUser()).data.user; if(!u) return;
+    var res = await sb.from('resumes').select('fields').eq('user_id', u.id).maybeSingle();
+    if(res.data && res.data.fields && Object.keys(res.data.fields).length){
+      Object.assign(model, res.data.fields);
+      applyModelToDOM();
+    }
+  }
+  var saveTimer = null;
+  function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(saveResume, 800); }
+  async function saveResume(){
+    var sb = window.miclSupabase; if(!sb) return;
+    var u = (await sb.auth.getUser()).data.user; if(!u) return;
+    await sb.from('resumes').upsert(
+      { user_id: u.id, fields: model, updated_at: new Date().toISOString() },
+      { onConflict: 'user_id' }
+    );
+    if(window.Miclea) Miclea.toast('Résumé saved');
+  }
+  document.querySelectorAll('[data-f]').forEach(function(el){
+    el.addEventListener('input', scheduleSave);
+  });
+  if(window.miclSupabase){ loadResume(); }
+  else { window.addEventListener('micl-ai-ready', loadResume); }
+
   // version switcher
   $('#verBtn').addEventListener('click',function(e){e.stopPropagation();$('#ver').classList.toggle('open');});
   document.addEventListener('click',function(){$('#ver').classList.remove('open');});
@@ -210,22 +244,24 @@
 
   $('#exportBtn').addEventListener('click',function(){Miclea.toast('Résumé exported to PDF');});
 
-  // Micl suggestions
-  var SUGG=[
-    {id:'summary',field:'summary',title:'Sharpen your summary',why:'Vague and passive. Lead with scope and a quantified signal.',
-      after:'Software engineer with 5 years building and scaling web platforms. Cut checkout failures 30% and page-load 75% by owning systems end to end. Pragmatic, fast, and obsessed with the user.'},
-    {id:'bullet',field:'b0',title:'Quantify this bullet',why:'"Made it faster" is unmeasurable. Add the metric and the action.',
-      after:'Re-architected the payments pipeline, cutting checkout latency from 4s to under 1s and lifting conversion 8%.'},
-    {id:'bullet2',field:'b1',title:'Add ownership & impact',why:'Passive and generic — show what you drove and the result.',
-      after:'Led delivery of 6 customer-facing features across 2 quarters, reducing support tickets 22% through proactive edge-case handling.'},
-    {id:'skills',field:'skills',title:'Tailor skills to the role',why:'Reorder toward the job description and add specifics that pass keyword screens.',
-      after:'React, TypeScript, Node.js, PostgreSQL, System Design, AWS, CI/CD, GraphQL'}
-  ];
+  // Micl suggestions — fetched live from the ai-resume edge function
+  var SUGG=[];
 
-  function openDrawer(filterId){
-    var list = filterId ? SUGG.filter(function(s){return s.id===filterId||s.field===filterId||(filterId==='bullet'&&s.field.indexOf('b')===0)}) : SUGG;
-    if(!list.length) list=SUGG;
-    $('#suggBody').innerHTML=list.map(function(s){
+  async function fetchSuggestions(field){
+    try{
+      var out = await window.Micl.ai('ai-resume', { field: field || null });
+      SUGG = (out.suggestions || []).map(function(s,i){ return {
+        id: (s.field||'s')+i, field: s.field, title: s.title, why: s.why, after: s.after
+      };});
+    }catch(e){ window.Micl.onAiError(e); SUGG=[]; }
+  }
+
+  async function openDrawer(filterId){
+    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+    $('#suggBody').innerHTML='<div class="sg-loading" style="padding:24px;color:var(--ink-muted)">Micl is reviewing your résumé…</div>';
+    await fetchSuggestions(typeof filterId==='string'?filterId:null);
+    if(!SUGG.length){ $('#suggBody').innerHTML='<div style="padding:24px;color:var(--ink-muted)">No suggestions right now.</div>'; return; }
+    $('#suggBody').innerHTML=SUGG.map(function(s){
       return '<div class="sugg" data-field="'+s.field+'" data-id="'+s.id+'">'+
         '<div class="sg-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'+s.title+'</div>'+
         '<div class="sg-why">'+s.why+'</div>'+
@@ -235,7 +271,6 @@
         '<div class="sg-status ok">✓ Applied</div>'+
       '</div>';
     }).join('');
-    $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
   }
   function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');}
 
@@ -252,6 +287,7 @@
       model[sug.field]=sug.after;
       var fld=document.querySelector('[data-f="'+sug.field+'"]'); if(fld)fld.textContent=sug.after;
       renderPreview();
+      scheduleSave();
       card.classList.add('done');card.querySelector('.sg-status').className='sg-status ok';card.querySelector('.sg-status').textContent='✓ Applied to your résumé';
       Miclea.toast('Suggestion applied');
     } else if(e.target.classList.contains('sg-reject')){

@@ -88,6 +88,7 @@
   </div>
 </aside>
 
+<script type="module" src="ai-client.js"></script>
 <script src="app-shell.js"></script>
 <script>
 (function(){
@@ -146,6 +147,37 @@
   function closeDrawer(){$('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');}
   $('#drawerClose').addEventListener('click',closeDrawer);
   $('#drawerScrim').addEventListener('click',closeDrawer);
+
+  // ---- Live research: any company, via the ai-research edge function ----
+  (function(){
+    var grid=$('#packGrid'); if(!grid) return;
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;gap:8px;margin-bottom:18px';
+    row.innerHTML='<input id="coInput" placeholder="Research any company with Micl (e.g. Stripe)" style="flex:1;padding:11px 13px;border:1px solid var(--app-line);border-radius:9px;font-size:14px;font-family:inherit">'+
+      '<button class="btn btn-brand" id="coGo">Research</button>';
+    grid.parentNode.insertBefore(row, grid);
+
+    function renderPack(company, p){
+      $('#dLogo').textContent=company[0].toUpperCase(); $('#dLogo').style.background='#635bff';
+      $('#dName').textContent=company; $('#dStyle').textContent=(p.interview_process?String(p.interview_process).slice(0,60):'Interview prep pack');
+      $('#dDesc').textContent=[p.overview,p.culture].filter(Boolean).join('\n\n');
+      var qs=(p.likely_questions||[]);
+      $('#dQs').innerHTML=qs.map(function(q,k){return '<div class="dq"><span class="dq-n">'+(k+1)+'</span><div><div class="dq-q">'+q+'</div></div></div>';}).join('')
+        + (p.talking_points&&p.talking_points.length?'<div style="margin-top:16px"><div class="pt-style" style="margin-bottom:8px">Talking points</div>'+p.talking_points.map(function(t){return '<div class="dq"><span class="dq-n">•</span><div><div class="dq-q">'+t+'</div></div></div>';}).join('')+'</div>':'');
+      $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+    }
+
+    $('#coGo').addEventListener('click',async function(){
+      var company=$('#coInput').value.trim();
+      if(!company){ Miclea.toast('Enter a company','err'); return; }
+      var btn=this; btn.disabled=true; var lbl=btn.textContent; btn.textContent='Researching…';
+      try{
+        var out = await window.Micl.ai('ai-research', { company: company });
+        renderPack(company, out.pack||{});
+      }catch(e){ window.Micl.onAiError(e); }
+      finally{ btn.disabled=false; btn.textContent=lbl; }
+    });
+  })();
 })();
 </script>
 </body>

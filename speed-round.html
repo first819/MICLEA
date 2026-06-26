@@ -184,6 +184,7 @@
   </main>
 </div>
 
+<script type="module" src="ai-client.js"></script>
 <script src="app-shell.js"></script>
 <script>
 (function(){
@@ -232,7 +233,20 @@
   $('#qTotal').textContent=total;
   var ringArc=$('#ringArc');
 
-  function startSession(){
+  async function startSession(){
+    // Pull AI-tailored questions (fallback to the built-in set on failure)
+    try{
+      var out = await window.Micl.ai('ai-question', { count: total, mode: 'speed' });
+      if(out.questions && out.questions.length){
+        QUESTIONS = out.questions.map(function(q){ return { q: q.content, a: '', topic: q.topic, id: q.id }; });
+        total = QUESTIONS.length; $('#qTotal').textContent = total;
+      }
+    }catch(e){ window.Micl.onAiError(e); /* keep built-in QUESTIONS */ }
+    try{
+      var uid = (await window.miclSupabase.auth.getUser()).data.user.id;
+      var s = await window.miclSupabase.from('practice_sessions').insert({ user_id: uid, mode:'speed' }).select('id').single();
+      window.miclSessionId = s.data && s.data.id;
+    }catch(e){ /* non-blocking */ }
     $('#screen-setup').classList.add('hide');
     $('#screen-session').classList.remove('hide');
     t0=Date.now();
@@ -268,7 +282,8 @@
     if(recording){ simulateSpeech(); } else { clearTimeout(typeTimer); }
   }
   function simulateSpeech(){
-    var full=QUESTIONS[idx].a, el=$('#ttext');
+    var full=QUESTIONS[idx].a||'', el=$('#ttext');
+    if(!full){ el.textContent=''; return; } // AI questions have no canned answer — user speaks/types
     var words=full.split(' '), i=0;
     el.textContent='';
     (function step(){
@@ -280,6 +295,15 @@
   function next(){
     clearInterval(timer);clearTimeout(typeTimer);
     var ans=$('#ttext').textContent.trim();
+    // Real AI feedback when there's an answer + an AI question id; else keep the heuristic
+    if(ans.length>0 && QUESTIONS[idx] && QUESTIONS[idx].id){
+      window.Micl.ai('ai-feedback', {
+        question: QUESTIONS[idx].q, answer: ans,
+        sessionId: window.miclSessionId, questionId: QUESTIONS[idx].id
+      }).then(function(fb){
+        if(fb && fb.score!=null && window.Miclea) Miclea.toast('Micl scored that '+fb.score+'/10');
+      }).catch(window.Micl.onAiError);
+    }
     scores.push(ans.length>40?72+Math.floor(Math.random()*22):55+Math.floor(Math.random()*18));
     idx++;
     if(idx>=total){ return finish(); }
@@ -288,7 +312,7 @@
   $('#recBtn').addEventListener('click',toggleRec);
   $('#nextBtn').addEventListener('click',next);
   $('#skipBtn').addEventListener('click',function(){scores.push(50);clearInterval(timer);clearTimeout(typeTimer);idx++;idx>=total?finish():loadQ();});
-  $('#startBtn').addEventListener('click',startSession);
+  $('#startBtn').addEventListener('click',function(){startSession();});
 
   function finish(){
     $('#screen-session').classList.add('hide');
