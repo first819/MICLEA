@@ -329,12 +329,10 @@
   body.feature-active .content{flex:1 1 auto;min-height:0;padding:0;max-width:none;position:relative;display:flex;flex-direction:column}
   body.feature-active .content > :not(#featureFrame):not(#featureLoading){display:none}
   body.feature-active #featureFrame{display:block;flex:1 1 auto;width:100%}
-  body.feature-active #greetingBlock{display:none}
+  body.feature-active .topbar .greeting,
+  body.feature-active .topbar .gsub{display:none}
   body.feature-active .topbar .resume-btn,
   body.feature-active .topbar .streak-chip{display:none}
-  #pageInfo{display:flex;flex-direction:column;justify-content:center}
-  .page-topbar-title{font-family:var(--font-serif,'Georgia',serif);font-weight:400;font-size:28px;letter-spacing:-.6px;line-height:1.05;margin:4px 0 0}
-  .page-topbar-desc{font-size:13.5px;color:var(--muted,#6b7280);margin-top:5px;line-height:1.4}
   #featureLoading.on{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;background:var(--app-bg);z-index:2}
   .fl-spinner{width:34px;height:34px;border-radius:50%;border:3px solid var(--brand-faint);border-top-color:var(--brand);animation:fl-spin .8s linear infinite}
   @keyframes fl-spin{to{transform:rotate(360deg)}}
@@ -423,14 +421,9 @@
 <!-- ===================== Main ===================== -->
 <div class="main">
   <header class="topbar">
-    <div id="greetingBlock">
+    <div>
       <h1 class="greeting" id="greeting">Welcome back, Thomas!</h1>
       <p class="gsub" id="gsub">Here's how your interview prep is shaping up.</p>
-    </div>
-    <div id="pageInfo" style="display:none">
-      <span class="eyebrow" id="pageEyebrow"></span>
-      <h1 class="page-topbar-title" id="pageTitle"></h1>
-      <p class="page-topbar-desc" id="pageDesc"></p>
     </div>
     <div class="top-actions">
       <button class="resume-btn">

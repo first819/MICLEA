@@ -7,24 +7,20 @@
   "use strict";
 
   var CORE = {
-    "speed-round":   { title: "Speed Round",         eyebrow: "Warm-up · Easy mode",          desc: "A quick burst of easy questions to shake off the nerves and build momentum." },
-    "gauntlet":      { title: "Gauntlet",             eyebrow: "The flagship · Realistic mock", desc: "Three rounds, rising pressure, one curveball. This is the real thing." },
-    "progress":      { title: "Progress & Insights",  eyebrow: "Your trajectory",               desc: "Every Speed Round and Gauntlet, distilled into where you're winning and what to drill next." },
-    "resume":        { title: "Résumé",               eyebrow: "Document studio",               desc: "Build it, then let Micl sharpen every line — stronger verbs, quantified impact, tailored to the role." },
-    "cover-letter":  { title: "Cover Letter",         eyebrow: "Document studio",               desc: "Drop in the role and a job description — Micl drafts a tailored letter in your voice." },
-    "question-bank": { title: "Question Bank",        eyebrow: "Study deliberately",            desc: "Hundreds of real interview questions — searchable and ready to drill." },
-    "company-packs": { title: "Company Packs",        eyebrow: "Ultra",                         desc: "Drill the exact style each company is known for — curated and kept current." },
-    "settings":      { title: "Settings",             eyebrow: "Your account",                  desc: "Manage your profile, security, and how Miclea looks and feels." },
-    "help":          { title: "Help & Support",       eyebrow: "We've got you",                 desc: "Find answers fast, or send us a note — we usually reply within a few hours." }
+    "speed-round": "Speed Round",
+    "gauntlet": "Gauntlet",
+    "progress": "Progress & Insights",
+    "resume": "Résumé",
+    "cover-letter": "Cover Letter",
+    "question-bank": "Question Bank",
+    "company-packs": "Company Packs",
+    "settings": "Settings",
+    "help": "Help & Support"
   };
 
   var body = document.body;
   var frame = document.getElementById("featureFrame");
   var loading = document.getElementById("featureLoading");
-  var pageInfo = document.getElementById("pageInfo");
-  var pageEyebrow = document.getElementById("pageEyebrow");
-  var pageTitle = document.getElementById("pageTitle");
-  var pageDesc = document.getElementById("pageDesc");
   var loadTimer = null;
 
   function stopLoading() {
@@ -54,7 +50,6 @@
     frame.removeAttribute("src");
     document.title = "Dashboard — Miclea";
     setActiveNav("dashboard");
-    if (pageInfo) pageInfo.style.display = "none";
   }
 
   function showFeature(slug) {
@@ -66,15 +61,8 @@
       frame.setAttribute("src", slug + "?embed=1");
     }
     body.classList.add("feature-active");
-    var info = CORE[slug];
-    document.title = info.title + " — Miclea";
+    document.title = CORE[slug] + " — Miclea";
     setActiveNav(slug);
-    if (pageInfo && info) {
-      if (pageEyebrow) pageEyebrow.textContent = info.eyebrow;
-      if (pageTitle)   pageTitle.textContent   = info.title;
-      if (pageDesc)    pageDesc.textContent     = info.desc;
-      pageInfo.style.display = "flex";
-    }
   }
 
   function route() {
