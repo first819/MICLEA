@@ -712,6 +712,7 @@
   ;(async () => {
     const { data } = await supabase.auth.getUser()
     const user = data?.user
+    window.miclUid = user?.id || null   // used to tag Stripe checkout with the buyer's id
     if (!user) return
     const meta = user.user_metadata || {}
     const fullName = meta.name || meta.full_name || (user.email ? user.email.split('@')[0] : '')
@@ -898,7 +899,12 @@
     function getStripeUrl(type) {
       var plan    = document.querySelector('.pm-card--selected').id.replace('pm-card-', '');
       var billing = document.querySelector('.pm-bt-opt.active').id.replace('pm-btn-', '');
-      return STRIPE[type][plan][billing];
+      var url = STRIPE[type][plan][billing];
+      // Tag the checkout with the buyer's Supabase id + tier so the webhook can grant access.
+      if (window.miclUid) {
+        url += (url.indexOf('?') < 0 ? '?' : '&') + 'client_reference_id=' + encodeURIComponent(window.miclUid + '__' + plan);
+      }
+      return url;
     }
 
     ctaBtn.addEventListener('click', function() {
