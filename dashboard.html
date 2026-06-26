@@ -316,9 +316,11 @@
 .pm-fi--lock{opacity:.35}
 .pm-fi--lock svg{width:12px;height:12px;color:var(--ink-subtle)}
 .pm-locked-text{opacity:.42}
-.pm-footer{display:flex;justify-content:center}
+.pm-footer{display:flex;flex-direction:column;align-items:center;gap:12px}
 .pm-cta-btn{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:15px 48px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s,box-shadow .15s;min-width:280px;text-align:center}
 .pm-cta-btn:hover{background:#1534c7;box-shadow:0 4px 16px rgba(31,64,237,.3)}
+.pm-pay-now{font-size:13px;color:var(--text-muted,#6b7280);cursor:pointer;background:none;border:none;padding:0;font-family:inherit;text-decoration:underline;text-underline-offset:2px}
+.pm-pay-now:hover{color:var(--brand)}
   /* ===================== Inline feature host ===================== */
   #featureFrame{display:none;width:100%;border:0;background:var(--app-bg)}
   #featureLoading{display:none}
@@ -416,7 +418,7 @@
 <div class="main">
   <header class="topbar">
     <div>
-      <h1 class="greeting">Welcome back, Thomas!</h1>
+      <h1 class="greeting" id="greeting">Welcome back, Thomas!</h1>
       <p class="gsub" id="gsub">Here's how your interview prep is shaping up.</p>
     </div>
     <div class="top-actions">
@@ -433,8 +435,8 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       </button>
       <a class="user-chip" href="#">
-        <span class="avatar">TH</span>
-        <span class="u-name">Thomas Hanks</span>
+        <span class="avatar" id="userAvatar">TH</span>
+        <span class="u-name" id="userName">Thomas Hanks</span>
         <svg class="u-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </a>
     </div>
@@ -698,6 +700,31 @@
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlemplaWl0enZ0ZHVhcnZpdW1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTg4MjAsImV4cCI6MjA5NTg3NDgyMH0.Z2JC8QufY-sVp9VoUg8j08RZjHgKnePWJSZkP8U6oFc'
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON)
 
+  // Fill greeting + user chip with the signed-in user's real name.
+  // Name comes from user_metadata.name (email/password signup) or
+  // full_name / name (Google/OAuth).
+  function initialsOf(name) {
+    const parts = String(name).trim().split(/\s+/).filter(Boolean)
+    if (!parts.length) return ''
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  }
+  ;(async () => {
+    const { data } = await supabase.auth.getUser()
+    const user = data?.user
+    if (!user) return
+    const meta = user.user_metadata || {}
+    const fullName = meta.name || meta.full_name || (user.email ? user.email.split('@')[0] : '')
+    if (!fullName) return
+    const firstName = fullName.trim().split(/\s+/)[0]
+    const greetingEl = document.getElementById('greeting')
+    const nameEl = document.getElementById('userName')
+    const avatarEl = document.getElementById('userAvatar')
+    if (greetingEl) greetingEl.textContent = `Welcome back, ${firstName}!`
+    if (nameEl) nameEl.textContent = fullName
+    if (avatarEl) avatarEl.textContent = initialsOf(fullName)
+  })()
+
   document.querySelectorAll('[data-action="signout"]').forEach(el => {
     el.addEventListener('click', async e => {
       e.preventDefault()
@@ -751,7 +778,7 @@
       </div>
 
       <!-- Ultra — pre-selected -->
-      <div class="pm-card pm-card--selected" id="pm-card-ultra" role="button" tabindex="0" onclick="pmSelectPlan('ultra','Get Ultra')">
+      <div class="pm-card pm-card--selected" id="pm-card-ultra" role="button" tabindex="0" onclick="pmSelectPlan('ultra')">
         <div class="pm-sel-dot">
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
         </div>
@@ -773,7 +800,7 @@
       </div>
 
       <!-- Pro -->
-      <div class="pm-card" id="pm-card-pro" role="button" tabindex="0" onclick="pmSelectPlan('pro','Choose Pro')">
+      <div class="pm-card" id="pm-card-pro" role="button" tabindex="0" onclick="pmSelectPlan('pro')">
         <div class="pm-sel-dot">
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
         </div>
@@ -796,7 +823,8 @@
     </div><!-- /pm-cards -->
 
     <div class="pm-footer">
-      <button class="pm-cta-btn" id="pm-cta-btn" type="button">Get Ultra</button>
+      <button class="pm-cta-btn" id="pm-cta-btn" type="button">Start free trial</button>
+      <button class="pm-pay-now" id="pm-pay-now-btn" type="button">Or pay now — skip the trial</button>
     </div>
   </div><!-- /pm-dialog -->
 </div><!-- /pricing-modal -->
@@ -808,7 +836,7 @@
     var ctaBtn = document.getElementById('pm-cta-btn');
 
     function openPricingModal() {
-      pmSelectPlan('ultra', 'Get Ultra');
+      pmSelectPlan('ultra');
       pmSetBilling('annual');
       modal.classList.add('pm-open');
       document.body.style.overflow = 'hidden';
@@ -842,8 +870,43 @@
       }
     });
 
+    var payNowBtn = document.getElementById('pm-pay-now-btn');
+
+    var STRIPE = {
+      trial: {
+        ultra: {
+          annual:  'https://buy.stripe.com/14AfZj4yweU12xS6Qj67S01',
+          monthly: 'https://buy.stripe.com/5kQ28t8OM13b7Sc4Ib67S02'
+        },
+        pro: {
+          annual:  'https://buy.stripe.com/8x2dRb1mk3bj1tO0rV67S03',
+          monthly: 'https://buy.stripe.com/6oUaEZ7KI6nvb4ogqT67S04'
+        }
+      },
+      paynow: {
+        ultra: {
+          annual:  'https://buy.stripe.com/5kQ8wRe96eU1b4ofmP67S05',
+          monthly: 'https://buy.stripe.com/00wbJ37KI3bjegAdeH67S06'
+        },
+        pro: {
+          annual:  'https://buy.stripe.com/cNiaEZd5227fc8sa2v67S07',
+          monthly: 'https://buy.stripe.com/3cI28te963bj3BW2A367S08'
+        }
+      }
+    };
+
+    function getStripeUrl(type) {
+      var plan    = document.querySelector('.pm-card--selected').id.replace('pm-card-', '');
+      var billing = document.querySelector('.pm-bt-opt.active').id.replace('pm-btn-', '');
+      return STRIPE[type][plan][billing];
+    }
+
     ctaBtn.addEventListener('click', function() {
-      window.location.href = '#';
+      window.open(getStripeUrl('trial'), '_blank');
+    });
+
+    payNowBtn.addEventListener('click', function() {
+      window.open(getStripeUrl('paynow'), '_blank');
     });
   })();
 
@@ -857,12 +920,14 @@
     document.getElementById('pm-pro-note').textContent = annual ? '$182 billed annually' : 'Billed monthly';
   }
 
-  function pmSelectPlan(plan, label) {
+  function pmSelectPlan(plan) {
     document.querySelectorAll('.pm-card:not(.pm-card--current)').forEach(function(c) {
       c.classList.remove('pm-card--selected');
     });
     document.getElementById('pm-card-' + plan).classList.add('pm-card--selected');
-    document.getElementById('pm-cta-btn').textContent = label;
+    document.getElementById('pm-cta-btn').textContent = 'Start 3-day free trial';
+    var planLabel = plan === 'ultra' ? 'Ultra' : 'Pro';
+    document.getElementById('pm-pay-now-btn').textContent = 'Or pay now — skip the trial';
   }
 </script>
 <script src="dashboard-router.js"></script>
