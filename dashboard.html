@@ -329,6 +329,8 @@
   body.feature-active .content{flex:1 1 auto;min-height:0;padding:0;max-width:none;position:relative;display:flex;flex-direction:column}
   body.feature-active .content > :not(#featureFrame):not(#featureLoading){display:none}
   body.feature-active #featureFrame{display:block;flex:1 1 auto;width:100%}
+  body.feature-active .topbar .greeting,
+  body.feature-active .topbar .gsub{display:none}
   #featureLoading.on{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;background:var(--app-bg);z-index:2}
   .fl-spinner{width:34px;height:34px;border-radius:50%;border:3px solid var(--brand-faint);border-top-color:var(--brand);animation:fl-spin .8s linear infinite}
   @keyframes fl-spin{to{transform:rotate(360deg)}}
