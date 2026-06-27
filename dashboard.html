@@ -42,9 +42,8 @@
   }
   body.collapsed .sidebar{width:var(--sbc)}
 
-  /* Logo header — no divider line; logo nudged right toward the search bar (#1) */
-  .sb-head{order:0;flex:none;display:flex;align-items:center;gap:10px;height:60px;padding:0 18px 0 36px;position:relative}
-  .sb-head::after{content:'';position:absolute;top:0;right:-1px;width:1px;height:100%;background:#fff}
+  /* Logo header — aligned with fixed topbar */
+  .sb-head{order:0;flex:none;display:flex;align-items:center;gap:10px;height:60px;padding:0 18px 0 36px;border-bottom:1px solid var(--app-line)}
   .sb-logo{display:flex;align-items:center;gap:10px;min-width:0}
   .sb-logo img{width:30px;height:30px;display:block;flex:none}
   .sb-logo b{font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--ink)}
@@ -192,11 +191,11 @@
   .fb-pop .fb-send:hover{background:#000}
 
   /* ===================== Main shell ===================== */
-  .main{margin-left:var(--sb);transition:margin-left .24s var(--ease);min-height:100vh;display:flex;flex-direction:column}
+  .main{margin-left:var(--sb);transition:margin-left .24s var(--ease);min-height:100vh;display:flex;flex-direction:column;padding-top:60px}
   body.collapsed .main{margin-left:var(--sbc)}
 
-  .topbar{position:sticky;top:0;z-index:30;background:#fff}
-  .tb-util{display:flex;align-items:center;gap:16px;height:60px;padding:0 30px;border-bottom:2px solid var(--brand)}
+  .topbar{background:#fff}
+  .tb-util{position:fixed;top:0;left:0;right:0;z-index:35;display:flex;align-items:center;gap:16px;height:60px;padding:0 30px;background:#fff;border-bottom:1px solid var(--app-line)}
   .top-search{position:relative;flex:1;max-width:420px}
   .top-search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-subtle)}
   .top-search input{
