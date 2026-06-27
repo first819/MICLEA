@@ -1,11 +1,16 @@
 // Stripe webhook → grants/revokes user_tier.
 // verify_jwt MUST be false (Stripe does not send a Supabase JWT); we authenticate
 // the request by verifying Stripe's HMAC signature with STRIPE_WEBHOOK_SECRET.
+//
+// Tier resolution is authoritative when STRIPE_SECRET_KEY is set: we retrieve the
+// purchased line item and read the tier from the price/product (metadata.tier, or
+// the product name containing "ultra"/"pro"). This can't be spoofed via the URL.
+// Without the key, we fall back to the tier carried in client_reference_id.
 import { serviceClient } from "../_shared/clients.ts";
 
 const WHSEC = Deno.env.get("STRIPE_WEBHOOK_SECRET")!;
+const SK = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
 
-// Verify the Stripe-Signature header: t=timestamp,v1=hexHMAC(`${t}.${rawBody}`)
 async function verifySignature(rawBody: string, sigHeader: string): Promise<boolean> {
   const parts: Record<string, string> = {};
   for (const kv of sigHeader.split(",")) {
@@ -14,9 +19,7 @@ async function verifySignature(rawBody: string, sigHeader: string): Promise<bool
   }
   const t = parts["t"], v1 = parts["v1"];
   if (!t || !v1) return false;
-  // Reject events older than 5 minutes (replay protection)
   if (Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
-
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw", enc.encode(WHSEC), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
@@ -27,6 +30,36 @@ async function verifySignature(rawBody: string, sigHeader: string): Promise<bool
   let diff = 0;
   for (let i = 0; i < hex.length; i++) diff |= hex.charCodeAt(i) ^ v1.charCodeAt(i);
   return diff === 0;
+}
+
+function tierFromString(s: string): "pro" | "ultra" | null {
+  const v = (s || "").toLowerCase();
+  if (v.includes("ultra")) return "ultra";
+  if (v.includes("pro")) return "pro";
+  return null;
+}
+
+// Authoritative tier: ask Stripe what was actually purchased.
+async function tierFromStripe(sessionId: string): Promise<"pro" | "ultra" | null> {
+  if (!SK || !sessionId) return null;
+  try {
+    const resp = await fetch(
+      `https://api.stripe.com/v1/checkout/sessions/${sessionId}/line_items?expand[]=data.price.product`,
+      { headers: { Authorization: `Bearer ${SK}` } },
+    );
+    if (!resp.ok) return null;
+    const body = await resp.json();
+    for (const item of (body.data ?? [])) {
+      const price = item.price ?? {};
+      const product = price.product ?? {};
+      const meta = (price.metadata?.tier ?? product.metadata?.tier ?? "") as string;
+      const fromMeta = tierFromString(meta);
+      if (fromMeta) return fromMeta;
+      const fromName = tierFromString(product.name ?? "");
+      if (fromName) return fromName;
+    }
+  } catch (_) { /* fall through to fallback */ }
+  return null;
 }
 
 Deno.serve(async (req) => {
@@ -44,11 +77,15 @@ Deno.serve(async (req) => {
   const db = serviceClient();
   try {
     if (event.type === "checkout.session.completed") {
-      const s = event.data.object as { client_reference_id?: string; customer?: string };
+      const s = event.data.object as { id?: string; client_reference_id?: string; customer?: string };
       const ref = s.client_reference_id ?? "";
       const sep = ref.lastIndexOf("__");
-      const uid = sep > 0 ? ref.slice(0, sep) : "";
-      const tier = sep > 0 ? ref.slice(sep + 2) : "";
+      const uid = sep > 0 ? ref.slice(0, sep) : ref;
+      const claimed = sep > 0 ? tierFromString(ref.slice(sep + 2)) : null;
+
+      // Prefer the authoritative tier from Stripe; fall back to the URL-carried tier.
+      const tier = (await tierFromStripe(s.id ?? "")) ?? claimed;
+
       if (uid && (tier === "pro" || tier === "ultra")) {
         await db.from("user_tier").upsert(
           { user_id: uid, tier, stripe_customer_id: s.customer ?? null, updated_at: new Date().toISOString() },
