@@ -342,6 +342,7 @@
     var nn=0,st=Math.max(1,Math.round(overall/40));var ci=setInterval(function(){nn+=st;if(nn>=overall){nn=overall;clearInterval(ci);}$('#resNum').textContent=nn},26);
     var secs=Math.round((Date.now()-state.t0)/1000);
     window.Miclea&&Miclea.addSession({type:'gauntlet',topic:'Gauntlet · '+state.role,role:state.role,score:overall,date:new Date().toISOString().slice(0,10),mins:Math.max(1,Math.round(secs/60))});
+    try{localStorage.setItem('miclea_gauntlet_used',String((parseInt(localStorage.getItem('miclea_gauntlet_used')||'0',10)||0)+1));}catch(e){}
     clear();
   }
 
