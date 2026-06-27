@@ -215,6 +215,51 @@
       '</header>';
   }
 
+  /* Pull the signed-in user's name from Supabase and fill the user chip,
+     replacing the placeholder. Works for email/password signups (name stored
+     in user_metadata.name during signup) and Google/OAuth (full_name / name). */
+  function initials(name) {
+    var parts = String(name).trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  function hydrateUser() {
+    var chip = document.querySelector(".user-chip");
+    import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/+esm")
+      .then(function (m) {
+        var supabase = m.createClient(
+          "https://eezjeiitzvtduarviume.supabase.co",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlemplaWl0enZ0ZHVhcnZpdW1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTg4MjAsImV4cCI6MjA5NTg3NDgyMH0.Z2JC8QufY-sVp9VoUg8j08RZjHgKnePWJSZkP8U6oFc"
+        );
+        return supabase.auth.getUser().then(function (res) {
+          var user = res && res.data && res.data.user;
+          if (!user) return;
+          // Fill the user chip (name + initials)
+          if (chip) {
+            var meta = user.user_metadata || {};
+            var name = meta.name || meta.full_name || (user.email ? user.email.split("@")[0] : "");
+            if (name) {
+              var nameEl = chip.querySelector(".u-name");
+              var avatarEl = chip.querySelector(".avatar");
+              if (nameEl) nameEl.textContent = name;
+              if (avatarEl) avatarEl.textContent = initials(name);
+            }
+          }
+          // Mirror the server-side tier into localStorage so lock UX matches entitlements
+          return supabase.from("user_tier").select("tier").eq("user_id", user.id).maybeSingle()
+            .then(function (r) {
+              var t = r && r.data && r.data.tier;
+              if (t && window.Miclea && t !== Miclea.getTier()) {
+                Miclea.setTier(t);
+                window.dispatchEvent(new Event("tierchange"));
+              }
+            });
+        });
+      })
+      .catch(function () {});
+  }
+
   /* In embed mode, keep navigation to other core features inside the embed:
      tell the parent dashboard to update its hash (which reloads this iframe). */
   function wireEmbedLinks() {
@@ -249,7 +294,7 @@
     }
     document.body.insertAdjacentHTML("afterbegin", buildRail(page) + buildSidebar(page, document.body.getAttribute("data-search")));
     var main = document.querySelector(".main");
-    if (main) main.insertAdjacentHTML("afterbegin", buildTopbar());
+    if (main) { main.insertAdjacentHTML("afterbegin", buildTopbar()); hydrateUser(); }
 
     /* collapse + mobile */
     if (LS.getItem("miclea_sb") === "1") document.body.classList.add("collapsed");
