@@ -42,13 +42,8 @@
   }
   body.collapsed .sidebar{width:var(--sbc)}
 
-  /* Logo header — aligned with fixed topbar */
-  .sb-head{order:0;flex:none;display:flex;align-items:center;gap:10px;height:60px;padding:0 18px 0 36px;border-bottom:1px solid var(--app-line)}
-  .sb-logo{display:flex;align-items:center;gap:10px;min-width:0}
-  .sb-logo img{width:30px;height:30px;display:block;flex:none}
-  .sb-logo b{font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--ink)}
-  body.collapsed .sb-head{justify-content:center;padding:0}
-  body.collapsed .sb-logo b{display:none}
+  /* Logo now lives in the fixed topbar; sb-head is just a 60px spacer */
+  .sb-head{order:0;flex:none;height:60px}
 
   /* Collapse toggle — now lives on the MAIN row, BELOW the line, so it only collapses the nav */
   .sb-toggle{
@@ -195,8 +190,12 @@
   body.collapsed .main{margin-left:var(--sbc)}
 
   .topbar{background:#fff}
-  .tb-util{position:fixed;top:0;left:0;right:0;z-index:35;display:flex;align-items:center;gap:16px;height:60px;padding:0 30px;background:#fff;border-bottom:1px solid var(--app-line)}
-  .top-search{position:relative;flex:1;max-width:420px}
+  /* Full-width fixed top strip — logo, search, actions. z-index above sidebar so it covers the sidebar's vertical line at the top */
+  .tb-util{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:0;height:60px;padding:0;background:#fff;border-bottom:1px solid var(--app-line)}
+  .tb-logo{width:var(--sb);flex:none;display:flex;align-items:center;gap:10px;height:100%;padding:0 18px 0 36px}
+  .tb-logo img{width:30px;height:30px;display:block;flex:none}
+  .tb-logo b{font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--ink)}
+  .top-search{position:relative;flex:1;max-width:420px;margin-left:30px}
   .top-search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-subtle)}
   .top-search input{
     width:100%;height:42px;border:1px solid var(--app-line);border-radius:11px;background:#fbfbfc;
@@ -204,7 +203,7 @@
   }
   .top-search input::placeholder{color:var(--ink-subtle)}
   .top-search input:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
-  .tb-actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .tb-actions{margin-left:auto;margin-right:30px;display:flex;align-items:center;gap:12px}
 
   .icon-btn{
     position:relative;width:42px;height:42px;border-radius:11px;border:1px solid var(--app-line);
@@ -443,7 +442,10 @@
     body.collapsed .main{margin-left:0}
     .sb-scrim{display:block;position:fixed;inset:0;background:rgba(20,24,40,.4);z-index:35;opacity:0;visibility:hidden;transition:.2s}
     body.nav-open .sb-scrim{opacity:1;visibility:visible}
-    .tb-util,.tb-head{padding-left:18px;padding-right:18px}
+    .tb-head{padding-left:18px;padding-right:18px}
+    .tb-logo{width:auto;padding:0 10px 0 18px}
+    .top-search{margin-left:8px}
+    .tb-actions{margin-right:18px}
     .greeting{font-size:20px}
     .user-chip .uc-b{display:none}
     .range-dd{display:none}
@@ -458,12 +460,7 @@
 
 <!-- ===================== Sidebar ===================== -->
 <aside class="sidebar">
-  <div class="sb-head">
-    <a href="dashboard" class="sb-logo" aria-label="Miclea home">
-      <img src="images/miclea-mark-blue.png" alt="Miclea">
-      <b>Miclea</b>
-    </a>
-  </div>
+  <div class="sb-head"></div>
 
   <nav class="sb-nav">
     <div class="sb-group sb-group--main">
@@ -562,6 +559,10 @@
 <div class="main">
   <header class="topbar">
     <div class="tb-util">
+      <a href="dashboard" class="tb-logo" aria-label="Miclea home">
+        <img src="images/miclea-mark-blue.png" alt="Miclea">
+        <b>Miclea</b>
+      </a>
       <div class="top-search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" placeholder="Search progress, session, resume..." aria-label="Search">
