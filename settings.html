@@ -9,11 +9,11 @@
 <link rel="stylesheet" href="app-shell.css">
 <style>
   /* ===== Settings header (full-width title + divider) ===== */
-  .set-top{padding-bottom:18px;border-bottom:1px solid var(--app-line);margin-bottom:26px}
+  .set-top{padding-bottom:18px;border-bottom:1px solid var(--app-line);margin-bottom:0}
   .set-top h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
 
   /* ===== Two-column layout: sub-nav + panel ===== */
-  .set-layout{display:grid;grid-template-columns:200px 1fr;gap:38px;align-items:start;max-width:1000px}
+  .set-layout{display:grid;grid-template-columns:200px 1fr;gap:38px;align-items:start;max-width:1000px;padding-top:24px}
 
   /* left sub-nav */
   .set-nav{display:flex;flex-direction:column;gap:3px;position:sticky;top:88px}
@@ -142,6 +142,8 @@
             </div>
             <input type="file" id="imgInput" accept="image/png,image/jpeg,image/gif" hidden>
           </div>
+
+          <div class="panel-rule"></div>
 
           <!-- Name -->
           <div class="field">
