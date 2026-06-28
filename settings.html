@@ -92,24 +92,12 @@
   .tp-sys{background:linear-gradient(120deg,#faf9f7 50%,#0e1014 50%)}.tp-sys .sb{background:linear-gradient(120deg,#fff 50%,#171a20 50%);border:none}.tp-sys .ln{background:linear-gradient(120deg,#e5e3de 50%,#2a2f38 50%)}.tp-sys .ln.a{background:#1f40ed;width:60%}
   .theme-opt .tn{font-size:13px;font-weight:600}
 
-  /* tier switcher (demo) */
-  .tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:560px}
-  .tier-opt{border:1.5px solid var(--app-line);border-radius:13px;padding:16px;cursor:pointer;transition:.14s}
-  .tier-opt:hover{border-color:var(--brand-faint)}
-  .tier-opt.on{border-color:var(--brand);box-shadow:0 0 0 3px rgba(var(--brand-rgb),.1)}
-  .tier-opt .tt{font-family:var(--font-family-serif);font-size:19px;margin-bottom:3px}
-  .tier-opt .tp{font-size:12px;color:var(--ink-muted)}
-  .tier-opt .tcheck{margin-top:10px;font-size:11.5px;font-weight:700;color:var(--brand);display:none}
-  .tier-opt.on .tcheck{display:block}
-  .demo-note{font-size:12px;color:var(--ink-muted);background:var(--brand-fainter);border-radius:9px;padding:10px 12px;margin-top:14px;max-width:560px;display:flex;gap:8px}
-  .demo-note svg{width:15px;height:15px;flex:none;color:var(--brand);margin-top:1px}
-
   @media(max-width:760px){
     .set-layout{grid-template-columns:1fr;gap:22px}
     .set-nav{flex-direction:row;position:static;border-bottom:1px solid var(--app-line);padding-bottom:8px}
     .cred-row{flex-direction:column;align-items:stretch}
     .cred-row .b{align-self:flex-start;margin-top:4px}
-    .theme-grid,.tier-grid{grid-template-columns:1fr}
+    .theme-grid{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -126,7 +114,7 @@
           Account
         </button>
         <button class="set-tab" data-tab="appearance">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="11.5" r="2.5"/><circle cx="17.5" cy="13.5" r="2.5"/><circle cx="9.5" cy="17.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1-.24-.27-.39-.62-.39-1 0-.83.67-1.5 1.5-1.5H16a4 4 0 0 0 4-4c0-4.42-3.58-8-8-8z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-1 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-4.42-4.03-8-9-8z"/><circle cx="6.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="9.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="14.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/></svg>
           Appearance
         </button>
       </nav>
@@ -224,14 +212,6 @@
             <div class="theme-opt" data-t="system"><div class="theme-prev tp-sys"><div class="sb"></div><div class="bd"><div class="ln a"></div><div class="ln"></div><div class="ln"></div></div></div><div class="tn">System</div></div>
           </div>
 
-          <div class="sub-head">Plan</div>
-          <div class="sub-sub">Your subscription gates premium features across the app.</div>
-          <div class="tier-grid" id="tierGrid">
-            <div class="tier-opt" data-tier="free"><div class="tt">Free</div><div class="tp">1 of each round · transcript + scoring</div><div class="tcheck">✓ Current plan</div></div>
-            <div class="tier-opt" data-tier="pro"><div class="tt">Pro</div><div class="tp">50 rounds/mo · insights · bank · docs</div><div class="tcheck">✓ Current plan</div></div>
-            <div class="tier-opt" data-tier="ultra"><div class="tt">Ultra</div><div class="tp">Unlimited · packs · replay · priority</div><div class="tcheck">✓ Current plan</div></div>
-          </div>
-          <div class="demo-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Demo switch — flip your tier to see how feature locks open and close across the app. Real billing lives on the <a href="pricing" style="color:var(--brand);font-weight:600">pricing page</a>.</span></div>
         </section>
 
       </div>
@@ -376,10 +356,6 @@ function paintTheme(){const t=Miclea.getTheme();document.querySelectorAll('.them
 $('#themeGrid').addEventListener('click',function(e){const o=e.target.closest('.theme-opt');if(!o)return;Miclea.setTheme(o.dataset.t);paintTheme();toast('Theme set to '+o.dataset.t);});
 paintTheme();
 
-/* ---------- Tier ---------- */
-function paintTier(){const t=Miclea.getTier();document.querySelectorAll('.tier-opt').forEach(function(o){o.classList.toggle('on',o.dataset.tier===t)});}
-$('#tierGrid').addEventListener('click',function(e){const o=e.target.closest('.tier-opt');if(!o)return;Miclea.setTier(o.dataset.tier);paintTier();toast('Switched to '+o.dataset.tier.charAt(0).toUpperCase()+o.dataset.tier.slice(1));});
-paintTier();
 </script>
 </body>
 </html>
