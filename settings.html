@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="app-shell.css">
 <style>
   /* ===== Settings header (full-width title + divider) ===== */
-  .set-top{padding-bottom:18px;border-bottom:1px solid var(--app-line);margin-bottom:0}
+  .set-top{padding-bottom:18px;border-bottom:1px solid #d1d5db;margin-bottom:0}
+  body.theme-dark .set-top{border-bottom-color:#2d323b}
   .set-top h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
 
   /* ===== Two-column layout: sub-nav + panel ===== */
@@ -27,7 +28,8 @@
   .set-panel{display:none;animation:appfade .3s var(--ease-standard) both}
   .set-panel.on{display:block}
   .panel-title{font-size:21px;font-weight:700;letter-spacing:-.01em}
-  .panel-rule{height:1px;background:var(--app-line);margin:18px 0 26px}
+  .panel-rule{height:1px;background:#d1d5db;margin:18px 0 26px}
+  body.theme-dark .panel-rule{background:#2d323b}
 
   /* avatar row */
   .av-row{display:flex;align-items:center;gap:20px;margin-bottom:30px}
@@ -60,7 +62,8 @@
   .err.show{display:block}
 
   /* credential rows (email / password) — field + action button on the right */
-  .cred-rule{height:1px;background:var(--app-line);margin:26px 0}
+  .cred-rule{height:1px;background:#d1d5db;margin:26px 0}
+  body.theme-dark .cred-rule{background:#2d323b}
   .cred-row{display:flex;align-items:flex-end;gap:16px;max-width:760px;margin-bottom:18px}
   .cred-row .field{flex:1;margin-bottom:0}
   .cred-row .b{margin-bottom:1px}
