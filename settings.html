@@ -9,14 +9,13 @@
 <link rel="stylesheet" href="app-shell.css">
 <style>
   /* ===== Settings header (full-width title + divider) ===== */
-  .set-top{padding-bottom:18px;border-bottom:1px solid #d1d5db;margin-bottom:0}
+  .set-top{padding-bottom:18px;border-bottom:1px solid #d1d5db;margin-bottom:0;
+    margin-left:-32px;margin-right:-32px;padding-left:32px;padding-right:32px}
   body.theme-dark .set-top{border-bottom-color:#2d323b}
   .set-top h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
 
   /* ===== Two-column layout: sub-nav + panel ===== */
-  .set-layout{display:grid;grid-template-columns:200px 1fr;gap:0;align-items:start;max-width:1000px;padding-top:24px;
-    background:linear-gradient(#d1d5db,#d1d5db) no-repeat left 200px top/1px 100%}
-  body.theme-dark .set-layout{background:linear-gradient(#2d323b,#2d323b) no-repeat left 200px top/1px 100%}
+  .set-layout{display:grid;grid-template-columns:200px 1fr;gap:0;align-items:start;max-width:1000px;padding-top:24px}
 
   /* left sub-nav */
   .set-nav{display:flex;flex-direction:column;gap:3px;position:sticky;top:88px;padding-right:24px}
@@ -27,7 +26,8 @@
   .set-tab.on{background:var(--app-line);color:var(--ink);font-weight:600}
 
   /* panels */
-  .set-main{padding-left:32px}
+  .set-main{padding-left:32px;border-left:1px solid #d1d5db}
+  body.theme-dark .set-main{border-left-color:#2d323b}
   .set-panel{display:none;animation:appfade .3s var(--ease-standard) both}
   .set-panel.on{display:block}
   .panel-title{font-size:21px;font-weight:700;letter-spacing:-.01em}
@@ -104,8 +104,10 @@
   .tp-label span{font-size:13.5px;font-weight:500;color:var(--ink)}
 
   @media(max-width:760px){
+    .set-top{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}
     .set-layout{grid-template-columns:1fr;gap:22px}
     .set-nav{flex-direction:row;position:static;border-bottom:1px solid var(--app-line);padding-bottom:8px}
+    .set-main{border-left:none;padding-left:0}
     .cred-row{flex-direction:column;align-items:stretch}
     .cred-row .b{align-self:flex-start;margin-top:4px}
     .theme-grid{grid-template-columns:1fr}
