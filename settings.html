@@ -103,14 +103,101 @@
   .theme-opt.on .tp-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
   .tp-label span{font-size:13.5px;font-weight:500;color:var(--ink)}
 
+  /* ===== Billing ===== */
+  .b-brand{background:var(--brand);color:#fff}
+  .b-brand:hover{filter:brightness(.92)}
+  .b-outline{background:var(--app-card);color:var(--ink);border:1px solid var(--app-line-2)}
+  .b-outline:hover{background:var(--app-line)}
+
+  .bill-card{background:var(--app-card);border:1px solid var(--app-line-2);border-radius:14px;padding:20px}
+
+  /* Current plan bar */
+  .cur-plan{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}
+  .cp-title{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .cp-sub{font-size:13.5px;color:var(--ink-muted);margin-top:4px}
+  .cp-sub strong{color:var(--ink);font-weight:600}
+  .cp-actions{display:flex;gap:10px;flex:none}
+
+  /* Plan + payment + benefits grid */
+  .bill-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-bottom:18px;align-items:start}
+  .bill-col{display:flex;flex-direction:column;gap:18px}
+
+  .pc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .pc-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .pc-price{font-size:13.5px;color:var(--ink-muted);white-space:nowrap}
+  .pc-price strong{font-size:21px;color:var(--ink);font-weight:700}
+  .pc-sessions{font-size:12.5px;color:var(--ink-muted);margin-top:18px;margin-bottom:9px}
+  .pc-bar{height:8px;border-radius:100px;background:var(--app-line);overflow:hidden}
+  .pc-bar i{display:block;height:100%;background:var(--brand);border-radius:100px}
+  .pc-foot{display:flex;justify-content:flex-end;margin-top:18px}
+
+  .pay-title{font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .pay-sub{font-size:13px;color:var(--ink-muted);margin-top:3px;margin-bottom:16px}
+  .pay-row{display:flex;align-items:center;gap:14px;border:1px solid var(--app-line-2);border-radius:10px;padding:12px 14px}
+  .pay-brand{display:inline-flex;align-items:center;justify-content:center;width:48px;height:31px;flex:none;
+    border:1px solid var(--app-line-2);border-radius:6px;background:#fff;color:#1a1f71;font-weight:800;font-style:italic;font-size:13px;letter-spacing:.02em}
+  .pay-num{flex:1;font-size:13.5px;font-weight:600;letter-spacing:.06em}
+  .pay-exp{font-size:12px;color:var(--ink-muted);font-weight:400;letter-spacing:0;margin-top:3px}
+
+  .ben-title{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:18px}
+  .ben-list{list-style:none;display:flex;flex-direction:column;gap:15px}
+  .ben-list li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.35}
+  .ben-list li span{color:var(--ink-muted);font-weight:500}
+  .ben-check{width:18px;height:18px;flex:none;margin-top:.5px;color:var(--ink-muted);opacity:.75}
+
+  /* Invoices */
+  .inv-card{margin-bottom:6px}
+  .inv-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+  .inv-title{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .inv-sub{font-size:13px;color:var(--ink-muted);margin-top:3px}
+  .inv-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .inv-search{display:flex;align-items:center;gap:8px;border:1px solid var(--app-line-2);border-radius:9px;padding:8px 12px;width:210px}
+  .inv-search svg{width:15px;height:15px;color:var(--ink-muted);flex:none}
+  .inv-search input{border:none;background:none;outline:none;font:inherit;font-size:13px;color:var(--ink);width:100%}
+  .b-tool{background:var(--app-card);color:var(--ink);border:1px solid var(--app-line-2);font-weight:500}
+  .b-tool:hover{background:var(--app-line)}
+  .b-tool svg{width:15px;height:15px;color:var(--ink-muted)}
+
+  .inv-scroll{overflow-x:auto}
+  .inv-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+  .inv-table thead th{text-align:left;font-size:12.5px;font-weight:600;color:var(--ink-muted);
+    background:rgba(125,125,125,.08);padding:11px 12px;white-space:nowrap}
+  .inv-table thead th:first-child{border-radius:8px 0 0 8px}
+  .inv-table thead th:last-child{border-radius:0 8px 8px 0}
+  .inv-table td:first-child,.inv-table th:first-child{padding-left:14px;width:34px}
+  .inv-table tbody td{padding:14px 12px;border-bottom:1px solid var(--app-line);vertical-align:middle}
+  .inv-table tbody tr:last-child td{border-bottom:none}
+  .inv-chk{width:15px;height:15px;accent-color:var(--brand);cursor:pointer}
+  .inv-desc{display:flex;align-items:center;gap:10px;font-weight:600;white-space:nowrap}
+  .inv-desc svg{width:16px;height:16px;color:var(--ink-muted);flex:none}
+  .inv-amt{font-weight:600}
+  .badge{display:inline-block;font-size:12px;font-weight:600;padding:4px 11px;border-radius:100px;border:1px solid;white-space:nowrap}
+  .badge-paid{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
+  body.theme-dark .badge-paid{color:#86efac;border-color:#14532d;background:rgba(20,83,45,.25)}
+  .badge-upcoming{color:var(--ink-muted);border-color:var(--app-line-2);background:transparent}
+  .inv-more{background:none;border:none;color:var(--ink-muted);cursor:pointer;padding:4px 6px;border-radius:6px;line-height:0}
+  .inv-more:hover{background:var(--app-line)}
+  .inv-foot{margin-top:18px}
+  .inv-pager{display:inline-flex;align-items:center;border:1px solid var(--app-line-2);border-radius:9px;overflow:hidden}
+  .inv-pager button{border:none;background:var(--app-card);padding:8px 13px;color:var(--ink-muted);cursor:pointer;display:flex;align-items:center}
+  .inv-pager button:hover{background:var(--app-line);color:var(--ink)}
+  .inv-pager svg{width:15px;height:15px}
+  .inv-pager .sep{width:1px;align-self:stretch;background:var(--app-line-2)}
+  .inv-pager .inv-count{font-size:13px;color:var(--ink-muted);padding:0 14px}
+
   @media(max-width:760px){
     .set-top{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}
     .set-layout{grid-template-columns:1fr;gap:22px}
-    .set-nav{flex-direction:row;position:static;border-bottom:1px solid var(--app-line);padding-bottom:8px}
+    .set-nav{flex-direction:row;position:static;border-bottom:1px solid var(--app-line);padding-bottom:8px;overflow-x:auto}
     .set-main{border-left:none;padding-left:0}
     .cred-row{flex-direction:column;align-items:stretch}
     .cred-row .b{align-self:flex-start;margin-top:4px}
     .theme-grid{grid-template-columns:1fr}
+    .bill-grid{grid-template-columns:1fr}
+    .cur-plan{flex-direction:column;align-items:flex-start;gap:16px}
+    .cp-actions{width:100%}
+    .inv-tools{width:100%}
+    .inv-search{flex:1;width:auto}
   }
 </style>
 </head>
@@ -129,6 +216,10 @@
         <button class="set-tab" data-tab="appearance">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-1 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-4.42-4.03-8-9-8z"/><circle cx="6.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="9.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="14.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/></svg>
           Appearance
+        </button>
+        <button class="set-tab" data-tab="billing">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+          Billing
         </button>
       </nav>
 
@@ -330,6 +421,170 @@
               <div class="tp-label"><div class="tp-radio"></div><span>System</span></div>
             </div>
 
+          </div>
+
+        </section>
+
+        <!-- ===== Billing ===== -->
+        <section class="set-panel" data-panel="billing">
+          <h2 class="panel-title">Billing</h2>
+          <div class="panel-rule"></div>
+
+          <!-- Current plan bar -->
+          <div class="bill-card cur-plan">
+            <div>
+              <div class="cp-title">Current Plan</div>
+              <div class="cp-sub">Plan active since: <strong>June 18, 2026</strong></div>
+            </div>
+            <div class="cp-actions">
+              <button class="b b-brand" id="upgradePlan">Upgrade Plan</button>
+              <button class="b b-outline" id="cancelPlan">Cancel Plan</button>
+            </div>
+          </div>
+
+          <!-- Plan / payment / benefits -->
+          <div class="bill-grid">
+            <div class="bill-col">
+
+              <!-- Plan usage -->
+              <div class="bill-card plan-card">
+                <div class="pc-head">
+                  <div class="pc-name">Pro Plan</div>
+                  <div class="pc-price"><strong>$29.00</strong>/month</div>
+                </div>
+                <div class="pc-sessions">50 sessions remaining</div>
+                <div class="pc-bar"><i style="width:100%"></i></div>
+                <div class="pc-foot"><button class="b b-outline">Upgrade Plan</button></div>
+              </div>
+
+              <!-- Payment method -->
+              <div class="bill-card pay-card">
+                <div class="pay-title">Payment method</div>
+                <div class="pay-sub">Change how you pay for your plan.</div>
+                <div class="pay-row">
+                  <span class="pay-brand">VISA</span>
+                  <div class="pay-num">
+                    <div>&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 2384</div>
+                    <div class="pay-exp">Expiry 02/27</div>
+                  </div>
+                  <button class="b b-outline">Change</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Benefits -->
+            <div class="bill-card benefits-card">
+              <div class="ben-title">Current Plan Benefits</div>
+              <ul class="ben-list">
+                <li>
+                  <svg class="ben-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+                  <span class="ben-txt">50 Speed &amp; Gauntlet Rounds <span>/month</span></span>
+                </li>
+                <li>
+                  <svg class="ben-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+                  <span class="ben-txt">Full progress dashboard &amp; history</span>
+                </li>
+                <li>
+                  <svg class="ben-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+                  <span class="ben-txt">Question Bank <span>&mdash; core roles &amp; standard difficulty</span></span>
+                </li>
+                <li>
+                  <svg class="ben-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+                  <span class="ben-txt">Resume Editor <span>&mdash; 10 AI rewrites /month</span></span>
+                </li>
+                <li>
+                  <svg class="ben-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+                  <span class="ben-txt">Cover Letter Editor <span>&mdash; 10 AI generations /month</span></span>
+                </li>
+                <li>
+                  <svg class="ben-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+                  <span class="ben-txt">Week-over-week improvement tips</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Invoices -->
+          <div class="bill-card inv-card">
+            <div class="inv-head">
+              <div>
+                <div class="inv-title">Invoices</div>
+                <div class="inv-sub">Access all your previous invoices.</div>
+              </div>
+              <div class="inv-tools">
+                <div class="inv-search">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" placeholder="Search">
+                </div>
+                <button class="b b-tool">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+                  Filter
+                </button>
+                <button class="b b-tool">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download All
+                </button>
+              </div>
+            </div>
+
+            <div class="inv-scroll">
+              <table class="inv-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" class="inv-chk" aria-label="Select all"></th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Invoice Amount</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" class="inv-chk" aria-label="Select invoice"></td>
+                    <td><span class="inv-desc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoice_Sep_2025</span></td>
+                    <td>Sep 12, 2025</td>
+                    <td><span class="badge badge-upcoming">Upcoming</span></td>
+                    <td class="inv-amt">$39.00</td>
+                    <td><button class="inv-more" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" class="inv-chk" aria-label="Select invoice"></td>
+                    <td><span class="inv-desc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoice_Aug_2025</span></td>
+                    <td>Aug 12, 2025</td>
+                    <td><span class="badge badge-paid">Paid</span></td>
+                    <td class="inv-amt">$39.00</td>
+                    <td><button class="inv-more" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" class="inv-chk" aria-label="Select invoice"></td>
+                    <td><span class="inv-desc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoice_Jul_2025</span></td>
+                    <td>Jul 12, 2025</td>
+                    <td><span class="badge badge-paid">Paid</span></td>
+                    <td class="inv-amt">$39.00</td>
+                    <td><button class="inv-more" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" class="inv-chk" aria-label="Select invoice"></td>
+                    <td><span class="inv-desc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoice_Jun_2025</span></td>
+                    <td>Jun 12, 2025</td>
+                    <td><span class="badge badge-paid">Paid</span></td>
+                    <td class="inv-amt">$39.00</td>
+                    <td><button class="inv-more" aria-label="More"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="inv-foot">
+              <div class="inv-pager">
+                <button aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+                <button aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+                <span class="sep"></span>
+                <span class="inv-count">1-8 of 16</span>
+              </div>
+            </div>
           </div>
 
         </section>
