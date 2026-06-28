@@ -227,7 +227,6 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlemplaWl0enZ0ZHVhcnZpdW1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTg4MjAsImV4cCI6MjA5NTg3NDgyMH0.Z2JC8QufY-sVp9VoUg8j08RZjHgKnePWJSZkP8U6oFc'
 );
 const $ = function(s){ return document.querySelector(s); };
-const toast = function(m,t){ if(window.Miclea) Miclea.toast(m,t); };
 
 /* ---------- Hydrate fields from the signed-in account ---------- */
 function initials(name){
@@ -278,15 +277,13 @@ document.querySelectorAll('.set-tab').forEach(function(tab){
 $('#changeImg').addEventListener('click',function(){$('#imgInput').click();});
 $('#imgInput').addEventListener('change',function(){
   const f=this.files&&this.files[0]; if(!f)return;
-  if(f.size>3*1024*1024){toast('Image must be under 3mb','err');this.value='';return;}
+  if(f.size>3*1024*1024){this.value='';return;}
   const r=new FileReader();
   r.onload=function(e){ setAvatar(e.target.result); };
   r.readAsDataURL(f);
-  toast('Image updated');
 });
 $('#removeImg').addEventListener('click',function(){
   setAvatar('', DEFAULT_INI); $('#imgInput').value='';
-  toast('Image removed');
 });
 
 /* ---------- Name → user_metadata ---------- */
@@ -294,15 +291,14 @@ $('#saveName').addEventListener('click',async function(){
   const fn=$('#firstName'), ln=$('#lastName'); let ok=true;
   if(!fn.value.trim()){fn.classList.add('bad');ok=false;}else fn.classList.remove('bad');
   if(!ln.value.trim()){ln.classList.add('bad');ok=false;}else ln.classList.remove('bad');
-  if(!ok){toast('Name can\'t be empty','err');return;}
+  if(!ok) return;
   const first=fn.value.trim(), last=ln.value.trim(), full=(first+' '+last).trim();
   this.disabled=true; const t0=this.textContent; this.textContent='Saving…';
   const { error } = await supabase.auth.updateUser({ data:{ name:full, full_name:full, first_name:first, last_name:last } });
   this.disabled=false; this.textContent=t0;
-  if(error){ toast(error.message,'err'); return; }
+  if(error) return;
   DEFAULT_INI = initials(full);
   if(!$('#avPic').getAttribute('data-img')) setAvatar('', DEFAULT_INI);
-  toast('Profile saved');
 });
 
 /* ---------- Email reveal → updateUser({ email }) ---------- */
@@ -314,12 +310,11 @@ $('#toggleEmail').addEventListener('click',function(){
 $('#saveEmail').addEventListener('click',async function(){
   const v=$('#newEmail').value.trim(), valid=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
   $('#newEmail').classList.toggle('bad',!valid);$('#emailErr').classList.toggle('show',!valid);
-  if(!valid){toast('Enter a valid email','err');return;}
+  if(!valid) return;
   this.disabled=true; const t0=this.textContent; this.textContent='Sending…';
   const { error } = await supabase.auth.updateUser({ email:v });
   this.disabled=false; this.textContent=t0;
-  if(error){ toast(error.message,'err'); return; }
-  toast('Verification link sent to '+v);
+  if(error) return;
   $('#emailReveal').classList.remove('show');$('#toggleEmail').textContent='Change email';$('#newEmail').value='';
 });
 
@@ -341,19 +336,18 @@ $('#savePw').addEventListener('click',async function(){
   const np=$('#newPw').value, cf=$('#confPw').value; let ok=true;
   if(strength(np)<2){$('#newPw').classList.add('bad');ok=false;}else $('#newPw').classList.remove('bad');
   if(np!==cf||!cf){$('#confPw').classList.add('bad');$('#confErr').classList.add('show');ok=false;}else{$('#confPw').classList.remove('bad');$('#confErr').classList.remove('show');}
-  if(!ok){toast('Fix the highlighted fields','err');return;}
+  if(!ok) return;
   this.disabled=true; const t0=this.textContent; this.textContent='Saving…';
   const { error } = await supabase.auth.updateUser({ password:np });
   this.disabled=false; this.textContent=t0;
-  if(error){ toast(error.message,'err'); return; }
-  toast('Password updated');
+  if(error) return;
   $('#newPw').value=$('#confPw').value='';$('#meterBar').style.width=0;$('#meterLbl').textContent='';
   $('#pwReveal').classList.remove('show');$('#togglePw').textContent='Change password';
 });
 
 /* ---------- Theme ---------- */
 function paintTheme(){const t=Miclea.getTheme();document.querySelectorAll('.theme-opt').forEach(function(o){o.classList.toggle('on',o.dataset.t===t)});}
-$('#themeGrid').addEventListener('click',function(e){const o=e.target.closest('.theme-opt');if(!o)return;Miclea.setTheme(o.dataset.t);paintTheme();toast('Theme set to '+o.dataset.t);});
+$('#themeGrid').addEventListener('click',function(e){const o=e.target.closest('.theme-opt');if(!o)return;Miclea.setTheme(o.dataset.t);paintTheme();});
 paintTheme();
 
 </script>
