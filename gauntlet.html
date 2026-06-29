@@ -86,6 +86,7 @@
   .res-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
   .hide{display:none!important}
   /* ===== Immersive lobby + call ===== */
+  #screen-setup{display:none!important}
   body.gt-immersive .main, body.gt-immersive .content{padding:0!important}
   /* The setup wrapper animates with a transform, which would make it the containing
      block for the fixed-position immersive screens (collapsing them). Neutralize it
@@ -693,6 +694,7 @@
   // ---- boot ----
   var saved=load();
   if(saved && saved.r!=null && saved.scores){ resume(saved); }
+  else { showLobby(); }
 })();
 </script>
 </body>
