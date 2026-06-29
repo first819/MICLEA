@@ -120,6 +120,40 @@
         </div>
       </section>
 
+      <!-- ============ LOBBY (permission gate) ============ -->
+      <section id="screen-lobby" class="hide">
+        <div class="lobby">
+          <div class="lobby-preview">
+            <video id="lobbyVideo" autoplay playsinline muted></video>
+            <div id="lobbyVideoOff" class="lobby-videooff">Camera preview will appear here</div>
+            <div class="lobby-self-tag">You</div>
+          </div>
+
+          <!-- state: ask permission -->
+          <div class="lobby-panel" id="lobbyGrant">
+            <h2 class="serif">Ready for your interview?</h2>
+            <p>Micl needs your <b>camera</b> and <b>microphone</b> to run a realistic mock interview. Nothing is uploaded — video stays on your device.</p>
+            <button class="btn btn-brand btn-lg" id="allowBtn" style="width:100%">Allow camera &amp; microphone</button>
+            <div class="lobby-meter"><span>Mic</span><div class="lobby-meter-track"><div class="lobby-meter-fill" id="micMeterFill"></div></div></div>
+          </div>
+
+          <!-- state: granted, ready to join -->
+          <div class="lobby-panel hide" id="lobbyReady">
+            <h2 class="serif">You're set.</h2>
+            <p>Camera and mic look good. Three rounds, escalating difficulty, with a short break between each. Speak your answers out loud — Micl is listening.</p>
+            <div class="lobby-meter"><span>Mic</span><div class="lobby-meter-track"><div class="lobby-meter-fill" id="micMeterFill2"></div></div></div>
+            <button class="btn btn-brand btn-lg" id="joinBtn" style="width:100%">Join interview</button>
+          </div>
+
+          <!-- state: denied / no device -->
+          <div class="lobby-panel hide" id="lobbyDenied">
+            <h2 class="serif">No camera or mic access</h2>
+            <p>That's okay — you can still run the Gauntlet. Pick how you'd like to continue:</p>
+            <button class="btn btn-brand btn-lg" id="joinAudioBtn" style="width:100%;margin-bottom:10px">Continue audio-only</button>
+            <button class="btn btn-ghost btn-lg" id="joinTextBtn" style="width:100%">Continue with typing</button>
+          </div>
+        </div>
+      </section>
 
       <!-- ============ RESULTS ============ -->
       <section id="screen-results" class="hide">
