@@ -14,6 +14,9 @@
   .sr-center{text-align:center}
   .sr-center h1{font-family:var(--font-family-serif);font-weight:400;font-size:clamp(38px,5vw,56px);letter-spacing:-1.4px;line-height:1.04;margin:14px 0 12px}
   .sr-center .lead{font-size:17px;color:var(--ink-muted);max-width:480px;margin:0 auto 30px;line-height:1.55}
+  .sr-page-header{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .sr-page-header h1{font-family:var(--font-family-serif);font-weight:400;font-size:22px;letter-spacing:-.4px;line-height:1;margin:0;color:var(--ink)}
+  .sr-page-header .sr-badge{display:inline-flex;align-items:center;gap:6px;background:var(--brand-fainter);color:var(--brand);font-size:11px;font-weight:700;font-family:var(--font-family-monospace);letter-spacing:.8px;text-transform:uppercase;padding:4px 9px;border-radius:var(--r-pill)}
   .setup-card{padding:28px;text-align:left}
   .field-lbl{font-weight:600;font-size:14.5px;margin-bottom:11px;display:flex;align-items:center;gap:8px}
   .field-lbl .n{width:22px;height:22px;border-radius:50%;background:var(--brand-fainter);color:var(--brand);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--font-family-monospace)}
@@ -87,8 +90,9 @@
 
       <!-- ============ SETUP ============ -->
       <section id="screen-setup">
-        <div class="sr-center">
+        <div class="sr-page-header">
           <h1>Speed Round</h1>
+          <span class="sr-badge"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Practice</span>
         </div>
 
         <div class="card setup-card">

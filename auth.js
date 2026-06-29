@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function signInWithProvider(provider) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: window.location.origin + DASHBOARD_URL }
+      options: { redirectTo: window.location.origin + ONBOARDING_URL }
     })
     if (error) alert(error.message)
   }
