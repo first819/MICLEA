@@ -341,111 +341,274 @@
 (function(){
   var $=function(s){return document.querySelector(s)};
   var LS=window.localStorage, KEY='miclea_gauntlet';
+  var RING=2*Math.PI*82;
+
   var ROUNDS=[
-    {tag:'Round 1 — Broad',cls:'rt1',seg:1,qs:[
-      {q:"To start — walk me through your background and what brought you here.",a:"I'm a software engineer with five years across two startups. I've owned features end to end, most recently a payments flow that handles real money, and I'm here because I want harder problems and more scope."},
-      {q:"Why this role, and why now?",a:"I've hit the ceiling of what I can learn where I am. This role pairs the technical depth I want with a team that ships, and the timing is right — I'm ready to step up, not coast."}
+    {tag:'Round 1 · Broad',cls:'rt1',qs:[
+      {q:"To start — walk me through your background and what brought you here.",a:""},
+      {q:"Why this role, and why now?",a:""}
     ]},
-    {tag:'Round 2 — Harder',cls:'rt2',seg:2,qs:[
-      {q:"Tell me about a time a project failed. What did you actually do?",a:"We shipped a feature nobody used. I'd skipped real user research. I owned it in the retro, pulled the feature, ran five interviews, and rebuilt it — the second version drove a noticeable lift."},
-      {q:"Walk me through a hard technical trade-off you made and why.",a:"We were choosing between consistency and latency on a cache. I picked eventual consistency with a short TTL because the data tolerated staleness, and documented the failure mode so the team knew the limits."},
-      {q:"How do you handle a teammate who disagrees with your design?",a:"I separate ego from the decision. I ask them to argue their strongest case, steelman it, and if they're right I change course loudly. If not, I write down the why so we don't relitigate it."}
+    {tag:'Round 2 · Harder',cls:'rt2',qs:[
+      {q:"Tell me about a time a project failed. What did you actually do?",a:""},
+      {q:"Walk me through a hard technical trade-off you made and why.",a:""},
+      {q:"How do you handle a teammate who disagrees with your design?",a:""}
     ]},
-    {tag:'Round 3 — Curveball',cls:'rt3',seg:3,qs:[
-      {q:"If you had to delete one feature from a product you love, what goes and why?",a:"Notifications defaults on most apps. I'd ship them off by default — it's a short-term metrics hit but it respects attention, and trust compounds into retention that vanity metrics miss."},
-      {q:"It's your first day and the codebase is on fire. No docs. What's your first hour?",a:"Stop the bleeding before understanding it. Find the on-call, get read access to logs and dashboards, identify the last deploy, and ask one question: what changed? Then bisect from there."}
+    {tag:'Round 3 · Curveball',cls:'rt3',qs:[
+      {q:"If you had to delete one feature from a product you love, what goes and why?",a:""},
+      {q:"It's your first day and the codebase is on fire. No docs. What's your first hour?",a:""}
     ]}
   ];
 
-  $('#roleChips').addEventListener('click',function(e){var b=e.target.closest('.chip-opt');if(!b)return;this.querySelectorAll('.chip-opt').forEach(function(c){c.classList.remove('on')});b.classList.add('on');});
+  // ---- state ----
+  var state, mode='video';           // 'video' | 'audio' | 'text'
+  var mediaStream=null, audioCtx=null, meterRAF=null;
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec=null, finalText='', listening=false;
+  var breakTimer=null, micOn=true;
 
-  var state, timer, recording=false, typeTimer, RING=2*Math.PI*82;
-
-  function save(){ LS.setItem(KEY, JSON.stringify(state)); }
-  function clear(){ LS.removeItem(KEY); }
+  function save(){ try{LS.setItem(KEY,JSON.stringify(state))}catch(e){} }
+  function clearSave(){ try{LS.removeItem(KEY)}catch(e){} }
   function load(){ try{return JSON.parse(LS.getItem(KEY))}catch(e){return null} }
 
-  // global slot index across rounds → into the flat AI question list
   function globalIdx(r,q){ var n=0; for(var i=0;i<r;i++) n+=ROUNDS[i].qs.length; return n+q; }
   function aiQ(r,q){ var a=window.miclGauntletQs; var i=globalIdx(r,q); return (a&&a[i])||null; }
+  function qTextFor(r,q){ return aiQ(r,q)||ROUNDS[r].qs[q].q; }
 
-  async function startGauntlet(){
-    try{
-      var slots=0; ROUNDS.forEach(function(R){slots+=R.qs.length;});
-      var out = await window.Micl.ai('ai-question', { count: slots, mode: 'gauntlet' });
-      if(out.questions && out.questions.length) window.miclGauntletQs = out.questions.map(function(q){return q.content;});
-    }catch(e){ window.Micl.onAiError(e); }
-    try{
-      var uid=(await window.miclSupabase.auth.getUser()).data.user.id;
-      var s=await window.miclSupabase.from('practice_sessions').insert({user_id:uid,mode:'gauntlet'}).select('id').single();
-      window.miclSessionId=s.data&&s.data.id;
-    }catch(e){ /* non-blocking */ }
-    state={role:document.querySelector('#roleChips .on').textContent, r:0, q:0, scores:[[],[],[]], breakEnd:null, t0:Date.now()};
-    save(); showSession();
+  // ---- screen switching ----
+  function show(name){
+    ['setup','lobby','call','results'].forEach(function(s){
+      var el=$('#screen-'+s); if(el) el.classList.toggle('hide', s!==name);
+    });
+    document.body.classList.toggle('gt-immersive', name==='lobby'||name==='call');
   }
 
-  function showSession(){
-    show('session');
-    var R=ROUNDS[state.r];
-    $('#roundTag').textContent=R.tag; $('#roundTag').className='roundtag '+R.cls;
-    $('#qText').textContent=aiQ(state.r,state.q)||R.qs[state.q].q;
-    $('#qMeta').textContent='Q'+(state.q+1)+' of '+R.qs.length;
-    $('#ttext').textContent=''; $('#answer').classList.remove('live');
-    recording=false; setRecUI();
-    // segment fills
+  // ---- role chips (setup) ----
+  var roleChips=$('#roleChips');
+  if(roleChips) roleChips.addEventListener('click',function(e){
+    var b=e.target.closest('.chip-opt'); if(!b)return;
+    this.querySelectorAll('.chip-opt').forEach(function(c){c.classList.remove('on')});
+    b.classList.add('on');
+  });
+
+  // ---- MEDIA ----
+  function setMeterFill(pct){ var a=$('#micMeterFill'),b=$('#micMeterFill2'); if(a)a.style.width=pct+'%'; if(b)b.style.width=pct+'%'; }
+  function startMeter(){
+    try{
+      audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+      var src=audioCtx.createMediaStreamSource(mediaStream);
+      var an=audioCtx.createAnalyser(); an.fftSize=256; src.connect(an);
+      var data=new Uint8Array(an.frequencyBinCount);
+      (function loop(){
+        an.getByteFrequencyData(data);
+        var avg=data.reduce(function(x,y){return x+y},0)/data.length;
+        setMeterFill(Math.min(100,Math.round(avg*1.6)));
+        meterRAF=requestAnimationFrame(loop);
+      })();
+    }catch(e){}
+  }
+  async function requestMedia(){
+    try{
+      mediaStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+      mode='video';
+      var v=$('#lobbyVideo'); if(v){ v.srcObject=mediaStream; v.play().catch(function(){}); }
+      $('#lobbyVideo').parentNode.classList.add('live');
+      startMeter();
+      $('#lobbyGrant').classList.add('hide');
+      $('#lobbyReady').classList.remove('hide');
+    }catch(err){
+      $('#lobbyGrant').classList.add('hide');
+      $('#lobbyDenied').classList.remove('hide');
+    }
+  }
+  function stopMedia(){
+    if(mediaStream){ mediaStream.getTracks().forEach(function(t){try{t.stop()}catch(e){}}); mediaStream=null; }
+    if(meterRAF){ cancelAnimationFrame(meterRAF); meterRAF=null; }
+    if(audioCtx){ try{audioCtx.close()}catch(e){} audioCtx=null; }
+  }
+
+  // ---- SPEECH RECOGNITION ----
+  function setListenUI(on){
+    listening=on;
+    var cap=$('#answerCap'); if(cap) cap.classList.toggle('live',on);
+    var mb=$('#micBtn'); if(mb) mb.classList.toggle('rec',on && micOn);
+  }
+  function startRec(){
+    finalText=($('#answerText').textContent||'').trim();
+    if(!SR || mode==='text' || !micOn){
+      var at=$('#answerText'); at.setAttribute('contenteditable','true');
+      if(mode==='text') at.focus();
+      setListenUI(true); return;
+    }
+    try{
+      rec=new SR(); rec.continuous=true; rec.interimResults=true; rec.lang='en-US';
+      rec.onresult=function(e){
+        var interim='';
+        for(var i=e.resultIndex;i<e.results.length;i++){
+          var t=e.results[i][0].transcript;
+          if(e.results[i].isFinal) finalText+=(finalText?' ':'')+t.trim();
+          else interim+=t;
+        }
+        $('#answerText').textContent=(finalText+(interim?' '+interim:'')).trim();
+      };
+      rec.onerror=function(){};
+      rec.onend=function(){ if(listening && micOn){ try{rec.start()}catch(e){} } };
+      rec.start();
+    }catch(e){
+      $('#answerText').setAttribute('contenteditable','true');
+    }
+    setListenUI(true);
+  }
+  function stopRec(){ if(rec){ try{rec.onend=null; rec.stop()}catch(e){} rec=null; } setListenUI(false); }
+
+  // ---- CALL FLOW ----
+  function fetchQuestions(){
+    var slots=0; ROUNDS.forEach(function(R){slots+=R.qs.length;});
+    if(window.Micl && window.Micl.ai){
+      window.Micl.ai('ai-question',{count:slots,mode:'gauntlet'}).then(function(out){
+        if(out && out.questions && out.questions.length){
+          window.miclGauntletQs=out.questions.map(function(q){return q.content;});
+          // refresh the on-screen question if we're still on the first, AI-less render
+          if(state && !$('#screen-call').classList.contains('hide')) refreshQCaption();
+        }
+      }).catch(function(e){ window.Micl.onAiError && window.Micl.onAiError(e); });
+    }
+    if(window.miclSupabase){
+      window.miclSupabase.auth.getUser().then(function(u){
+        var uid=u && u.data && u.data.user && u.data.user.id; if(!uid) return;
+        window.miclSupabase.from('practice_sessions').insert({user_id:uid,mode:'gauntlet'}).select('id').single()
+          .then(function(s){ window.miclSessionId=s.data&&s.data.id; });
+      }).catch(function(){});
+    }
+  }
+  function refreshQCaption(){ var qc=$('#qCap'); if(qc && qc.textContent.trim()==='') qc.textContent=qTextFor(state.r,state.q); }
+
+  function showLobby(){ show('lobby'); }
+
+  function beginCall(chosenMode){
+    mode=chosenMode||mode;
+    var roleEl=document.querySelector('#roleChips .on');
+    state={role:roleEl?roleEl.textContent:'Candidate', r:0, q:0, scores:[[],[],[]], breakEnd:null, t0:Date.now()};
+    save();
+    fetchQuestions();
+    enterCall();
+    askCurrent();
+  }
+  function enterCall(){
+    show('call');
+    window.MiclInterviewer.mount($('#aiStage'));
+    if(mode==='video' && mediaStream){
+      var v=$('#selfVideo'); v.srcObject=mediaStream; v.play().catch(function(){});
+      $('#selfTile').classList.remove('hide');
+    } else {
+      $('#selfTile').classList.add('hide');
+    }
+  }
+  function paintRail(){
     [1,2,3].forEach(function(n){
-      var f=$('#seg'+n);
-      if(n-1<state.r) f.style.width='100%';
-      else if(n-1===state.r) f.style.width=((state.q)/R.qs.length*100)+'%';
-      else f.style.width='0%';
+      var seg=$('#seg'+n); if(!seg) return;
+      seg.classList.toggle('r2',n===2); seg.classList.toggle('r3',n===3);
+      var R=ROUNDS[state.r], pct;
+      if(n-1<state.r) pct=100;
+      else if(n-1===state.r) pct=Math.round(state.q/R.qs.length*100);
+      else pct=0;
+      seg.style.setProperty('--f',pct+'%');
+    });
+    $('#roundChip').textContent=ROUNDS[state.r].tag;
+  }
+  function setTurn(who){
+    $('#turnHint').textContent = who==='ai' ? 'Micl is asking…' : 'Your turn — answer out loud';
+    $('#doneBtn').disabled = who==='ai';
+  }
+  function askCurrent(){
+    paintRail();
+    var qt=qTextFor(state.r,state.q);
+    var qc=$('#qCap'); qc.textContent=qt; qc.classList.remove('hide');
+    $('#answerText').textContent=''; $('#answerCap').classList.add('hide');
+    setTurn('ai');
+    window.MiclInterviewer.speak(qt).then(function(){
+      setTurn('you');
+      $('#answerCap').classList.remove('hide');
+      startRec();
     });
   }
-  function setRecUI(){var b=$('#recBtn');b.classList.toggle('rec',recording);$('#recHint').textContent=recording?'Listening… tap to pause':'Tap to answer out loud';$('#answer').classList.toggle('live',recording);}
-  function toggleRec(){recording=!recording;setRecUI();if(recording)simulateSpeech();else clearTimeout(typeTimer);}
-  function simulateSpeech(){var full=aiQ(state.r,state.q)?'':ROUNDS[state.r].qs[state.q].a,el=$('#ttext');if(!full){el.textContent='';return;}var words=full.split(' '),i=0;el.textContent='';(function step(){if(!recording||i>=words.length)return;el.textContent+=(i?' ':'')+words[i];i++;typeTimer=setTimeout(step,70+Math.random()*70);})();}
-
-  function submit(){
-    clearTimeout(typeTimer);
-    var ans=$('#ttext').textContent.trim();
-    if(ans.length>0 && aiQ(state.r,state.q)){
-      window.Micl.ai('ai-feedback', { question: aiQ(state.r,state.q), answer: ans, sessionId: window.miclSessionId })
+  function submitAnswer(){
+    if($('#doneBtn').disabled) return;
+    var ans=($('#answerText').textContent||'').trim();
+    if(!ans){ window.Miclea && Miclea.toast('Say or type your answer first'); return; }
+    stopRec();
+    if(aiQ(state.r,state.q) && window.Micl){
+      window.Micl.ai('ai-feedback',{question:aiQ(state.r,state.q),answer:ans,sessionId:window.miclSessionId})
         .then(function(fb){ if(fb && fb.score!=null && window.Miclea) Miclea.toast('Micl scored that '+fb.score+'/10'); })
-        .catch(window.Micl.onAiError);
+        .catch(function(e){ window.Micl.onAiError && window.Micl.onAiError(e); });
     }
     var base=state.r===0?78:state.r===1?70:74;
     state.scores[state.r].push(ans.length>50?base+Math.floor(Math.random()*16):base-10+Math.floor(Math.random()*12));
     var R=ROUNDS[state.r];
-    if(state.q < R.qs.length-1){ state.q++; save(); showSession(); return; }
-    // round done
-    if(state.r < ROUNDS.length-1){ state.breakEnd=Date.now()+30000; save(); showBreak(); }
-    else { save(); finish(); }
+    if(state.q < R.qs.length-1){ state.q++; save(); askCurrent(); return; }
+    if(state.r < ROUNDS.length-1){ state.breakEnd=Date.now()+30000; save(); showBreak(); return; }
+    save(); endToResults();
   }
 
-  /* ---- Enforced break: persisted end-time; resumes on refresh; no skip ---- */
+  // ---- controls ----
+  function toggleMic(){
+    micOn=!micOn;
+    if(mediaStream){ var t=mediaStream.getAudioTracks()[0]; if(t) t.enabled=micOn; }
+    $('#micBtn').classList.toggle('off',!micOn);
+    if(listening){ if(micOn) startRec(); else stopRec(); if(!micOn){ $('#answerCap').classList.add('live'); } }
+  }
+  function toggleCam(){
+    if(!mediaStream) return;
+    var t=mediaStream.getVideoTracks()[0]; if(!t) return;
+    t.enabled=!t.enabled;
+    $('#camBtn').classList.toggle('off',!t.enabled);
+    $('#selfTile').classList.toggle('camoff',!t.enabled);
+  }
+  function endInterview(){
+    if(!window.confirm("End the interview now? You'll go straight to your analysis.")) return;
+    endToResults();
+  }
+  function endToResults(){
+    stopRec();
+    try{ window.MiclInterviewer.destroy(); }catch(e){}
+    stopMedia();
+    clearInterval(breakTimer);
+    finish();
+  }
+
+  // ---- BREAK overlay ----
   function showBreak(){
-    show('break');
+    var ov=$('#breakOverlay'); ov.classList.remove('hide');
     var nextR=state.r+1;
     $('#breakTag').textContent='Round '+(state.r+1)+' complete';
-    $('#breakTag').className='roundtag '+(nextR===1?'rt2':'rt3');
-    $('#breakHead').textContent=nextR===1?'Round 2 is tougher — take a breath.':'Final round: the curveball.';
-    $('#breakBody').textContent=nextR===1?'Shake out your shoulders, sip some water, reset. The questions get deeper and more specific from here.':'One unexpected question is coming. There\'s no perfect answer — they\'re watching how you think on your feet. Stay composed.';
+    $('#breakHead').textContent = nextR===1 ? 'Round 2 is tougher — take a breath.' : 'Final round: the curveball.';
+    $('#breakBody').textContent = nextR===1
+      ? 'Shake out your shoulders, sip some water, reset. The questions get deeper from here.'
+      : "One unexpected question is coming. There's no perfect answer — they're watching how you think on your feet. Stay composed.";
+    try{ window.MiclInterviewer.setSpeaking(false); }catch(e){}
     tickBreak();
   }
   function tickBreak(){
-    clearInterval(timer);
+    clearInterval(breakTimer);
     function frame(){
       var left=Math.ceil((state.breakEnd-Date.now())/1000);
-      if(left<=0){ clearInterval(timer); $('#breakNum').textContent='0'; $('#breakArc').style.strokeDashoffset=RING; state.r++; state.q=0; state.breakEnd=null; save(); setTimeout(showSession,350); return; }
+      if(left<=0){
+        clearInterval(breakTimer);
+        $('#breakNum').textContent='0';
+        $('#breakArc').style.strokeDashoffset=RING;
+        state.r++; state.q=0; state.breakEnd=null; save();
+        setTimeout(function(){ $('#breakOverlay').classList.add('hide'); askCurrent(); },350);
+        return;
+      }
       $('#breakNum').textContent=left;
       $('#breakArc').style.strokeDashoffset=(RING*(1-left/30)).toFixed(1);
     }
     frame();
-    timer=setInterval(frame,250);
+    breakTimer=setInterval(frame,250);
   }
 
+  // ---- RESULTS (reused) ----
   function radar(vals){
     var labels=['Clarity','Confidence','Structure','Relevance','Pacing'];
-    var cx=130,cy=108,R=78,n=5,el=$('#radar');
+    var cx=130,cy=108,R=78,n=5,el=$('#radar'); if(!el) return;
     function pt(i,r){var a=-Math.PI/2+i/n*2*Math.PI;return[cx+Math.cos(a)*r,cy+Math.sin(a)*r];}
     var g='';
     for(var ring=1;ring<=4;ring++){var pp=[];for(var i=0;i<n;i++){var p=pt(i,R*ring/4);pp.push(p.join(','));}g+='<polygon points="'+pp.join(' ')+'" fill="none" stroke="#ece9e4" stroke-width="1"/>';}
@@ -456,40 +619,62 @@
     vals.forEach(function(v,i){var p=pt(i,R*v/100);g+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3" fill="#1f40ed"/>';});
     el.innerHTML=g;
   }
-
   function finish(){
     show('results');
-    var avg=function(a){return Math.round(a.reduce(function(x,y){return x+y},0)/a.length)};
+    var avg=function(a){return a.length?Math.round(a.reduce(function(x,y){return x+y},0)/a.length):0};
     var r1=avg(state.scores[0]),r2=avg(state.scores[1]),r3=avg(state.scores[2]);
-    var overall=Math.round((r1+r2+r3)/3);
+    var overall=Math.round((r1+r2+r3)/3)||0;
     var names=[['1','Broad','#1f40ed',r1],['2','Harder','#d97706',r2],['3','Curveball','#dc2626',r3]];
-    $('#roundsBreak').innerHTML=names.map(function(x){
+    var rb=$('#roundsBreak'); if(rb) rb.innerHTML=names.map(function(x){
       return '<div class="rbreak"><span class="rb-i" style="background:'+x[2]+'">'+x[0]+'</span><div class="rb-b"><div class="rb-t">Round '+x[0]+' — '+x[1]+'</div><div class="rb-m">'+(x[3]>=80?'Strong':x[3]>=68?'Solid':'Shaky')+' performance</div></div><span class="rb-s" style="color:'+x[2]+'">'+x[3]+'</span></div>';
     }).join('');
     radar([84,80,86,78,72]);
-    var arc=$('#resArc');setTimeout(function(){arc.style.strokeDashoffset=(427*(1-overall/100)).toFixed(1)},150);
-    var nn=0,st=Math.max(1,Math.round(overall/40));var ci=setInterval(function(){nn+=st;if(nn>=overall){nn=overall;clearInterval(ci);}$('#resNum').textContent=nn},26);
+    var arc=$('#resArc'); if(arc) setTimeout(function(){arc.style.strokeDashoffset=(427*(1-overall/100)).toFixed(1)},150);
+    var resNum=$('#resNum');
+    if(resNum){ var nn=0,st=Math.max(1,Math.round(overall/40)); var ci=setInterval(function(){nn+=st;if(nn>=overall){nn=overall;clearInterval(ci);}resNum.textContent=nn},26); }
     var secs=Math.round((Date.now()-state.t0)/1000);
-    window.Miclea&&Miclea.addSession({type:'gauntlet',topic:'Gauntlet · '+state.role,role:state.role,score:overall,date:new Date().toISOString().slice(0,10),mins:Math.max(1,Math.round(secs/60))});
+    window.Miclea && Miclea.addSession({type:'gauntlet',topic:'Gauntlet · '+state.role,role:state.role,score:overall,date:new Date().toISOString().slice(0,10),mins:Math.max(1,Math.round(secs/60))});
     try{localStorage.setItem('miclea_gauntlet_used',String((parseInt(localStorage.getItem('miclea_gauntlet_used')||'0',10)||0)+1));}catch(e){}
-    clear();
+    clearSave();
   }
 
-  function show(name){['setup','session','break','results'].forEach(function(s){$('#screen-'+s).classList.toggle('hide',s!==name)});}
+  // ---- lifecycle teardown ----
+  window.addEventListener('pagehide',function(){ stopRec(); stopMedia(); try{window.MiclInterviewer.destroy()}catch(e){} });
 
-  $('#recBtn').addEventListener('click',toggleRec);
-  $('#nextBtn').addEventListener('click',submit);
-  $('#startBtn').addEventListener('click',function(){startGauntlet();});
-  $('#againBtn').addEventListener('click',function(){clear();location.reload();});
-
-  /* resume an in-progress gauntlet (handles refresh during break) */
-  var saved=load();
-  if(saved && saved.r!=null){
+  // ---- resume an in-progress gauntlet (refresh during call/break) ----
+  function resume(saved){
     state=saved;
-    if(state.breakEnd && state.breakEnd>Date.now()){ showBreak(); }
-    else if(state.breakEnd && state.breakEnd<=Date.now()){ state.r++; state.q=0; state.breakEnd=null; save(); showSession(); }
-    else { showSession(); }
+    show('lobby');
+    // Media must be re-granted after a refresh; route through the lobby.
+    var grant=$('#lobbyGrant'); grant.querySelector('h2').textContent='Resume your interview';
+    grant.querySelector('p').textContent='Re-enable your camera & mic to pick up where you left off. Your break timer kept running.';
+    function go(){
+      fetchQuestions(); enterCall();
+      if(state.breakEnd && state.breakEnd>Date.now()){ showBreak(); }
+      else if(state.breakEnd && state.breakEnd<=Date.now()){ state.r++; state.q=0; state.breakEnd=null; save(); askCurrent(); }
+      else { askCurrent(); }
+    }
+    $('#allowBtn').onclick=function(){ requestMedia().then(function(){}); };
+    $('#joinBtn').onclick=go;
+    $('#joinAudioBtn').onclick=function(){ mode='audio'; go(); };
+    $('#joinTextBtn').onclick=function(){ mode='text'; go(); };
   }
+
+  // ---- events ----
+  $('#startBtn') && $('#startBtn').addEventListener('click',showLobby);
+  $('#allowBtn') && $('#allowBtn').addEventListener('click',function(){ requestMedia(); });
+  $('#joinBtn')  && $('#joinBtn').addEventListener('click',function(){ beginCall('video'); });
+  $('#joinAudioBtn') && $('#joinAudioBtn').addEventListener('click',function(){ beginCall('audio'); });
+  $('#joinTextBtn')  && $('#joinTextBtn').addEventListener('click',function(){ beginCall('text'); });
+  $('#micBtn') && $('#micBtn').addEventListener('click',toggleMic);
+  $('#camBtn') && $('#camBtn').addEventListener('click',toggleCam);
+  $('#doneBtn') && $('#doneBtn').addEventListener('click',submitAnswer);
+  $('#endBtn') && $('#endBtn').addEventListener('click',endInterview);
+  $('#againBtn') && $('#againBtn').addEventListener('click',function(){ clearSave(); location.reload(); });
+
+  // ---- boot ----
+  var saved=load();
+  if(saved && saved.r!=null && saved.scores){ resume(saved); }
 })();
 </script>
 </body>
