@@ -94,7 +94,7 @@
   .lobby-preview{position:relative;width:min(46vw,560px);aspect-ratio:4/3;border-radius:18px;overflow:hidden;background:linear-gradient(160deg,#2a3340,#161b22);border:1px solid rgba(255,255,255,.12)}
   .lobby-preview video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
   .lobby-videooff{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:14px}
-  .lobby-preview video[srcobject], .lobby-preview.live .lobby-videooff{display:none}
+  .lobby-preview.live .lobby-videooff{display:none}
   .lobby-self-tag{position:absolute;bottom:12px;left:12px;font-size:12px;background:rgba(0,0,0,.5);padding:4px 10px;border-radius:8px}
   .lobby-panel{width:min(90vw,380px)}
   .lobby-panel h2{font-size:30px;font-weight:400;margin-bottom:12px}
@@ -367,7 +367,7 @@
   var state, mode='video';           // 'video' | 'audio' | 'text'
   var mediaStream=null, audioCtx=null, meterRAF=null;
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec=null, finalText='', listening=false;
-  var breakTimer=null, micOn=true, torn=false;
+  var breakTimer=null, breakEndTimer=null, micOn=true, torn=false, resuming=false;
 
   function save(){ try{LS.setItem(KEY,JSON.stringify(state))}catch(e){} }
   function clearSave(){ try{LS.removeItem(KEY)}catch(e){} }
@@ -423,10 +423,13 @@
       $('#lobbyDenied').classList.remove('hide');
     }
   }
-  function stopMedia(){
-    if(mediaStream){ mediaStream.getTracks().forEach(function(t){try{t.stop()}catch(e){}}); mediaStream=null; }
+  function stopMeter(){
     if(meterRAF){ cancelAnimationFrame(meterRAF); meterRAF=null; }
     if(audioCtx){ try{audioCtx.close()}catch(e){} audioCtx=null; }
+  }
+  function stopMedia(){
+    if(mediaStream){ mediaStream.getTracks().forEach(function(t){try{t.stop()}catch(e){}}); mediaStream=null; }
+    stopMeter();
   }
 
   // ---- SPEECH RECOGNITION ----
@@ -495,12 +498,13 @@
     var roleEl=document.querySelector('#roleChips .on');
     state={role:roleEl?roleEl.textContent:'Candidate', r:0, q:0, scores:[[],[],[]], breakEnd:null, t0:Date.now()};
     save();
-    torn=false;
+    torn=false; resuming=false;
     fetchQuestions();
     enterCall();
     askCurrent();
   }
   function enterCall(){
+    stopMeter();
     show('call');
     if(window.MiclInterviewer) window.MiclInterviewer.mount($('#aiStage'));
     if(mode==='video' && mediaStream){
@@ -564,7 +568,7 @@
     micOn=!micOn;
     if(mediaStream){ var t=mediaStream.getAudioTracks()[0]; if(t) t.enabled=micOn; }
     $('#micBtn').classList.toggle('off',!micOn);
-    if(listening){ if(micOn) startRec(); else stopRec(); if(!micOn){ $('#answerCap').classList.add('live'); } }
+    if(listening){ if(micOn) startRec(); else stopRec(); }
   }
   function toggleCam(){
     if(!mediaStream) return;
@@ -583,6 +587,7 @@
     try{ window.MiclInterviewer.destroy(); }catch(e){}
     stopMedia();
     clearInterval(breakTimer);
+    clearTimeout(breakEndTimer);
     finish();
   }
 
@@ -609,7 +614,7 @@
         $('#breakNum').textContent='0';
         $('#breakArc').style.strokeDashoffset=RING;
         state.r++; state.q=0; state.breakEnd=null; save();
-        setTimeout(function(){ $('#breakOverlay').classList.add('hide'); askCurrent(); },350);
+        breakEndTimer=setTimeout(function(){ if(torn) return; $('#breakOverlay').classList.add('hide'); askCurrent(); },350);
         return;
       }
       $('#breakNum').textContent=left;
@@ -656,31 +661,30 @@
   window.addEventListener('pagehide',function(){ stopRec(); stopMedia(); try{window.MiclInterviewer.destroy()}catch(e){} });
 
   // ---- resume an in-progress gauntlet (refresh during call/break) ----
+  // Resume an in-progress gauntlet through the lobby (media must be re-granted
+  // after a refresh). Sets `resuming` so the lobby buttons continue saved state
+  // instead of starting a fresh interview — the join handlers below branch on it.
   function resume(saved){
     state=saved;
+    resuming=true;
     show('lobby');
-    // Media must be re-granted after a refresh; route through the lobby.
     var grant=$('#lobbyGrant'); grant.querySelector('h2').textContent='Resume your interview';
     grant.querySelector('p').textContent='Re-enable your camera & mic to pick up where you left off. Your break timer kept running.';
-    function go(){
-      torn=false;
-      fetchQuestions(); enterCall();
-      if(state.breakEnd && state.breakEnd>Date.now()){ showBreak(); }
-      else if(state.breakEnd && state.breakEnd<=Date.now()){ state.r++; state.q=0; state.breakEnd=null; save(); askCurrent(); }
-      else { askCurrent(); }
-    }
-    $('#allowBtn').onclick=function(){ requestMedia().then(function(){}); };
-    $('#joinBtn').onclick=go;
-    $('#joinAudioBtn').onclick=function(){ mode='audio'; go(); };
-    $('#joinTextBtn').onclick=function(){ mode='text'; go(); };
+  }
+  function resumeGo(){
+    torn=false;
+    fetchQuestions(); enterCall();
+    if(state.breakEnd && state.breakEnd>Date.now()){ showBreak(); }
+    else if(state.breakEnd && state.breakEnd<=Date.now()){ state.r++; state.q=0; state.breakEnd=null; save(); askCurrent(); }
+    else { askCurrent(); }
   }
 
   // ---- events ----
   $('#startBtn') && $('#startBtn').addEventListener('click',showLobby);
   $('#allowBtn') && $('#allowBtn').addEventListener('click',function(){ requestMedia(); });
-  $('#joinBtn')  && $('#joinBtn').addEventListener('click',function(){ beginCall('video'); });
-  $('#joinAudioBtn') && $('#joinAudioBtn').addEventListener('click',function(){ beginCall('audio'); });
-  $('#joinTextBtn')  && $('#joinTextBtn').addEventListener('click',function(){ beginCall('text'); });
+  $('#joinBtn')  && $('#joinBtn').addEventListener('click',function(){ if(resuming) resumeGo(); else beginCall('video'); });
+  $('#joinAudioBtn') && $('#joinAudioBtn').addEventListener('click',function(){ if(resuming){ mode='audio'; resumeGo(); } else beginCall('audio'); });
+  $('#joinTextBtn')  && $('#joinTextBtn').addEventListener('click',function(){ if(resuming){ mode='text'; resumeGo(); } else beginCall('text'); });
   $('#micBtn') && $('#micBtn').addEventListener('click',toggleMic);
   $('#camBtn') && $('#camBtn').addEventListener('click',toggleCam);
   $('#doneBtn') && $('#doneBtn').addEventListener('click',submitAnswer);
