@@ -363,7 +363,7 @@
   var state, mode='video';           // 'video' | 'audio' | 'text'
   var mediaStream=null, audioCtx=null, meterRAF=null;
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec=null, finalText='', listening=false;
-  var breakTimer=null, micOn=true;
+  var breakTimer=null, micOn=true, torn=false;
 
   function save(){ try{LS.setItem(KEY,JSON.stringify(state))}catch(e){} }
   function clearSave(){ try{LS.removeItem(KEY)}catch(e){} }
@@ -409,8 +409,8 @@
     try{
       mediaStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
       mode='video';
-      var v=$('#lobbyVideo'); if(v){ v.srcObject=mediaStream; v.play().catch(function(){}); }
-      $('#lobbyVideo').parentNode.classList.add('live');
+      var v=$('#lobbyVideo');
+      if(v){ v.srcObject=mediaStream; v.play().catch(function(){}); if(v.parentNode) v.parentNode.classList.add('live'); }
       startMeter();
       $('#lobbyGrant').classList.add('hide');
       $('#lobbyReady').classList.remove('hide');
@@ -432,6 +432,7 @@
     var mb=$('#micBtn'); if(mb) mb.classList.toggle('rec',on && micOn);
   }
   function startRec(){
+    if(rec){ try{rec.onend=null; rec.stop()}catch(e){} rec=null; }
     finalText=($('#answerText').textContent||'').trim();
     if(!SR || mode==='text' || !micOn){
       var at=$('#answerText'); at.setAttribute('contenteditable','true');
@@ -449,7 +450,9 @@
         }
         $('#answerText').textContent=(finalText+(interim?' '+interim:'')).trim();
       };
-      rec.onerror=function(){};
+      rec.onerror=function(e){
+        if(e && e.error==='not-allowed'){ mode='text'; stopRec(); var at=$('#answerText'); at.setAttribute('contenteditable','true'); setListenUI(true); }
+      };
       rec.onend=function(){ if(listening && micOn){ try{rec.start()}catch(e){} } };
       rec.start();
     }catch(e){
@@ -479,7 +482,7 @@
       }).catch(function(){});
     }
   }
-  function refreshQCaption(){ var qc=$('#qCap'); if(qc && qc.textContent.trim()==='') qc.textContent=qTextFor(state.r,state.q); }
+  function refreshQCaption(){ if(!state) return; var qc=$('#qCap'); var fb=ROUNDS[state.r].qs[state.q].q; if(qc && qc.textContent===fb) qc.textContent=qTextFor(state.r,state.q); }
 
   function showLobby(){ show('lobby'); }
 
@@ -488,13 +491,14 @@
     var roleEl=document.querySelector('#roleChips .on');
     state={role:roleEl?roleEl.textContent:'Candidate', r:0, q:0, scores:[[],[],[]], breakEnd:null, t0:Date.now()};
     save();
+    torn=false;
     fetchQuestions();
     enterCall();
     askCurrent();
   }
   function enterCall(){
     show('call');
-    window.MiclInterviewer.mount($('#aiStage'));
+    if(window.MiclInterviewer) window.MiclInterviewer.mount($('#aiStage'));
     if(mode==='video' && mediaStream){
       var v=$('#selfVideo'); v.srcObject=mediaStream; v.play().catch(function(){});
       $('#selfTile').classList.remove('hide');
@@ -524,7 +528,10 @@
     var qc=$('#qCap'); qc.textContent=qt; qc.classList.remove('hide');
     $('#answerText').textContent=''; $('#answerCap').classList.add('hide');
     setTurn('ai');
-    window.MiclInterviewer.speak(qt).then(function(){
+    var speakP = window.MiclInterviewer ? window.MiclInterviewer.speak(qt) : Promise.resolve();
+    speakP.then(function(){
+      if(torn || $('#screen-call').classList.contains('hide')) return;
+      if(!$('#breakOverlay').classList.contains('hide')) return;
       setTurn('you');
       $('#answerCap').classList.remove('hide');
       startRec();
@@ -567,6 +574,7 @@
     endToResults();
   }
   function endToResults(){
+    torn=true;
     stopRec();
     try{ window.MiclInterviewer.destroy(); }catch(e){}
     stopMedia();
@@ -576,9 +584,11 @@
 
   // ---- BREAK overlay ----
   function showBreak(){
+    stopRec();
     var ov=$('#breakOverlay'); ov.classList.remove('hide');
     var nextR=state.r+1;
     $('#breakTag').textContent='Round '+(state.r+1)+' complete';
+    $('#breakTag').className='roundtag '+(nextR===1?'rt2':'rt3');
     $('#breakHead').textContent = nextR===1 ? 'Round 2 is tougher — take a breath.' : 'Final round: the curveball.';
     $('#breakBody').textContent = nextR===1
       ? 'Shake out your shoulders, sip some water, reset. The questions get deeper from here.'
@@ -649,6 +659,7 @@
     var grant=$('#lobbyGrant'); grant.querySelector('h2').textContent='Resume your interview';
     grant.querySelector('p').textContent='Re-enable your camera & mic to pick up where you left off. Your break timer kept running.';
     function go(){
+      torn=false;
       fetchQuestions(); enterCall();
       if(state.breakEnd && state.breakEnd>Date.now()){ showBreak(); }
       else if(state.breakEnd && state.breakEnd<=Date.now()){ state.r++; state.q=0; state.breakEnd=null; save(); askCurrent(); }
