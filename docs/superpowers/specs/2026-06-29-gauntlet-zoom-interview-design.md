@@ -16,8 +16,9 @@ AI wiring (`ai-question` / `ai-feedback`), and detailed results screen are kept.
 
 - Realistic Zoom-like 1:1 interview feel (big interviewer, small self-view PiP).
 - Actually request and use the camera and microphone for the SaaS.
-- AI interviewer speaks each question aloud (cloud talking-avatar later; browser
-  voice now), via a swappable provider layer.
+- AI interviewer speaks each question aloud (ElevenLabs voice later; browser
+  voice now) over an AI portrait, via swappable voice + visual provider layers.
+- Support multiple interviewer characters (portrait + voice) via config.
 - Keep the proven 3-round escalation (Broad → Harder → Curveball) with the
   enforced, non-skippable 30s breaks between rounds.
 - Detailed analysis after the interview ends (reuse existing results screen).
@@ -27,17 +28,20 @@ AI wiring (`ai-question` / `ai-feedback`), and detailed results screen are kept.
 - Real-time WebRTC streaming avatar (chosen: clip-per-question).
 - Multi-participant calls (1:1 only: Micl + candidate).
 - Cloud speech-to-text (chosen: browser live transcription).
-- Building the actual D-ID/HeyGen integration now (no key yet) — only the
-  abstraction + a functional fallback. The real provider is a later, key-gated
-  drop-in.
+- Building the actual ElevenLabs / D-ID / HeyGen integration now (no key yet) —
+  only the abstractions + functional fallbacks. Each real provider is a later,
+  key-gated drop-in.
+- Lip-synced talking head now (visual = AI portrait + speaking FX for this round).
 
 ## Decisions (from brainstorming)
 
 | Decision | Choice |
 |---|---|
-| Voice | Cloud TTS (realistic) eventually; merges into the talking-avatar provider |
-| Interviewer | AI-generated talking avatar (lip-synced), **clip per question** delivery |
-| Provider | Decide later / no key yet → build provider abstraction + functional fallback |
+| Voice | **ElevenLabs** (realistic) as the target; architect now, wire later. Browser `speechSynthesis` active now. No key yet. |
+| Interviewer visual | AI-generated portrait + speaking FX now; lip-synced talking head (D-ID/HeyGen) is a later, separate drop-in |
+| Avatar delivery (if talking head) | Clip per question (no WebRTC) |
+| Provider model | **Two independent providers — voice and visual** — both behind a config; functional fallback for each |
+| Characters | Multi-character config (`{ name, portraitUrl, elevenVoiceId }`); user will add more avatars later |
 | Answer capture | Live mic transcription (browser `SpeechRecognition`) |
 | Round structure | Keep 3 rounds + enforced 30s breaks |
 | In-call layout | Immersive captions (big interviewer + self-view PiP + caption overlays) |
@@ -111,28 +115,51 @@ are reused as-is; only the session presentation changes.
 
 ## Provider layer (`interviewer.js`)
 
-A single module owns how Micl looks and speaks, decoupled from the call UI.
+A single module owns how Micl looks and speaks, decoupled from the call UI. It
+composes **two independent providers** — a *visual* provider and a *voice*
+provider — driven by the active **character**.
 
 ```js
 window.MiclInterviewer = {
-  mount(stageEl),                 // render avatar into the stage element
-  speak(text) -> Promise<void>,   // "say" text; resolves when finished
+  mount(stageEl),                 // render the active character into the stage
+  setCharacter(id),               // switch interviewer (portrait + voice)
+  speak(text) -> Promise<void>,   // "say" text; resolves when finished speaking
   setSpeaking(bool),              // drive speaking FX
   destroy(),
 }
 ```
 
-- **Provider interface** (`clip-per-question` shape): given question text, a
-  provider returns a lip-synced video URL; the module plays it on the stage and
-  resolves `speak()` on `ended`.
-- **Fallback provider (now, no key):** renders an AI-generated interviewer
-  portrait + speaking FX, and uses the browser `speechSynthesis` API for audio.
-  `speak()` resolves on the utterance `end` event. Fully functional end-to-end.
-- **Real provider (later):** config `{ provider: 'd-id' | 'heygen' }` + a new
-  Supabase **edge function** that holds the API key server-side and returns a
-  clip URL for given text (keeps the key out of the browser). Selecting it
-  requires **no call-UI changes** — only config + the edge function.
-- Provider selection via a small config constant (default `fallback`).
+### Characters
+A config array of selectable interviewers; `speak()` and `mount()` use the active one.
+```js
+const CHARACTERS = [
+  { id: 'micl', name: 'Micl', portraitUrl: '…', elevenVoiceId: '…' },
+  // user adds more later: just a portrait + a voice id
+];
+```
+The default character ships with the AI-generated portrait produced during
+implementation. Adding a character requires no code changes beyond this array.
+
+### Voice provider
+- **`browser` (now, default, no key):** browser `speechSynthesis`; `speak()`
+  resolves on the utterance `end` event.
+- **`elevenlabs` (later, drop-in):** a new Supabase **edge function** holds the
+  ElevenLabs key server-side, takes `{ text, voiceId }`, returns/streams audio;
+  the module plays it (resolving on `ended`) and drives the speaking FX from its
+  amplitude. Selecting it = config flip + the edge function + key in secrets.
+  Browser voice remains the automatic fallback if the call fails.
+
+### Visual provider
+- **`portrait` (now, default):** renders the character's AI portrait with
+  speaking FX (glow pulse + live waveform). No lip-sync.
+- **`talkinghead` (later, separate drop-in):** `{ provider: 'd-id' | 'heygen' }`
+  via an edge function that returns a lip-synced clip URL per question
+  (`clip-per-question`); played on the stage, resolving `speak()` on `ended`.
+  ElevenLabs audio can be fed in for the lip-sync. **No call-UI changes** to
+  enable.
+
+Voice and visual are selected by independent config constants (defaults
+`browser` + `portrait`), so they can be upgraded separately.
 
 ## Media lifecycle
 
@@ -172,14 +199,19 @@ window.MiclInterviewer = {
 - Break overlay appears between rounds, counts down, can't be skipped, auto-resumes.
 - End interview / page leave stops all tracks (camera light off).
 - Results screen renders the full analysis after round 3.
-- Provider abstraction: fallback works with no key; swapping the config constant
-  is the only change needed to point at a real provider.
+- Provider abstractions: browser voice + portrait visual work with no key;
+  swapping a config constant is the only call-UI change needed to point voice at
+  ElevenLabs or visual at a talking head.
+- Characters: switching the active character changes portrait + voice; adding one
+  is config-only.
 - Verify in the preview sandbox per project convention (preview server reads the
   copied files, not the repo directly).
 
 ## Out of scope / future
 
-- Real D-ID/HeyGen edge function + key wiring.
+- ElevenLabs edge function + key wiring (architected now, built later).
+- Real D-ID/HeyGen talking-head edge function + key wiring.
 - Cloud speech-to-text.
 - Device-switching UI behind the settings control.
 - Real-time streaming avatar.
+- In-app character picker UI (config-only for now).
