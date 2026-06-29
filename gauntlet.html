@@ -120,48 +120,6 @@
         </div>
       </section>
 
-      <!-- ============ SESSION ============ -->
-      <section id="screen-session" class="hide">
-        <div class="rail">
-          <div class="seg r1"><div class="f" id="seg1"></div></div>
-          <div class="seg r2"><div class="f" id="seg2"></div></div>
-          <div class="seg r3"><div class="f" id="seg3"></div></div>
-        </div>
-        <span class="roundtag rt1" id="roundTag">Round 1 — Broad</span>
-        <div class="card qcard">
-          <div class="micl">
-            <span class="micl-av">M</span>
-            <span class="micl-n">Micl<span>YOUR AI INTERVIEWER</span></span>
-            <span class="qmeta" id="qMeta">Q1 of 2</span>
-          </div>
-          <p class="qtext" id="qText"></p>
-          <div class="answer" id="answer">
-            <div class="listening"><span class="eq"><i></i><i></i><i></i><i></i></span> LISTENING</div>
-            <div class="ttext" id="ttext" contenteditable="true" spellcheck="false"></div>
-          </div>
-          <div class="sess-actions">
-            <button class="mic-btn" id="recBtn" aria-label="Toggle microphone">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
-            </button>
-            <span class="hint" id="recHint">Tap to answer out loud</span>
-            <button class="btn btn-brand" style="margin-left:auto" id="nextBtn">Submit answer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ BREAK (enforced) ============ -->
-      <section id="screen-break" class="hide">
-        <span class="roundtag rt2" id="breakTag">Round 1 complete</span>
-        <div class="break-ring">
-          <svg width="190" height="190" viewBox="0 0 190 190" style="transform:rotate(-90deg)"><circle cx="95" cy="95" r="82" fill="none" stroke="#ece9e4" stroke-width="10"/><circle id="breakArc" cx="95" cy="95" r="82" fill="none" stroke="var(--brand)" stroke-width="10" stroke-linecap="round" stroke-dasharray="515.2" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear"/></svg>
-          <div class="bn"><b id="breakNum">30</b><span>mandatory break</span></div>
-        </div>
-        <div class="card break-card">
-          <h3 class="serif" style="font-size:22px;margin-bottom:8px" id="breakHead">Round 2 is tougher — take a breath.</h3>
-          <p style="font-size:14px;color:var(--ink-muted);line-height:1.6" id="breakBody">Shake out your shoulders, sip some water, and reset your mindset. The questions get deeper and more specific from here.</p>
-          <div class="lock-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> This break can't be skipped — even if you refresh.</div>
-        </div>
-      </section>
 
       <!-- ============ RESULTS ============ -->
       <section id="screen-results" class="hide">
@@ -208,6 +166,7 @@
 
 <script type="module" src="ai-client.js"></script>
 <script src="app-shell.js"></script>
+<script src="interviewer.js"></script>
 <script>
 (function(){
   var $=function(s){return document.querySelector(s)};
