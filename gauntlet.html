@@ -84,6 +84,10 @@
   .hide{display:none!important}
   /* ===== Immersive lobby + call ===== */
   body.gt-immersive .main, body.gt-immersive .content{padding:0!important}
+  /* The setup wrapper animates with a transform, which would make it the containing
+     block for the fixed-position immersive screens (collapsing them). Neutralize it
+     while immersive so #screen-lobby/#screen-call are fixed to the viewport. */
+  body.gt-immersive .gt-wrap{transform:none!important;animation:none!important}
   #screen-lobby, #screen-call{position:fixed;inset:0;z-index:60;background:#0e1217;color:#fff}
   /* lobby */
   .lobby{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;padding:30px}
