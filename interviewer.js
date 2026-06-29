@@ -26,8 +26,7 @@
       '<div class="mi-ring"></div>' +
       '<img class="mi-portrait" src="' + esc(active.portraitUrl) + '" alt="' + esc(active.name) + '" ' +
         'onerror="this.style.display=\'none\'">' +
-      '<div class="mi-fx" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
-      '<div class="mi-name">' + esc(active.name) + '<small>' + esc(active.title) + '</small></div>';
+      '<div class="mi-fx" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>';
   }
   function mountVisual() {
     if (VISUAL_PROVIDER === "talkinghead") {
