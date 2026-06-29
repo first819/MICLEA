@@ -17,18 +17,24 @@
   var active = CHARACTERS[0];
   var stageEl = null;
 
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
   // ---------------- VISUAL ----------------
   function renderPortrait() {
     stageEl.innerHTML =
       '<div class="mi-bg"></div>' +
       '<div class="mi-ring"></div>' +
-      '<img class="mi-portrait" src="' + active.portraitUrl + '" alt="' + active.name + '" ' +
+      '<img class="mi-portrait" src="' + esc(active.portraitUrl) + '" alt="' + esc(active.name) + '" ' +
         'onerror="this.style.display=\'none\'">' +
       '<div class="mi-fx" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
-      '<div class="mi-name">' + active.name + '<small>' + active.title + '</small></div>';
+      '<div class="mi-name">' + esc(active.name) + '<small>' + esc(active.title) + '</small></div>';
   }
   function mountVisual() {
-    // 'talkinghead' drop-in: render a <video> here and swap in clip URLs in speak().
+    if (VISUAL_PROVIDER === "talkinghead") {
+      // future drop-in: render a <video> here and swap clip URLs in speak()
+      renderPortrait(); // until talking-head is wired, fall back to portrait
+      return;
+    }
     renderPortrait();
   }
   function setSpeaking(on) {
@@ -39,11 +45,12 @@
   function speakBrowser(text) {
     return new Promise(function (resolve) {
       var done = false;
-      function finish() { if (!done) { done = true; resolve(); } }
+      var timer = null;
+      function finish() { if (!done) { done = true; if (timer) clearTimeout(timer); resolve(); } }
       var synth = window.speechSynthesis;
       if (!synth || typeof SpeechSynthesisUtterance === "undefined") {
         // No TTS available: hold long enough to read the caption.
-        setTimeout(finish, Math.min(9000, 1600 + text.length * 45));
+        timer = setTimeout(finish, Math.min(9000, 1600 + text.length * 45));
         return;
       }
       try { synth.cancel(); } catch (e) {}
@@ -52,7 +59,7 @@
       u.onend = finish; u.onerror = finish;
       synth.speak(u);
       // Safety net: some browsers never fire onend.
-      setTimeout(finish, Math.min(15000, 2500 + text.length * 60));
+      timer = setTimeout(finish, Math.min(15000, 2500 + text.length * 60));
     });
   }
 
